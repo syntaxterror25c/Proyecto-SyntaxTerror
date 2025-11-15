@@ -20,7 +20,7 @@
             --bg-light: #ffffff;
             --accent: #16a34a;
             --accent-soft: rgba(22, 163, 74, 0.12);
-            --text: #0f172a;
+            --text: #040a16;
             --text-soft: #4b5563;
             --border: #e5e7eb;
             background: radial-gradient(circle at top, #e5e7eb, #ffffff);
@@ -171,6 +171,19 @@
             color: var(--accent);
             font-size: 0.75rem;
             font-weight: 600;
+        }
+        .version-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.1rem 0.5rem;
+            margin-left: 0.4rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.2);
+            color: ;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
         }
 
         .section-title {
@@ -423,6 +436,109 @@ footer::before {
     0%  { transform: translateX(-50%) translateY(0) scale(0.9); }
     100%{ transform: translateX(-50%) translateY(-6px) scale(0.9); }
 }
+/* CONTENEDOR */
+.dancing-robot-container {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+/* ANIMACIÓN FADE */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ROBOT */
+.robot {
+    width: 60px;
+    height: 100px;
+    margin: 0 auto;
+    position: relative;
+    image-rendering: pixelated;
+    animation: dance 0.8s infinite alternate ease-in-out;
+}
+
+/* CABEZA */
+.robot .head {
+    width: 36px;
+    height: 26px;
+    background: #22c55e;
+    border: 3px solid #000;
+    margin: 0 auto;
+    box-shadow: 0px 0px 6px #22c55e;
+}
+
+/* CUERPO */
+.robot .body {
+    width: 40px;
+    height: 40px;
+    background: #111;
+    border: 3px solid #000;
+    margin: 4px auto;
+}
+
+/* BRAZOS */
+.robot .arm {
+    width: 12px;
+    height: 30px;
+    background: #333;
+    border: 3px solid #000;
+    position: absolute;
+    top: 32px;
+}
+
+.arm-left  { left: -20px; transform-origin: top; animation: armL 0.8s infinite ease-in-out alternate; }
+.arm-right { right: -20px; transform-origin: top; animation: armR 0.8s infinite ease-in-out alternate; }
+
+/* PIERNAS */
+.robot .leg {
+    width: 14px;
+    height: 34px;
+    background: #333;
+    border: 3px solid #000;
+    position: absolute;
+    top: 70px;
+}
+
+.leg-left  { left: 5px;  transform-origin: top; animation: legL 0.8s infinite ease-in-out alternate; }
+.leg-right { right: 5px; transform-origin: top; animation: legR 0.8s infinite ease-in-out alternate; }
+
+/* ANIMACIONES PIXEL ROBOT BAILE */
+@keyframes dance {
+    0% { transform: translateX(-6px); }
+    100% { transform: translateX(6px); }
+}
+
+@keyframes armL { 
+    0% { transform: rotate(-25deg); } 
+    100% { transform: rotate(10deg); }
+}
+
+@keyframes armR { 
+    0% { transform: rotate(25deg); } 
+    100% { transform: rotate(-10deg); }
+}
+
+@keyframes legL {
+    0% { transform: rotate(10deg); }
+    100% { transform: rotate(-20deg); }
+}
+
+@keyframes legR {
+    0% { transform: rotate(-10deg); }
+    100% { transform: rotate(20deg); }
+}
+
+/* TEXTO DEBAJO DEL ROBOT */
+.robot-text {
+    margin-top: 0.6rem;
+    color: var(--text-soft);
+    font-size: 0.75rem;
+    font-family: monospace;
+    text-shadow: 1px 1px 0 #000;
+}
 
     </style>
 </head>
@@ -431,7 +547,11 @@ footer::before {
     <img id="logo-syntaxterror" src="logo.png"
          alt="Logo SyntaxTerror">
     <div>
-        <h1>Bitácora del Proyecto equipo de trabajo "SyntaxTerror"</h1>
+        <h1>
+    Bitácora del Proyecto equipo de trabajo "SyntaxTerror"
+    <span class="version-badge app-version"></span>
+</h1>
+
         <p>Seguimiento del desarrollo · 2º DAM</p>
     </div>
     <nav>
@@ -505,7 +625,7 @@ footer::before {
         <section class="card" id="tareas">
             <h2>Panel de tareas</h2>
             <p class="small">
-                Usa esta tabla como mini tablero Kanban. Edita estados directamente aquí.
+                <!--Usa esta tabla como mini tablero Kanban. Edita estados directamente aquí.-->
             </p>
             <table>
                 <thead>
@@ -645,7 +765,7 @@ footer::before {
     <section class="card" id="roadmap" style="margin-top:1.5rem;">
         <h2>Roadmap del proyecto</h2>
         <p class="small">
-            Roadmap general con el progreso aproximado de cada fase. Puedes ir actualizando los porcentajes.
+            <!--Roadmap general con el progreso aproximado de cada fase. Puedes ir actualizando los porcentajes.-->
         </p>
 
         <div class="progress-row">
@@ -693,8 +813,8 @@ footer::before {
     <section class="card" id="notas" style="margin-top:1.5rem;">
         <h2>Notas rápidas</h2>
         <p class="small">
-            Usa esta sección como “post-its”: ideas para
-            mejorar el proyecto, dudas o recordatorios.
+            <!--Usa esta sección como “post-its”: ideas para
+            mejorar el proyecto, dudas o recordatorios.-->
         </p>
         <ul class="timeline">
             <li>
@@ -743,9 +863,20 @@ footer::before {
         </ul>
     </section>
 </main>
+<div class="dancing-robot-container">
+    <div class="robot">
+        <div class="head"></div>
+        <div class="body"></div>
+        <div class="arm arm-left"></div>
+        <div class="arm arm-right"></div>
+        <div class="leg leg-left"></div>
+        <div class="leg leg-right"></div>
+    </div>
+    <p class="robot-text">SyntaxTerror Bot Loading… 🤖</p>
+</div>
 
 <footer>
-    SyntaxTerror · <span>{ code · learn · build }</span> · 2025
+    <span>SyntaxTerror · { code · learn · build } · <span class="app-version"></span></span>
 </footer>
 
 <script>
@@ -780,6 +911,22 @@ footer::before {
             bar.style.width = value + '%';
         });
     });
+        // Versión de la aplicación
+    const APP_VERSION = "v0.1.0";
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Rellena todos los elementos con class="app-version"
+        document.querySelectorAll('.app-version').forEach(el => {
+            el.textContent = APP_VERSION;
+        });
+
+        // Animar barras de progreso al cargar
+        document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+            const value = bar.getAttribute('data-progress') || '0';
+            bar.style.width = value + '%';
+        });
+    });
+
 </script>
 </body>
 
