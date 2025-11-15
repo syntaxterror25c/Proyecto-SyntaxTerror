@@ -15,6 +15,17 @@
             --border: #1f2937;
         }
 
+        body.light-theme {
+            --bg: #f3f4f6;
+            --bg-light: #ffffff;
+            --accent: #16a34a;
+            --accent-soft: rgba(22, 163, 74, 0.12);
+            --text: #0f172a;
+            --text-soft: #4b5563;
+            --border: #e5e7eb;
+            background: radial-gradient(circle at top, #e5e7eb, #ffffff);
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -24,6 +35,7 @@
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: radial-gradient(circle at top, #1f2937, #020617);
             color: var(--text);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         header {
@@ -51,15 +63,50 @@
             color: var(--text-soft);
         }
 
+        #logo-syntaxterror {
+            height: 90px;
+            margin-right: 20px;
+            filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.6));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        #logo-syntaxterror:hover {
+            transform: scale(1.05) rotate(-1deg);
+            filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.9));
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
         nav a {
             color: var(--text-soft);
             text-decoration: none;
-            margin-left: 1rem;
+            margin-left: 0.5rem;
             font-size: 0.9rem;
         }
 
         nav a:hover {
             color: var(--accent);
+        }
+
+        .theme-toggle {
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--bg-light);
+            color: var(--text-soft);
+            padding: 0.35rem 0.8rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent);
+            border-color: var(--accent);
         }
 
         main {
@@ -72,6 +119,7 @@
             display: grid;
             grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
             gap: 1.5rem;
+            align-items: flex-start;
         }
 
         @media (max-width: 900px) {
@@ -86,13 +134,12 @@
 
             nav {
                 width: 100%;
-                display: flex;
-                flex-wrap: wrap;
+                justify-content: flex-start;
             }
 
             nav a {
                 margin-left: 0;
-                margin-right: 1rem;
+                margin-right: 0.6rem;
                 margin-top: 0.3rem;
             }
         }
@@ -103,6 +150,7 @@
             border: 1px solid var(--border);
             padding: 1.2rem 1.3rem;
             box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+            background-color: var(--bg-light);
         }
 
         .card h2 {
@@ -265,19 +313,123 @@
             border: 1px solid var(--border);
         }
 
-        footer {
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--text-soft);
-            padding-bottom: 1rem;
+        /* Roadmap */
+        .progress-row {
+            margin-top: 0.6rem;
         }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.7);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #4ade80);
+            width: 0;
+            transition: width 0.8s ease-out;
+        }
+
+        footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-soft);
+    padding: 1.8rem 1rem 1.2rem;
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    font-family: monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+
+    /* Fondo cuadriculado tipo pixel */
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(34, 197, 94, 0.15) 0px,
+        rgba(34, 197, 94, 0.15) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    background-size: 16px 16px;
+    animation: pixelScroll 14s linear infinite;
+
+    /* Borde “gordo” estilo 8-bit */
+    border-top: 4px solid #000;
+    box-shadow: 0 -4px 0 #22c55e;
+}
+
+/* Borde negro alrededor del texto (rollo fuente 8-bit) */
+footer span,
+footer strong {
+    color: #e5e7eb;
+    text-shadow:
+        1px 1px 0 #000,
+       -1px 1px 0 #000,
+        1px -1px 0 #000,
+       -1px -1px 0 #000,
+        0 2px 0 #000,
+        2px 0 0 #000,
+       -2px 0 0 #000,
+        0 -2px 0 #000;
+}
+
+/* Corazón / icono pixel art en el centro */
+footer::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.9);
+    width: 6px;
+    height: 6px;
+    background: #22c55e;
+    image-rendering: pixelated;
+    box-shadow:
+        8px 0   #22c55e,
+        16px 0  #22c55e,
+        0   8px #22c55e,
+        8px 8px #22c55e,
+        16px 8px #22c55e,
+        24px 8px #22c55e,
+        0   16px #22c55e,
+        8px 16px #22c55e,
+        16px 16px #22c55e,
+        24px 16px #22c55e,
+        8px 24px #22c55e,
+        16px 24px #22c55e;
+    border-radius: 1px;
+    animation: pixelBounce 1.4s ease-in-out infinite alternate;
+}
+
+/* Scroll del fondo “pixelado” */
+@keyframes pixelScroll {
+    0%   { background-position: 0 0; }
+    100% { background-position: 64px 64px; }
+}
+
+/* Saltito del corazón pixel art */
+@keyframes pixelBounce {
+    0%  { transform: translateX(-50%) translateY(0) scale(0.9); }
+    100%{ transform: translateX(-50%) translateY(-6px) scale(0.9); }
+}
+
     </style>
 </head>
 <body>
 <header>
-    <img src="logo.png" 
-     alt="Logo SyntaxTerror"
-     style="height:90px; margin-right:20px;">
+    <img id="logo-syntaxterror" src="logo.png"
+         alt="Logo SyntaxTerror">
     <div>
         <h1>Bitácora del Proyecto equipo de trabajo "SyntaxTerror"</h1>
         <p>Seguimiento del desarrollo · 2º DAM</p>
@@ -286,8 +438,10 @@
         <a href="#resumen">Resumen</a>
         <a href="#bitacora">Bitácora</a>
         <a href="#tareas">Tareas</a>
+        <a href="#roadmap">Roadmap</a>
         <a href="#notas">Notas rápidas</a>
         <a href="#equipo">Equipo</a>
+        <button id="themeToggle" class="theme-toggle">🌙</button>
     </nav>
 </header>
 
@@ -312,6 +466,14 @@
                 Describir brevemente qué quieres conseguir con este proyecto: qué hace, para quién es
                 y qué problema soluciona.
             </p>
+
+            <p class="section-title">Objetivos del proyecto</p>
+            <ul class="small">
+                <li>Diseñar y desarrollar una aplicación funcional que integre interfaz, lógica de negocio y base de datos.</li>
+                <li>Aplicar buenas prácticas de programación, control de versiones (Git/GitHub) y trabajo en equipo.</li>
+                <li>Documentar el proyecto (memoria, manuales y bitácora) para facilitar su mantenimiento y evaluación.</li>
+                <li>Utilizar PostgreSQL y DBeaver para gestionar la base de datos en un entorno lo más cercano posible al real.</li>
+            </ul>
 
             <p class="section-title">Fases principales</p>
             <ul class="timeline">
@@ -379,6 +541,42 @@
                 <span class="pill">#base-de-datos</span>
                 <span class="pill">#documentación</span>
             </div>
+
+            <p class="section-title">Cronograma de trabajo</p>
+            <p class="small">
+                Cronograma orientativo por semanas. Actualiza las fechas según la planificación del módulo.
+            </p>
+            <table>
+                <thead>
+                <tr>
+                    <th>Semana</th>
+                    <th>Actividad</th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Análisis, definición del alcance y creación del repositorio.</td>
+                    <td>✅ Completado</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Diseño de BD (PostgreSQL) y conexión con DBeaver.</td>
+                    <td>⏳ En progreso</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Desarrollo de la lógica principal de la aplicación.</td>
+                    <td>🕒 Pendiente</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Pruebas, correcciones y documentación final.</td>
+                    <td>🕒 Pendiente</td>
+                </tr>
+                </tbody>
+            </table>
         </section>
     </div>
 
@@ -401,37 +599,24 @@
                 <div class="bitacora-detalle">
                     - Hemos creado el repositorio en GitHub y hemos subido esta página de bitácora.<br>
                     - Hemos definido las secciones básicas: resumen, bitácora, tareas y notas rápidas.<br>
-                    - He revisado que GitHub Pages funcione correctamente.
+                    - Hemos revisado que GitHub Pages funcione correctamente.
                 </div>
             </li>
-            
+
             <li class="bitacora-item">
                 <div class="bitacora-header">
                     <span class="bitacora-fecha">2025-11-15</span>
-                    <span class="bitacora-estado">Estado / Tema principal</span>
+                    <span class="bitacora-estado">Conexión BD en la nube</span>
                 </div>
-                <div class="bitacora-titulo">Conectar Base de datos</div>
+                <div class="bitacora-titulo">Conectar base de datos</div>
                 <div class="bitacora-detalle">
-                    - Investigación sobre opciones de nubes .<br>
-                    - Eligimos la de Railway ya que es la mejor opción gratuita para una base de datos.<br>
-                    - Añadimos la base de datos al proyecto.
-                    - Conectamos DBeaver con la nube.
-                    - Sincronizamos colaboradores con la base de datos.
+                    - Investigación sobre opciones de nube para la base de datos.<br>
+                    - Decidimos usar PostgreSQL gestionada y conectarla con DBeaver.<br>
+                    - Añadimos la base de datos al proyecto y probamos la conexión desde el cliente SQL.<br>
+                    - Dejamos preparado el acceso para colaboradores.
                 </div>
             </li>
-            <li class="bitacora-item">
-                <div class="bitacora-header">
-                    <span class="bitacora-fecha">AAAA-MM-DD</span>
-                    <span class="bitacora-estado">Estado / Tema principal</span>
-                </div>
-                <div class="bitacora-titulo">Título corto de lo que has hecho</div>
-                <div class="bitacora-detalle">
-                    - Punto 1 de lo que has trabajado hoy.<br>
-                    - Punto 2 (errores, pruebas, ideas).<br>
-                    - Punto 3 (pendientes para la próxima sesión).
-                </div>
-            </li>
-        
+
             <!-- PLANTILLA PARA COPIAR Y PEGAR -->
             <li class="bitacora-item">
                 <div class="bitacora-header">
@@ -448,12 +633,60 @@
         </ul>
     </section>
 
+    <!-- Roadmap -->
+    <section class="card" id="roadmap" style="margin-top:1.5rem;">
+        <h2>Roadmap del proyecto</h2>
+        <p class="small">
+            Roadmap general con el progreso aproximado de cada fase. Puedes ir actualizando los porcentajes.
+        </p>
+
+        <div class="progress-row">
+            <div class="progress-label">
+                <span>Fase 1 – Análisis y planificación</span>
+                <span>100%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" data-progress="100"></div>
+            </div>
+        </div>
+
+        <div class="progress-row">
+            <div class="progress-label">
+                <span>Fase 2 – Diseño (BD, interfaces)</span>
+                <span>40%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" data-progress="40"></div>
+            </div>
+        </div>
+
+        <div class="progress-row">
+            <div class="progress-label">
+                <span>Fase 3 – Desarrollo</span>
+                <span>10%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" data-progress="10"></div>
+            </div>
+        </div>
+
+        <div class="progress-row">
+            <div class="progress-label">
+                <span>Fase 4 – Documentación y entrega</span>
+                <span>0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" data-progress="0"></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Notas rápidas -->
     <section class="card" id="notas" style="margin-top:1.5rem;">
         <h2>Notas rápidas</h2>
         <p class="small">
-            Usa esta sección como “post-its”:  ideas para
-            mejorar el proyecto, etc.
+            Usa esta sección como “post-its”: ideas para
+            mejorar el proyecto, dudas o recordatorios.
         </p>
         <ul class="timeline">
             <li>
@@ -465,45 +698,81 @@
             <li>
                 <div class="timeline-title">[Duda] Integración con base de datos</div>
                 <div class="timeline-desc">
-                    Hemos configurado la base de datos en PostgreSQL y la gestionamos mediante DBeaver. 
+                    Hemos configurado la base de datos en PostgreSQL y la gestionamos mediante DBeaver.
                     Hoy hemos creado el esquema inicial, conectado el cliente SQL y comenzado a definir tablas y relaciones.
                 </div>
             </li>
             <li>
-                <div class="timeline-title">[Recordatorio] Revisar rubrica del profesor</div>
+                <div class="timeline-title">[Recordatorio] Revisar rúbrica del profesor</div>
                 <div class="timeline-desc">
                     Comprobar que la entrega cumple todos los puntos de RA y criterios de evaluación.
                 </div>
             </li>
         </ul>
-       
     </section>
-    <section class="card" id="equipo" style="margin-top:1.5rem;">
-    <h2>Quiénes somos</h2>
-    <p class="small">
-        Somos el equipo <strong>SyntaxTerror</strong>, responsables del desarrollo del proyecto intermodular de 2º DAM.
-        Nuestro objetivo es aplicar las competencias del ciclo para crear una solución útil, organizada y bien documentada.
-    </p>
 
-    <ul class="timeline">
-        <li>
-            <div class="timeline-title">Pedro Torres</div>
-            <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones· Documentación</div>
-        </li>
-        <li>
-            <div class="timeline-title">Manuel Sánchez</div>
-            <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones · Documentación</div>
-        </li>
-        <li>
-            <div class="timeline-title">Adrián Romera</div>
-            <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones · Documentación</div>
-        </li>
-    </ul>
-</section>
+    <!-- Equipo -->
+    <section class="card" id="equipo" style="margin-top:1.5rem;">
+        <h2>Quiénes somos</h2>
+        <p class="small">
+            Somos el equipo <strong>SyntaxTerror</strong>, responsables del desarrollo del proyecto intermodular de 2º DAM.
+            Nuestro objetivo es aplicar las competencias del ciclo para crear una solución útil, organizada y bien documentada.
+        </p>
+
+        <ul class="timeline">
+            <li>
+                <div class="timeline-title">Pedro Torres</div>
+                <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones · Documentación</div>
+            </li>
+            <li>
+                <div class="timeline-title">Manuel Sánchez</div>
+                <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones · Documentación</div>
+            </li>
+            <li>
+                <div class="timeline-title">Adrián Romera</div>
+                <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones · Documentación</div>
+            </li>
+        </ul>
+    </section>
 </main>
 
 <footer>
-    SyntaxTerror · <span style="color:#22c55e;">{ code · learn · build }</span> · 2025
+    SyntaxTerror · <span>{ code · learn · build }</span> · 2025
 </footer>
+
+<script>
+    // Tema oscuro / claro con localStorage
+    const body = document.body;
+    const toggleBtn = document.getElementById('themeToggle');
+
+    function applyStoredTheme() {
+        const stored = localStorage.getItem('syntaxterror-theme');
+        if (stored === 'light') {
+            body.classList.add('light-theme');
+            toggleBtn.textContent = '🌙';
+        } else {
+            body.classList.remove('light-theme');
+            toggleBtn.textContent = '☀️';
+        }
+    }
+
+    toggleBtn.addEventListener('click', () => {
+        body.classList.toggle('light-theme');
+        const isLight = body.classList.contains('light-theme');
+        localStorage.setItem('syntaxterror-theme', isLight ? 'light' : 'dark');
+        applyStoredTheme();
+    });
+
+    applyStoredTheme();
+
+    // Animar barras de progreso al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+            const value = bar.getAttribute('data-progress') || '0';
+            bar.style.width = value + '%';
+        });
+    });
+</script>
 </body>
+
 </html>
