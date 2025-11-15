@@ -1,11 +1,517 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Proyecto SyntaxTerror</title>
+    <title>Bitácora del Proyecto - 2º DAM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-light: #111827;
+            --accent: #22c55e;
+            --accent-soft: rgba(34, 197, 94, 0.1);
+            --text: #e5e7eb;
+            --text-soft: #9ca3af;
+            --border: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #1f2937, #020617);
+            color: var(--text);
+        }
+
+        header {
+            background: linear-gradient(to right, #22c55e, #22c55e55, transparent);
+            border-bottom: 1px solid var(--border);
+            padding: 1.2rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-soft);
+        }
+
+        nav a {
+            color: var(--text-soft);
+            text-decoration: none;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 1.5rem auto 2rem;
+            padding: 0 1rem 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                margin-left: 0;
+                margin-right: 1rem;
+                margin-top: 0.3rem;
+            }
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            padding: 1.2rem 1.3rem;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0.8rem 0 0.3rem;
+        }
+
+        .small {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+        }
+
+        .bitacora-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0;
+        }
+
+        .bitacora-item {
+            border-radius: 0.8rem;
+            border: 1px solid var(--border);
+            padding: 0.7rem 0.8rem;
+            margin-bottom: 0.6rem;
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        .bitacora-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            align-items: baseline;
+        }
+
+        .bitacora-fecha {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .bitacora-estado {
+            font-size: 0.75rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--text-soft);
+            white-space: nowrap;
+        }
+
+        .bitacora-titulo {
+            font-size: 0.92rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        .bitacora-detalle {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            margin-top: 0.2rem;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+        }
+
+        .pill {
+            font-size: 0.75rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            border: 1px dashed var(--border);
+            color: var(--text-soft);
+        }
+
+        .timeline {
+            list-style: none;
+            padding-left: 0;
+            border-left: 2px solid #1f2937;
+            margin: 0.5rem 0 0;
+        }
+
+        .timeline li {
+            margin: 0.7rem 0 0.7rem 0.8rem;
+            position: relative;
+            padding-left: 0.5rem;
+        }
+
+        .timeline li::before {
+            content: "";
+            position: absolute;
+            left: -1rem;
+            top: 0.35rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+        }
+
+        .timeline-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .timeline-desc {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 0.45rem 0.5rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.9);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) td {
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        code {
+            font-family: "JetBrains Mono", Consolas, monospace;
+            font-size: 0.8rem;
+            background: #020617;
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-soft);
+            padding-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bienvenido al Proyecto SyntaxTerror</h1>
-    <p>Página creada con GitHub Pages 🚀</p>
+<header>
+    <img src="logo.png" 
+     alt="Logo SyntaxTerror"
+     style="height:90px; margin-right:20px;">
+    <div>
+        <h1>Bitácora del Proyecto equipo de trabajo "SyntaxTerror"</h1>
+        <p>Seguimiento del desarrollo · 2º DAM</p>
+    </div>
+    <nav>
+        <a href="#resumen">Resumen</a>
+        <a href="#bitacora">Bitácora</a>
+        <a href="#tareas">Tareas</a>
+        <a href="#notas">Notas rápidas</a>
+        <a href="#equipo">Equipo</a>
+    </nav>
+</header>
+
+<main>
+    <div class="grid">
+        <!-- Columna izquierda -->
+        <section class="card" id="resumen">
+            <h2>
+                Resumen del proyecto
+                <span class="badge">WIP</span>
+            </h2>
+            <p class="small">
+                Aquí puedes ir resumiendo en qué consiste el proyecto, objetivos y estado general.
+                Modifica este texto directamente desde GitHub cuando avances.
+            </p>
+
+            <p class="section-title">Nombre del proyecto</p>
+            <p>Proyecto Intermodular 2º DAM – <strong>(pon aquí el nombre real)</strong></p>
+
+            <p class="section-title">Objetivo principal</p>
+            <p class="small">
+                Describir brevemente qué quieres conseguir con este proyecto: qué hace, para quién es
+                y qué problema soluciona.
+            </p>
+
+            <p class="section-title">Fases principales</p>
+            <ul class="timeline">
+                <li>
+                    <div class="timeline-title">Fase 1 – Análisis y planificación</div>
+                    <div class="timeline-desc">Definir requisitos, esquemas, tecnologías y planificación inicial.</div>
+                </li>
+                <li>
+                    <div class="timeline-title">Fase 2 – Diseño</div>
+                    <div class="timeline-desc">Diseño de BD, arquitectura, interfaces, navegación...</div>
+                </li>
+                <li>
+                    <div class="timeline-title">Fase 3 – Desarrollo</div>
+                    <div class="timeline-desc">Implementación de funcionalidades, pruebas y correcciones.</div>
+                </li>
+                <li>
+                    <div class="timeline-title">Fase 4 – Documentación y entrega</div>
+                    <div class="timeline-desc">Manuales, memoria técnica, preparación de la presentación final.</div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Columna derecha -->
+        <section class="card" id="tareas">
+            <h2>Panel de tareas</h2>
+            <p class="small">
+                Usa esta tabla como mini tablero Kanban. Edita estados directamente aquí.
+            </p>
+            <table>
+                <thead>
+                <tr>
+                    <th>Tarea</th>
+                    <th>Estado</th>
+                    <th>Prioridad</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Definir alcance del proyecto</td>
+                    <td>✅ Completado</td>
+                    <td>Alta</td>
+                </tr>
+                <tr>
+                    <td>Configurar repositorio en GitHub</td>
+                    <td>✅ Completado</td>
+                    <td>Media</td>
+                </tr>
+                <tr>
+                    <td>Crear estructura inicial de la app</td>
+                    <td>⏳ En progreso</td>
+                    <td>Alta</td>
+                </tr>
+                <tr>
+                    <td>Escribir documentación mínima</td>
+                    <td>🕒 Pendiente</td>
+                    <td>Media</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p class="section-title">Etiquetas recomendadas</p>
+            <div class="pill-row">
+                <span class="pill">#backend</span>
+                <span class="pill">#frontend</span>
+                <span class="pill">#base-de-datos</span>
+                <span class="pill">#documentación</span>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bitácora -->
+    <section class="card" id="bitacora" style="margin-top:1.5rem;">
+        <h2>Bitácora del proyecto</h2>
+        <p class="small">
+            Añade una entrada por día o por sesión de trabajo. Solo tienes que copiar y pegar uno de los bloques
+            de abajo y cambiar la fecha, el título y los detalles.
+        </p>
+
+        <ul class="bitacora-list">
+            <!-- EJEMPLO 1 -->
+            <li class="bitacora-item">
+                <div class="bitacora-header">
+                    <span class="bitacora-fecha">2025-11-14</span>
+                    <span class="bitacora-estado">Configuración inicial</span>
+                </div>
+                <div class="bitacora-titulo">Creación de repositorio y página de bitácora</div>
+                <div class="bitacora-detalle">
+                    - Hemos creado el repositorio en GitHub y hemos subido esta página de bitácora.<br>
+                    - Hemos definido las secciones básicas: resumen, bitácora, tareas y notas rápidas.<br>
+                    - He revisado que GitHub Pages funcione correctamente.
+                </div>
+            </li>
+            
+            <li class="bitacora-item">
+                <div class="bitacora-header">
+                    <span class="bitacora-fecha">2025-11-15</span>
+                    <span class="bitacora-estado">Estado / Tema principal</span>
+                </div>
+                <div class="bitacora-titulo">Conectar Base de datos</div>
+                <div class="bitacora-detalle">
+                    - Investigación sobre opciones de nubes .<br>
+                    - Eligimos la de Railway ya que es la mejor opción gratuita para una base de datos.<br>
+                    - Añadimos la base de datos al proyecto.
+                    - Sincronizamos colaboradores con la base de datos.
+                </div>
+            </li>
+            <li class="bitacora-item">
+                <div class="bitacora-header">
+                    <span class="bitacora-fecha">AAAA-MM-DD</span>
+                    <span class="bitacora-estado">Estado / Tema principal</span>
+                </div>
+                <div class="bitacora-titulo">Título corto de lo que has hecho</div>
+                <div class="bitacora-detalle">
+                    - Punto 1 de lo que has trabajado hoy.<br>
+                    - Punto 2 (errores, pruebas, ideas).<br>
+                    - Punto 3 (pendientes para la próxima sesión).
+                </div>
+            </li>
+        
+            <!-- PLANTILLA PARA COPIAR Y PEGAR -->
+            <li class="bitacora-item">
+                <div class="bitacora-header">
+                    <span class="bitacora-fecha">AAAA-MM-DD</span>
+                    <span class="bitacora-estado">Estado / Tema principal</span>
+                </div>
+                <div class="bitacora-titulo">Título corto de lo que has hecho</div>
+                <div class="bitacora-detalle">
+                    - Punto 1 de lo que has trabajado hoy.<br>
+                    - Punto 2 (errores, pruebas, ideas).<br>
+                    - Punto 3 (pendientes para la próxima sesión).
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Notas rápidas -->
+    <section class="card" id="notas" style="margin-top:1.5rem;">
+        <h2>Notas rápidas</h2>
+        <p class="small">
+            Usa esta sección como “post-its”: cosas que no quieres olvidar, dudas para el profesor, ideas para
+            mejorar el proyecto, etc.
+        </p>
+        <ul class="timeline">
+            <li>
+                <div class="timeline-title">[Idea] Mejorar el diseño de la interfaz</div>
+                <div class="timeline-desc">
+                    Probar una paleta más clara y añadir iconos pequeños para las acciones principales.
+                </div>
+            </li>
+            <li>
+                <div class="timeline-title">[Duda] Integración con base de datos</div>
+                <div class="timeline-desc">
+                    Decidir si usar PostgreSQL, MySQL u otra solución según requisitos del módulo.
+                </div>
+            </li>
+            <li>
+                <div class="timeline-title">[Recordatorio] Revisar rubrica del profesor</div>
+                <div class="timeline-desc">
+                    Comprobar que la entrega cumple todos los puntos de RA y criterios de evaluación.
+                </div>
+            </li>
+        </ul>
+
+        <p class="section-title">Tip rápido GitHub Pages</p>
+        <p class="small">
+            Para publicar esta página como web:
+        </p>
+        <ol class="small">
+            <li>Sube este archivo como <code>index.html</code> a tu repositorio.</li>
+            <li>En GitHub ve a <strong>Settings &gt; Pages</strong>.</li>
+            <li>En <em>Source</em> elige la rama (por ejemplo <code>main</code>) y la carpeta <code>/root</code>.</li>
+            <li>Guarda y, tras unos minutos, tendrás la web en la URL que te da GitHub.</li>
+        </ol>
+    </section>
+    <section class="card" id="equipo" style="margin-top:1.5rem;">
+    <h2>Quiénes somos</h2>
+    <p class="small">
+        Somos el equipo <strong>SyntaxTerror</strong>, responsables del desarrollo del proyecto intermodular de 2º DAM.
+        Nuestro objetivo es aplicar las competencias del ciclo para crear una solución útil, organizada y bien documentada.
+    </p>
+
+    <ul class="timeline">
+        <li>
+            <div class="timeline-title">Pedro Torres</div>
+            <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones· Documentación</div>
+        </li>
+        <li>
+            <div class="timeline-title">Manuel Sánchez</div>
+            <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones · Documentación</div>
+        </li>
+        <li>
+            <div class="timeline-title">Adrián Romera</div>
+            <div class="timeline-desc">Desarrollador · Coordinación técnica · Gestión del proyecto · Control de versiones · Documentación</div>
+        </li>
+    </ul>
+</section>
+</main>
+
+<footer>
+    Bitácora del proyecto · Edita este archivo directamente desde GitHub para mantenerlo siempre al día.
+</footer>
 </body>
 </html>
