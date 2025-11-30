@@ -1,9 +1,6 @@
 
-|**Planning**|
+|**RECOPILACIÓN DE INFORMACIÓN PARA EL PROYECTO**|
 | :-: |
-
-
-**RECOPILACIÓN DE INFORMACIÓN PARA EL PROYECTO**
 
 1) **Definición del alcance del proyecto**
 
@@ -40,7 +37,10 @@
 
 ---
 
-**ESTUDIO DE VIABILIDAD TÉCNICA**
+|**ESTUDIO DE VIABILIDAD TÉCNICA**|
+| :-: |
+
+
 
 1) **Requisitos técnicos del proyecto***
   
@@ -148,75 +148,63 @@
         - Mantenibilidad (control de versiones Git)
         - Sistema de copias de seguridad
 
-10) **Análisis DAFO**
+7) **Análisis DAFO**
+  
    **Fortalezas y debilidades del proyecto**
 
-|**Debilidades (D)**|**Amenazas (A)**|
-| :- | :- |
-|Complejidad del *Backend* (lógica para evitar el *overbooking* en tiempo real)|Limitación de tiempo finalización|
-|Pruebas y documentación|Caída del servidor cloud|
-|Integración multiplataforma (complejidad escritorio+Android)|Ciberseguridad y RGPD|
-|Curva de aprendizaje (p.ej. pasarela de pagos)|Cambios en versiones que puedan romper estabilidad|
-|**Fortalezas**|**Oportunidades**|
-|Viabilidad técnica (tecnologías maduras y estables)|Demanda de APPs para *self-service* |
-|Arquitectura sólida  (separación *frontend*, *backend*, API) BBDD escalable|Mercado en crecimiento (nicho sistemas de gestión de recursos)  SGR|
-|Aplicación multiplataforma|Mucha documentación accesible|
+   |**Debilidades (D)**|**Amenazas (A)**|
+   | :- | :- |
+   |Complejidad del *Backend* (lógica para evitar el *overbooking* en tiempo real)|Limitación de tiempo finalización|
+   |Pruebas y documentación|Caída del servidor cloud|
+   |Integración multiplataforma (complejidad escritorio+Android)|Ciberseguridad y RGPD|
+   |Curva de aprendizaje (p.ej. pasarela de pagos)|Cambios en versiones que puedan romper estabilidad|
+   |**Fortalezas**|**Oportunidades**|
+   |Viabilidad técnica (tecnologías maduras y estables)|Demanda de APPs para *self-service* |
+   |Arquitectura sólida  (separación *frontend*, *backend*, API) BBDD escalable|Mercado en crecimiento (nicho sistemas de gestión de recursos)  SGR|
+   |Aplicación multiplataforma|Mucha documentación accesible|
 
+---
 
+|**IDENTIFICACIÓN DE FASES Y ESTRUCTURA DEL PROYECTO**|
+| :-: |
 
-**RA3. Planifica la ejecución del proyecto, determinando el plan de intervención y la documentación asociada**
+1) **Inicio**
 
-a) Se han secuenciado las actividades, ordenándolas en función de las necesidades de desarrollo.
-
-b) Se han determinado los recursos y la logística necesarias para cada actividad.
-
-c) Se han identificado las necesidades de permisos y autorizaciones, para llevar a cabo las actividades.
-
-d) Se han determinado los procedimientos de actuación o ejecución de las actividades.
-
-e) Se han identificado los riesgos inherentes a la ejecución, definiendo el plan de prevención de riesgos y los medios y equipos necesarios.
-
-f) Se ha planificado la asignación de recursos materiales y humanos y los tiempos de ejecución
-
-g) Se ha hecho la valoración económica que da respuesta a las condiciones de su puesta en práctica.
-
-h) Se ha definido y elaborado la documentación necesaria para la ejecución
-
-**3. Identificación de fases y estructura del proyecto (Entornos de Desarrollo)**
-
-**3.1. Inicio**
    **Definición del alcance y objetivos.**
 
-      El objetivo del proyecto es desarrollar una aplicación multiplataforma que sirva para la reserva de espacios o salas para distintos tipos de negocios, aunque de momento se entregará una adaptación para gimnasios.
+   El objetivo del proyecto es desarrollar una aplicación multiplataforma que sirva para la reserva de espacios o salas para distintos tipos de negocios, aunque de momento se entregará una adaptación para gimnasios.
 
-      El usuario podrá ver qué espacios están libres u ocupados, elegir el espacio a reservar y el intervalo de tiempo. (Además podrá pagar directamente desde la app).
+   El usuario podrá ver qué espacios están libres u ocupados, elegir el espacio a reservar y el intervalo de tiempo. (Además podrá pagar directamente desde la app).
 
    **Elaboración del acta de constitución del proyecto.**
 
-      Vamos a usar Github para alojar el acta de constitución del proyecto, que quedará también reflejada en la web, puesto que en ella se identifican los integrantes del equipo, los recursos que vamos a utilizar, los plazos del desarrollo y el propósito general del proyecto.
+   Vamos a usar Github para alojar el acta de constitución del proyecto, que quedará también reflejada en la web, puesto que en ella se identifican los integrantes del equipo, los recursos que vamos a utilizar, los plazos del desarrollo y el propósito general del proyecto.
 
-**3.2 Planificación**
+2) **Planificación**
+
    Cronograma. Secuenciación de actividades. Ordenar las actividades según la lógica del proyecto y las dependencias entre ellas.
 
-      ![](Aspose.Words.787f71d4-7386-47f8-94c7-6f312d5cd1e9.001.png)
+   ![cronograma](https://github.com/user-attachments/assets/22a2b6e3-8e35-43df-a6b9-89c724e7e648)
 
-**3.3 Ejecución**
+3) **Ejecución**
+
    **Desarrollo del producto o servicio.**
 
-      Durante la fase de ejecución se llevará a cabo el desarrollo completo del producto, siguiendo la planificación establecida en fases previas. Esto incluye la implementación de la lógica de negocio, el diseño y construcción de la interfaz utilizando JavaFX, la conexión con la base de datos PostgreSQL y la integración progresiva de todas las funcionalidades del sistema.
+   Durante la fase de ejecución se llevará a cabo el desarrollo completo del producto, siguiendo la planificación establecida en fases previas. Esto incluye la implementación de la lógica de negocio, el diseño y construcción de la interfaz utilizando JavaFX, la conexión con la base de datos PostgreSQL y la integración progresiva de todas las funcionalidades del sistema.
 
-      El desarrollo se realizará de manera incremental, siguiendo una estructura de entregas periódicas que permitirán evaluar el avance, detectar errores y aplicar correcciones sin comprometer los plazos del proyecto, actualizando el repositorio Github.
+   El desarrollo se realizará de manera incremental, siguiendo una estructura de entregas periódicas que permitirán evaluar el avance, detectar errores y aplicar correcciones sin comprometer los plazos del proyecto, actualizando el repositorio Github.
 
    **Coordinación del equipo.**
 
-      La coordinación entre los miembros del equipo será continua durante toda la fase de ejecución. Se emplearán reuniones periódicas para revisar el progreso, redistribuir tareas cuando sea necesario y resolver incidencias técnicas de forma conjunta.
+   La coordinación entre los miembros del equipo será continua durante toda la fase de ejecución. Se emplearán reuniones periódicas para revisar el progreso, redistribuir tareas cuando sea necesario y resolver incidencias técnicas de forma conjunta.
 
-\
-      Al haber 6 roles y ser 3 personas, cada uno desarrollará dos roles durante aproximadamente 3 semanas. Se rotará cada semana 1 de esos roles según madurez de conocimientos en cada momento. El ajuste de días se hará de forma dinámica. 
+   Al haber 6 roles y ser 3 personas, cada uno desarrollará dos roles durante aproximadamente 3 semanas. Se rotará cada semana 1 de esos roles según madurez de conocimientos en cada momento. El ajuste de días se hará de forma dinámica. 
 
-**3.4 Control y seguimiento**
-   **Gestión de cambios **
-      Utilizaremos GitHub para control de versiones, gestión de cambios y tareas. Se establecerá un flujo de trabajo basado en ramas, que incluirá al menos:
+4) **Control y seguimiento**
+
+   **Gestión de cambios**
+
+   Utilizaremos GitHub para control de versiones, gestión de cambios y tareas. Se establecerá un flujo de trabajo basado en ramas, que incluirá al menos:
 
     - **Principal**: Contiene la versión estable del proyecto.
     - **Desarrollo**: Funcionalidades nuevas para probar cambios antes de pasarlos a la rama principal.
@@ -227,21 +215,20 @@ h) Se ha definido y elaborado la documentación necesaria para la ejecución
       - Manuales
     - **Extras**: Ideas sobre funcionalidades que mejoren la aplicación
 
-**3.4 Cierre**
+5) **Cierre**
+
    **Entrega del producto final.**
       - Documentación del proyecto: acta de constitución, plan de proyecto, manuales técnicos, manuales de usuario, etc.
-
-         Al finalizar el proyecto, se hará entrega del producto completo, al igual que de su documentación, manuales de usuario, bitácora etc
+        Al finalizar el proyecto, se hará entrega del producto completo, al igual que de su documentación, manuales de usuario, bitácora etc
 
       - Evaluación y lecciones aprendidas.
-
-         Se realizará un análisis del desarrollo del proyecto, evaluando:
-
-        - El cumplimiento de los objetivos y requisitos definidos.
-        - La calidad técnica del producto final.
-        - La eficacia del trabajo en equipo y la coordinación de roles.
-        - Las dificultades encontradas y las estrategias utilizadas para resolverlas.
-        - Las lecciones aprendidas, que servirán para mejorar futuros proyectos y prácticas de desarrollo colaborativo.
+        Se realizará un análisis del desarrollo del proyecto, evaluando:
+         
+         - El cumplimiento de los objetivos y requisitos definidos.
+         - La calidad técnica del producto final.
+         - La eficacia del trabajo en equipo y la coordinación de roles.
+         - Las dificultades encontradas y las estrategias utilizadas para resolverlas.
+         - Las lecciones aprendidas, que servirán para mejorar futuros proyectos y prácticas de desarrollo colaborativo.
 
       - Presentación del proyecto cuando finalicen los exámenes.
 
