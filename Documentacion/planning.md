@@ -186,7 +186,10 @@
 
    ![cronograma](https://github.com/user-attachments/assets/22a2b6e3-8e35-43df-a6b9-89c724e7e648)
 
-3) **Ejecución**
+   <img width="1485" height="897" alt="gantt" src="https://github.com/user-attachments/assets/07d14b42-684a-4239-971e-3d38cee2eeb5" />
+
+
+4) **Ejecución**
 
    **Desarrollo del producto o servicio.**
 
@@ -200,7 +203,7 @@
 
    Al haber 6 roles y ser 3 personas, cada uno desarrollará dos roles durante aproximadamente 3 semanas. Se rotará cada semana 1 de esos roles según madurez de conocimientos en cada momento. El ajuste de días se hará de forma dinámica. 
 
-4) **Control y seguimiento**
+5) **Control y seguimiento**
 
    **Gestión de cambios**
 
@@ -215,7 +218,7 @@
       - Manuales
     - **Extras**: Ideas sobre funcionalidades que mejoren la aplicación
 
-5) **Cierre**
+6) **Cierre**
 
    **Entrega del producto final.**
       - Documentación del proyecto: acta de constitución, plan de proyecto, manuales técnicos, manuales de usuario, etc.
