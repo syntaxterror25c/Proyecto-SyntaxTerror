@@ -1,2 +1,3 @@
 
-<img width="1486" height="886" alt="gantt" src="https://github.com/user-attachments/assets/28472caa-044f-47f0-9d71-1051d49c4340" />
+<img width="1485" height="897" alt="gantt" src="https://github.com/user-attachments/assets/6fc171da-487c-49c6-9aea-28deebe7cda0" />
+
