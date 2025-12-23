@@ -713,6 +713,32 @@ footer::before {
         </p>
 
         <ul class="bitacora-list">
+            <li class="bitacora-item">
+  <div class="bitacora-header">
+    <span class="bitacora-fecha">2025-12-23</span>
+    <span class="bitacora-estado">Diseño BD</span>
+  </div>
+
+  <div class="bitacora-titulo">Diseño ER y UML de la base de datos (salas, clases, horarios y reservas)</div>
+
+  <div class="bitacora-detalle">
+    - Se ha elaborado el <strong>Diagrama Entidad-Relación (ER)</strong> para definir entidades, atributos y relaciones.<br>
+    - Se ha construido el <strong>modelo UML</strong> para representar las clases/tablas y sus asociaciones.<br>
+    - Objetivo: dejar clara la estructura antes de pasar a <strong>PostgreSQL</strong> y asegurar integridad (claves y relaciones).<br><br>
+
+    <strong>Diagrama ER:</strong><br>
+    <img src="diagrama/DISEÑO_ER" alt="Diagrama ER de la base de datos" style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;"><br><br>
+
+    <strong>Diagrama UML:</strong><br>
+    <img src="diagrama/DISEÑO_UML" alt="Diagrama UML del modelo de datos" style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;"><br><br>
+
+    <strong>Explicación breve:</strong><br>
+    El modelo se basa en: <em>TipoSala → Sala → Clase</em>, donde una sala pertenece a un tipo y en esa sala se imparten clases.
+    Cada clase usa un horario (inicio/fin) y los usuarios pueden generar reservas asociadas a una clase. Además, el aforo/plazas máximas
+    limitan el número de reservas permitidas por sesión.
+  </div>
+</li>
+
             <!-- EJEMPLO 1 -->
             <li class="bitacora-item">
                 <div class="bitacora-header">
