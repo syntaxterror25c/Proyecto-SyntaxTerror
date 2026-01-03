@@ -1,6 +1,11 @@
--- ==========================================
--- SCRIPT GESTIÓN DE GIMNASIO PARA POSTGRESQL
--- ==========================================
+CREATE DATABASE gestion_gimnasio;
+
+-- Conectarse a la base de datos con psql o pgAdmin
+ \c gestion_gimnasio;
+
+-- Crear un esquema 
+CREATE SCHEMA IF NOT EXISTS gym;
+SET search_path TO gym;
 
 -- Creación de tipos ENUM 
 -- ------------------------------------------------------
@@ -13,35 +18,36 @@ CREATE TYPE tipo_sala AS ENUM ('CLASES', 'MAQUINAS');
 -- ------------------------------------------------------
 
 CREATE TABLE usuarios (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
     telefono VARCHAR(20) NOT NULL,
     fecha_alta DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE plan_precios (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nombre_plan VARCHAR(50) NOT NULL,
     precio_mensual DECIMAL(10, 2) NOT NULL,
     limite_actividades INT NOT NULL DEFAULT 1
 );
 
 CREATE TABLE tipo_actividad (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL UNIQUE,
     descripcion TEXT
 );
 
 CREATE TABLE salas (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     capacidad_maxima INT NOT NULL,
     tipo tipo_sala NOT NULL
 );
 
 CREATE TABLE profesores (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     telefono VARCHAR(20) NOT NULL,
     especialidad VARCHAR(100)
@@ -51,7 +57,7 @@ CREATE TABLE profesores (
 -- ------------------------------------------------------
 
 CREATE TABLE suscripciones (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_usuario INT NOT NULL,
     id_plan INT NOT NULL,
     fecha_inicio DATE NOT NULL,
@@ -74,7 +80,7 @@ CREATE TABLE seleccion_actividad (
 -- ------------------------------------------------------
 
 CREATE TABLE actividad_configurada (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nombre_clase VARCHAR(100) NOT NULL,
     dia_semana INT NOT NULL CHECK (dia_semana BETWEEN 1 AND 7),
     hora_inicio TIME NOT NULL,
@@ -88,7 +94,7 @@ CREATE TABLE actividad_configurada (
 );
 
 CREATE TABLE sesiones (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     fecha DATE NOT NULL,
     id_actividad_configurada INT NOT NULL,
     id_profesor_sustituto INT DEFAULT NULL,
@@ -102,7 +108,7 @@ CREATE TABLE sesiones (
 -- ------------------------------------------------------
 
 CREATE TABLE reservas (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_usuario INT NOT NULL,
     id_sesion INT NOT NULL,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -110,7 +116,3 @@ CREATE TABLE reservas (
     CONSTRAINT fk_res_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     CONSTRAINT fk_res_sesion FOREIGN KEY (id_sesion) REFERENCES sesiones(id)
 );
-
--- Índices para optimizar las consultas de validación de acceso
-CREATE INDEX idx_sesion_fecha ON sesiones(fecha);
-CREATE INDEX idx_sub_usuario_periodo ON suscripciones(id_usuario, fecha_inicio, fecha_fin) WHERE (estado = 'ACTIVA');
