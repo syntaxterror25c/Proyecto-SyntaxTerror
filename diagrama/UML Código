@@ -1,0 +1,126 @@
+
+
+@startuml
+skinparam monochrome true
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+header Sistema de Gestión de Gimnasio - Modelo Unificado Profesional
+footer Gestión de Horarios Fijos + Planes por Cupo de Actividades
+
+class Usuario {
+  - id : int*
+  - nombre : string
+  - email : string
+  - telefono : string
+  - fecha_alta : date
+  --
+  + realizarReserva(sesionId) : boolean
+  + cancelarReserva(reservaId) : void
+  + obtenerSuscripcionActiva() : Suscripcion
+}
+
+class Plan_Precios {
+  - id : int*
+  - nombre_plan : string
+  - precio_mensual : float
+  - limite_actividades : int (Ej: 1, 2, 5)
+  --
+  + obtenerDescripcion() : string
+}
+
+class Suscripcion {
+  - id : int*
+  - id_usuario : int (FK)
+  - id_plan : int (FK)
+  - fecha_inicio : date
+  - fecha_fin : date
+  - estado : enum (ACTIVA, EXPIRADA, CANCELADA)
+  --
+  + esValida() : boolean
+  + quedanCuposDeActividad() : boolean
+}
+
+class Seleccion_Actividad {
+  - id_suscripcion : int (FK)
+  - id_tipo_actividad : int (FK)
+  --
+  note "Registra qué actividades eligió el usuario\nsegún el límite de su plan." as N1
+}
+
+class Tipo_Actividad {
+  - id : int*
+  - nombre : string (Ej: Yoga, Zumba)
+  - descripcion : string
+  --
+}
+
+class Actividad_Configurada {
+  - id : int*
+  - nombre_clase : string
+  - dia_semana : int (1-7)
+  - hora_inicio : time
+  - duracion : int (minutos)
+  - id_tipo_actividad : int (FK)
+  - id_sala : int (FK)
+  - id_profesor_fijo : int (FK)
+  --
+  + calcularHoraFin() : time
+  + generarSesion(fecha) : Sesion
+}
+
+class Sala {
+  - id : int*
+  - nombre : string
+  - capacidad_maxima : int
+  - tipo : enum (CLASES, MAQUINAS)
+  --
+}
+
+class Profesor {
+  - id : int*
+  - nombre : string
+  - telefono : string
+  - especialidad : string
+  --
+}
+
+class Sesion {
+  - id : int*
+  - fecha : date
+  - id_actividad_configurada : int (FK)
+  - id_profesor_sustituto : int (FK, null)
+  - estado : enum (ACTIVA, CANCELADA, FINALIZADA)
+  - aforo_especifico : int (null usa sala.capacidad)
+  --
+  + calcularPlazasLibres() : int
+  + cancelarConNotificacion() : void
+}
+
+class Reserva {
+  - id : int*
+  - id_usuario : int (FK)
+  - id_sesion : int (FK)
+  - fecha_registro : datetime
+  - estado : enum (CONFIRMADA, CANCELADA, AUSENTE)
+  --
+  + validarAforo() : boolean
+  + validarAccesoPlan() : boolean
+}
+
+' RELACIONES
+Usuario "1" -- "*" Suscripcion
+Plan_Precios "1" -- "*" Suscripcion
+Suscripcion "1" -- "*" Seleccion_Actividad
+Tipo_Actividad "1" -- "*" Seleccion_Actividad
+
+Tipo_Actividad "1" -- "*" Actividad_Configurada
+Sala "1" -- "*" Actividad_Configurada
+Profesor "1" -- "*" Actividad_Configurada : "titular"
+Actividad_Configurada "1" -- "*" Sesion : "genera"
+Profesor "0..1" -- "*" Sesion : "sustituye"
+
+Usuario "1" -- "*" Reserva
+Sesion "1" -- "*" Reserva
+
+@enduml
