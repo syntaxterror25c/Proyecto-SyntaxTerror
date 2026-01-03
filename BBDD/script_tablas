@@ -1,0 +1,116 @@
+-- ==========================================
+-- SCRIPT GESTIÓN DE GIMNASIO PARA POSTGRESQL
+-- ==========================================
+
+-- 0. Creación de tipos ENUM 
+-- ------------------------------------------------------
+CREATE TYPE estado_suscripcion AS ENUM ('ACTIVA', 'EXPIRADA', 'CANCELADA');
+CREATE TYPE estado_sesion AS ENUM ('ACTIVA', 'CANCELADA', 'FINALIZADA');
+CREATE TYPE estado_reserva AS ENUM ('CONFIRMADA', 'CANCELADA', 'AUSENTE');
+CREATE TYPE tipo_sala AS ENUM ('CLASES', 'MAQUINAS');
+
+-- 1. Tablas Maestras
+-- ------------------------------------------------------
+
+CREATE TABLE usuarios (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    telefono VARCHAR(20) NOT NULL,
+    fecha_alta DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE plan_precios (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre_plan VARCHAR(50) NOT NULL,
+    precio_mensual DECIMAL(10, 2) NOT NULL,
+    limite_actividades INT NOT NULL DEFAULT 1
+);
+
+CREATE TABLE tipo_actividad (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE,
+    descripcion TEXT
+);
+
+CREATE TABLE salas (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    capacidad_maxima INT NOT NULL,
+    tipo tipo_sala NOT NULL
+);
+
+CREATE TABLE profesores (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20),
+    especialidad VARCHAR(100)
+);
+
+-- 2. Gestión de Suscripciones y Cupos
+-- ------------------------------------------------------
+
+CREATE TABLE suscripciones (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_plan INT NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    estado estado_suscripcion DEFAULT 'ACTIVA',
+    CONSTRAINT fk_sub_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+    CONSTRAINT fk_sub_plan FOREIGN KEY (id_plan) REFERENCES plan_precios(id)
+);
+
+-- Registro de actividades específicas elegidas por el usuario
+CREATE TABLE seleccion_actividad (
+    id_suscripcion INT NOT NULL,
+    id_tipo_actividad INT NOT NULL,
+    PRIMARY KEY (id_suscripcion, id_tipo_actividad),
+    CONSTRAINT fk_sel_sub FOREIGN KEY (id_suscripcion) REFERENCES suscripciones(id) ON DELETE CASCADE,
+    CONSTRAINT fk_sel_tipo FOREIGN KEY (id_tipo_actividad) REFERENCES tipo_actividad(id)
+);
+
+-- 3. Configuración de Horarios y Sesiones
+-- ------------------------------------------------------
+
+CREATE TABLE actividad_configurada (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre_clase VARCHAR(100) NOT NULL,
+    dia_semana INT NOT NULL CHECK (dia_semana BETWEEN 1 AND 7),
+    hora_inicio TIME NOT NULL,
+    duracion INT NOT NULL, -- Minutos
+    id_tipo_actividad INT NOT NULL,
+    id_sala INT NOT NULL,
+    id_profesor_fijo INT NOT NULL,
+    CONSTRAINT fk_conf_tipo FOREIGN KEY (id_tipo_actividad) REFERENCES tipo_actividad(id),
+    CONSTRAINT fk_conf_sala FOREIGN KEY (id_sala) REFERENCES salas(id),
+    CONSTRAINT fk_conf_prof FOREIGN KEY (id_profesor_fijo) REFERENCES profesores(id)
+);
+
+CREATE TABLE sesiones (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    fecha DATE NOT NULL,
+    id_actividad_configurada INT NOT NULL,
+    id_profesor_sustituto INT DEFAULT NULL,
+    estado estado_sesion DEFAULT 'ACTIVA',
+    aforo_especifico INT DEFAULT NULL,
+    CONSTRAINT fk_sesion_conf FOREIGN KEY (id_actividad_configurada) REFERENCES actividad_configurada(id),
+    CONSTRAINT fk_sesion_sustituto FOREIGN KEY (id_profesor_sustituto) REFERENCES profesores(id)
+);
+
+-- 4. Reservas
+-- ------------------------------------------------------
+
+CREATE TABLE reservas (
+    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_sesion INT NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado estado_reserva DEFAULT 'CONFIRMADA',
+    CONSTRAINT fk_res_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+    CONSTRAINT fk_res_sesion FOREIGN KEY (id_sesion) REFERENCES sesiones(id)
+);
+
+-- Índices para optimizar las consultas de validación de acceso
+CREATE INDEX idx_sesion_fecha ON sesiones(fecha);
+CREATE INDEX idx_sub_usuario_periodo ON suscripciones(id_usuario, fecha_inicio, fecha_fin) WHERE (estado = 'ACTIVA');
