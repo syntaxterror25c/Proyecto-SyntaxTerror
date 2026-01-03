@@ -2,14 +2,14 @@
 -- SCRIPT GESTIÓN DE GIMNASIO PARA POSTGRESQL
 -- ==========================================
 
--- 0. Creación de tipos ENUM 
+-- Creación de tipos ENUM 
 -- ------------------------------------------------------
 CREATE TYPE estado_suscripcion AS ENUM ('ACTIVA', 'EXPIRADA', 'CANCELADA');
 CREATE TYPE estado_sesion AS ENUM ('ACTIVA', 'CANCELADA', 'FINALIZADA');
 CREATE TYPE estado_reserva AS ENUM ('CONFIRMADA', 'CANCELADA', 'AUSENTE');
 CREATE TYPE tipo_sala AS ENUM ('CLASES', 'MAQUINAS');
 
--- 1. Tablas Maestras
+-- Tablas Maestras
 -- ------------------------------------------------------
 
 CREATE TABLE usuarios (
@@ -47,7 +47,7 @@ CREATE TABLE profesores (
     especialidad VARCHAR(100)
 );
 
--- 2. Gestión de Suscripciones y Cupos
+-- Gestión de Suscripciones y Cupos
 -- ------------------------------------------------------
 
 CREATE TABLE suscripciones (
@@ -70,7 +70,7 @@ CREATE TABLE seleccion_actividad (
     CONSTRAINT fk_sel_tipo FOREIGN KEY (id_tipo_actividad) REFERENCES tipo_actividad(id)
 );
 
--- 3. Configuración de Horarios y Sesiones
+-- Configuración de Horarios y Sesiones
 -- ------------------------------------------------------
 
 CREATE TABLE actividad_configurada (
@@ -98,7 +98,7 @@ CREATE TABLE sesiones (
     CONSTRAINT fk_sesion_sustituto FOREIGN KEY (id_profesor_sustituto) REFERENCES profesores(id)
 );
 
--- 4. Reservas
+-- Reservas
 -- ------------------------------------------------------
 
 CREATE TABLE reservas (
