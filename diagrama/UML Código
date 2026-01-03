@@ -14,10 +14,12 @@ class Usuario {
   - email : string
   - telefono : string
   - fecha_alta : date
+  - password_hash : string
   --
   + realizarReserva(sesionId) : boolean
   + cancelarReserva(reservaId) : void
   + obtenerSuscripcionActiva() : Suscripcion
+  + autenticar(email, password) : boolean
 }
 
 class Plan_Precios {
