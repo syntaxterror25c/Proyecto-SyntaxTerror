@@ -1,0 +1,13 @@
+.idea/
+.gradle/
+build/
+
+/codigo/.idea/
+codigo/.gradle/
+codigo/build/
+build/
+*.log
+*.iml
+
+local.properties
+
