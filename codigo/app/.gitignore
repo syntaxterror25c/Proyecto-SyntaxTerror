@@ -1,6 +1,8 @@
 build/
+out/
 .gradle
 local.properties
-*.log*.iml
+*.log
+*.iml
 .idea/
 
