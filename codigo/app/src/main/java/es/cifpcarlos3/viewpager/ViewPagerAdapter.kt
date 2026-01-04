@@ -1,9 +1,9 @@
-package com.cifpcarlos3.tarea1y2.viewpager
+package es.cifpcarlos3.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.cifpcarlos3.tarea1y2.fragments.FavFragment
-import com.cifpcarlos3.tarea1y2.fragments.ListFragment
+import es.cifpcarlos3.fragments.FavFragment
+import es.cifpcarlos3.fragments.ListFragment
 
 // Adaptador del ViewPager2.
 // Devuelve el fragment correcto según la pestaña (posición).

@@ -1,5 +1,5 @@
-package com.cifpcarlos3.tarea1y2.recycler
-import com.cifpcarlos3.tarea1y2.R
+package es.cifpcarlos3.recycler
+import es.cifpcarlos3.R
 // Data class que representa cada serie de la lista.
 //
 // IMPORTANTE: aquí dejo los sonidos como PARÁMETROS OPCIONALES,

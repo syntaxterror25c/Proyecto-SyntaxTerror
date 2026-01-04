@@ -1,12 +1,12 @@
-package com.cifpcarlos3.tarea1y2.fragments
+package es.cifpcarlos3.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.cifpcarlos3.tarea1y2.databinding.FragmentTabBinding
-import com.cifpcarlos3.tarea1y2.viewpager.ViewPagerAdapter
+import es.cifpcarlos3.databinding.FragmentTabBinding
+import es.cifpcarlos3.viewpager.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 // Fragment que contiene las dos pestañas: "Lista" y "Favoritos".

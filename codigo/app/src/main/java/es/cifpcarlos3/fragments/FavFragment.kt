@@ -1,4 +1,4 @@
-package com.cifpcarlos3.tarea1y2.fragments
+package es.cifpcarlos3.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cifpcarlos3.tarea1y2.databinding.FragmentFavBinding
-import com.cifpcarlos3.tarea1y2.recycler.SerieAdapter
-import com.cifpcarlos3.tarea1y2.viewmodels.SerieViewModel
+import es.cifpcarlos3.databinding.FragmentFavBinding
+import es.cifpcarlos3.recycler.SerieAdapter
+import es.cifpcarlos3.viewmodels.SerieViewModel
 
 /**
  * Fragment que muestra SOLO las series FAVORITAS.

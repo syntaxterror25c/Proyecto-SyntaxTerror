@@ -1,4 +1,4 @@
-package com.cifpcarlos3.tarea1y2.fragments
+package es.cifpcarlos3.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.cifpcarlos3.tarea1y2.R
-import com.cifpcarlos3.tarea1y2.databinding.FragmentLoginBinding
-import com.cifpcarlos3.tarea1y2.viewmodels.LoginViewModel
+import es.cifpcarlos3.R
+import es.cifpcarlos3.databinding.FragmentLoginBinding
+import es.cifpcarlos3.viewmodels.LoginViewModel
 
 // Este fragment representa la pantalla de LOGIN de la tarea.
 // Aquí es donde el usuario introduce su usuario y contraseña

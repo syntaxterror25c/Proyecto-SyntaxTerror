@@ -6,7 +6,7 @@
 
     <fragment
             android:id="@+id/loginFragment"
-            android:name="com.cifpcarlos3.tarea1y2.fragments.LoginFragment"
+            android:name="es.cifpcarlos3.fragments.LoginFragment"
             android:label="Login"
             tools:layout="@layout/fragment_login">
 
@@ -21,7 +21,7 @@
 
     <fragment
             android:id="@+id/registerFragment"
-            android:name="com.cifpcarlos3.tarea1y2.fragments.RegisterFragment"
+            android:name="es.cifpcarlos3.fragments.RegisterFragment"
             android:label="Register"
             tools:layout="@layout/fragment_register">
 
@@ -32,7 +32,7 @@
 
     <fragment
             android:id="@+id/tabFragment"
-            android:name="com.cifpcarlos3.tarea1y2.fragments.TabFragment"
+            android:name="es.cifpcarlos3.fragments.TabFragment"
             android:label="Tabs"
             tools:layout="@layout/fragment_tab" />
 </navigation>

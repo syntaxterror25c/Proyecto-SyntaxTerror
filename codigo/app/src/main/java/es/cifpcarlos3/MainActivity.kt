@@ -1,9 +1,9 @@
-package com.cifpcarlos3.tarea1y2           // <-- ESTE ES EL BUENO
+package es.cifpcarlos3           // <-- ESTE ES EL BUENO
 // ← ajusta si tu paquete es distinto
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.cifpcarlos3.tarea1y2.R
+
 
 // Actividad principal de la tarea.
 // Solo se encarga de inflar el layout activity_main.xml,

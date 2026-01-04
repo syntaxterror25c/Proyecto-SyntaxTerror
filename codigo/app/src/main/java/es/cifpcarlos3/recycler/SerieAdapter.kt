@@ -1,4 +1,4 @@
-package com.cifpcarlos3.tarea1y2.recycler
+package es.cifpcarlos3.recycler
 
 import android.media.MediaPlayer
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.cifpcarlos3.tarea1y2.R
+import es.cifpcarlos3.R
 
 // Adapter del RecyclerView.
 //

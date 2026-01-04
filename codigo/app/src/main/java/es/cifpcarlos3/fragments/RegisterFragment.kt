@@ -1,4 +1,4 @@
-package com.cifpcarlos3.tarea1y2.fragments
+package es.cifpcarlos3.fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.cifpcarlos3.tarea1y2.R
-import com.cifpcarlos3.tarea1y2.databinding.FragmentRegisterBinding
-import com.cifpcarlos3.tarea1y2.viewmodels.RegisterViewModel
+import es.cifpcarlos3.R
+import es.cifpcarlos3.databinding.FragmentRegisterBinding
+import es.cifpcarlos3.viewmodels.RegisterViewModel
 import java.util.Calendar
 
 // Fragmento que representa la pantalla de REGISTRO.

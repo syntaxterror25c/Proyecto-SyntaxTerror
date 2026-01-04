@@ -1,9 +1,8 @@
-package com.cifpcarlos3.tarea1y2
+package es.cifpcarlos3
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.cifpcarlos3.tarea1y2.MainActivity
 
 
 /**

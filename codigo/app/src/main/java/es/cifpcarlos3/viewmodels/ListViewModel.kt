@@ -1,10 +1,10 @@
-package com.cifpcarlos3.tarea1y2.viewmodels
+package es.cifpcarlos3.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.cifpcarlos3.tarea1y2.R
-import com.cifpcarlos3.tarea1y2.recycler.Serie
+import es.cifpcarlos3.R
+import es.cifpcarlos3.recycler.Serie
 
 class ListViewModel : ViewModel() {
 

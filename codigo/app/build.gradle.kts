@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.cifpcarlos3.tarea1y2"
+    namespace = "es.cifpcarlos3"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.cifpcarlos3.tarea1y2"
+        applicationId = "es.cifpcarlos3"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

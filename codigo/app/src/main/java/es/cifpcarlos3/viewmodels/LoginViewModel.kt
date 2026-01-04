@@ -1,4 +1,4 @@
-package com.cifpcarlos3.tarea1y2.viewmodels
+package es.cifpcarlos3.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
