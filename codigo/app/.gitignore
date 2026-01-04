@@ -1,8 +1,10 @@
 build/
 out/
+.idea/
 .gradle
+bin/
 local.properties
 *.log
 *.iml
-.idea/
+
 
