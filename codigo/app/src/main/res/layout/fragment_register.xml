@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <!-- Uso un ScrollView por si la pantalla es pequeña y hay que hacer scroll -->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <!-- =============== USUARIO =============== -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilUserReg"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_user">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etUserReg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- =============== EMAIL =============== -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmailReg"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/hint_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEmailReg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- =============== CONTRASEÑA =============== -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassReg"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/hint_password"
+                app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassReg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- =============== REPETIR CONTRASEÑA =============== -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassConfirmReg"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/hint_confirm_password"
+                app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassConfirmReg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- =============== FECHA DE NACIMIENTO =============== -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilBirthReg"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/hint_birthdate">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBirthReg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- =============== BOTÓN CREAR CUENTA =============== -->
+        <Button
+                android:id="@+id/btnCreateAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/btn_create_account"
+                android:enabled="false" />
+    </LinearLayout>
+</ScrollView>

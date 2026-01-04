@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- LOGIN -->
+    <string name="app_name">Tarea1Moviles</string>
+    <string name="hint_user">User</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login">Log in</string>
+    <string name="btn_login_google">Log in with Google</string>
+    <string name="register_question">Do you have an account? Create one</string>
+    <string name="login_incorrect">Incorrect user or password</string>
+    <string name="login_correct">Login successful</string>
+    <string name="google_not_implemented">Feature not implemented yet</string>
+
+    <!-- REGISTER -->
+    <string name="register_title">Register</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_birth">Birth date</string>
+    <string name="hint_password_confirm">Repeat password</string>
+    <string name="btn_create_account">Create account</string>
+    <string name="register_success">Account created successfully</string>
+    <string name="error_passwords_not_match">Passwords do not match</string>
+
+</resources>
