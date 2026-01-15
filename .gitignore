@@ -1,13 +1,23 @@
-.idea/
+# Archivos de compilación de Android/Java
+**/build/
 .gradle/
-build/
+Capturas/
+bin/
 
-/codigo/.idea/
-codigo/.gradle/
-codigo/build/
-build/
-*.log
+# Configuración de IntelliJ / Android Studio para cualquier proyecto
+.idea/
 *.iml
+*.iws
+*.ipr
+out/
 
+# Archivos de configuración local (Muy importante para seguridad)
 local.properties
+.kotlin/
 
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Limpieza de errores tipográficos que vimos antes
+.gitnore
