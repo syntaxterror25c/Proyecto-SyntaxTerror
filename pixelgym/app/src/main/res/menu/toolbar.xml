@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/ic_search"
+            android:title="@string/buscar"
+            app:iconTint="?attr/colorOnSurface"
+            app:showAsAction="ifRoom|collapseActionView"
+            app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+            android:id="@+id/action_sort"
+            android:icon="@drawable/ic_swap_vert"
+            android:title="@string/ordenar"
+            app:iconTint="?attr/colorOnSurface"
+            app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/action_more"
+            android:icon="@drawable/ic_more_vert"
+            android:title="@string/mas"
+            app:iconTint="?attr/colorOnSurface"
+            app:showAsAction="ifRoom">
+
+
+        <menu>
+            <item
+                    android:id="@+id/subitem1"
+                    android:title="Subitem 1"/> // OJO --> @string
+            <item
+                    android:id="@+id/subitem2"
+                    android:title="Subitem 2"/> // OJO --> @string
+        </menu>
+
+    </item>
+</menu>
+
