@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:background="?attr/colorSurface">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+
+        <ImageView
+                android:id="@+id/imgReservaHeader"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/logo"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Tarjeta Material 3 (Elevated o Outlined) -->
+        <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRecursoInfo"
+                style="@style/Widget.Material3.CardView.Elevated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardCornerRadius="28dp"
+                app:layout_constraintTop_toBottomOf="@id/imgReservaHeader">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:gravity="center">
+
+                <TextView
+                        android:id="@+id/tvReservaTitulo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fredoka_one"
+                        android:text="Nueva Reserva"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="22sp" />
+
+                <TextView
+                        android:id="@+id/tvNombreRecursoReserva"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"
+                        android:textColor="?attr/colorOnSurface"
+                        tools:text="Sala de Musculación" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Input de Fecha Material 3 -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutFecha"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:hint="Selecciona Fecha"
+                app:startIconDrawable="@android:drawable/ic_menu_my_calendar"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent"
+                app:layout_constraintTop_toBottomOf="@id/cardRecursoInfo">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etFechaReserva"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:inputType="none"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Dropdown de Hora Material 3 -->
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutHora"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Horario Disponible"
+                app:startIconDrawable="@android:drawable/ic_menu_recent_history"
+                app:layout_constraintTop_toBottomOf="@id/layoutFecha">
+
+            <AutoCompleteTextView
+                    android:id="@+id/spinnerHoras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón Material 3 -->
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmarReserva"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="24dp"
+                android:text="CONFIRMAR RESERVA"
+                android:fontFamily="@font/fredoka_one"
+                android:textSize="16sp"
+                app:cornerRadius="100dp"
+                app:layout_constraintTop_toBottomOf="@id/layoutHora"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

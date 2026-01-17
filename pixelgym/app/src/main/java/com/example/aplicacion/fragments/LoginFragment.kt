@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.aplicacion.R
@@ -21,8 +21,8 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    // Instancia del ViewModel
-    private lateinit var viewModel: AuthViewModel
+    // Usamos activityViewModels para que la sesión se mantenga globalmente
+    private val viewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,8 +34,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         setupListeners(view)
         setupObservers()
@@ -58,7 +56,7 @@ class LoginFragment : Fragment() {
                 val username = binding.editTextUsername.text.toString()
                 val password = binding.editTextPassword.text.toString()
 
-                // NOTIFICAR  al ViewModel del cambio de texto
+                // NOTIFICAR al ViewModel del cambio de texto
                 viewModel.updateValidation(username, password)
             }
 
@@ -76,21 +74,15 @@ class LoginFragment : Fragment() {
 
             binding.textInputLayoutPassword.error = null // Limpiar error previo
 
-            if (viewModel.isValidLogin(username, password)) {
-                // Versión Toast
+            // Ajustado a .login() para coincidir con el ViewModel actualizado
+            if (viewModel.login(username, password)) {
 
-//                val successToast = Toast.makeText(
-//                    this.context, getString(R.string.login_success),
-//                    Toast.LENGTH_LONG
-//                )
-//                successToast.setGravity(Gravity.CENTER, 0, 0)
-//                successToast.show()
                 val snack = Snackbar.make(binding.root, getString(R.string.login_success), Snackbar.LENGTH_LONG)
                 val tv = snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                 tv.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 snack.show()
 
-                findNavController().navigate(R.id.action_loginFragment_to_tabListDiscosFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_tabListRecursosFragment)
             } else {
                 Snackbar.make(binding.root, getString(R.string.login_error), Snackbar.LENGTH_LONG).show()
                 binding.textInputLayoutPassword.error = getString(R.string.login_error_field)
@@ -116,6 +108,7 @@ class LoginFragment : Fragment() {
         }
 
     }
+
     // Bloquear inputs
     private fun setInputsEnabled(enabled: Boolean) {
         binding.editTextUsername.isEnabled = enabled

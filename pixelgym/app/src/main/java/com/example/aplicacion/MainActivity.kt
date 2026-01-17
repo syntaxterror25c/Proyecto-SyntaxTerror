@@ -16,11 +16,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.aplicacion.databinding.ActivityMainBinding
-import com.example.aplicacion.viewmodels.ListViewModel
-
+import com.example.aplicacion.viewmodels.RecursosViewModel
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var listViewModel: ListViewModel
+    private lateinit var recursosViewModel: RecursosViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
 
@@ -32,190 +31,145 @@ class MainActivity : AppCompatActivity() {
         // Inicialización del Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        listViewModel = ViewModelProvider(this)[ListViewModel::class.java]
 
-        /* TOOLBAR (como AcctionBar) */
-        this.setSupportActionBar(binding.toolbar)
+        // Inicializamos el ViewModel compartido a nivel de Actividad
+        recursosViewModel = ViewModelProvider(this)[RecursosViewModel::class.java]
 
-        /* DRAWER MENU */
+        /* TOOLBAR PERSONALIZADA */
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+        }
+
+        /* DRAWER (Menú Lateral) */
         toggle = ActionBarDrawerToggle(
             this,
             binding.drawerLayout,
-            binding.toolbar, // Vincula la barra con el drawer
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
-        // Pintar la hamburguesa + Sincronizar el menú
+        toggle.isDrawerIndicatorEnabled = false
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Navegación
+        // Configuración del NavController
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Drawer
+        // Listeners del Menú Lateral (Drawer)
         binding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.drawer_list -> {
-                    navController.navigate(R.id.tabListDiscosFragment)
-                    true
-                }
-
-                R.id.drawer_contact -> {
-                    navController.navigate(R.id.contactFragment)
-                    true
-                }
-
-                R.id.drawer_preferences -> {
-                    navController.navigate(R.id.preferencesFragment)
-                    true
-                }
-
-                R.id.drawer_logOut -> {
-                    navController.navigate(R.id.loginFragment)
-                    true
-                }
-
-                else -> false
-                // Cerrar siempre
-            }.also {
-                binding.drawerLayout.closeDrawers()
+                R.id.drawer_list -> navController.navigate(R.id.tabListRecursosFragment)
+                R.id.drawer_contact -> navController.navigate(R.id.contactFragment)
+                R.id.drawer_preferences -> navController.navigate(R.id.preferencesFragment)
+                R.id.drawer_logOut -> navController.navigate(R.id.loginFragment)
             }
+            binding.drawerLayout.closeDrawers()
+            true
         }
 
-        // Toolbar. Menú superior
+        // Proveedor de Menú para la Toolbar (Búsqueda y Ordenación)
         this.addMenuProvider(object : MenuProvider {
-            // Inflar menú
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.toolbar, menu)
 
-                // Ocultar componentes según fragment
-                // Buscamos el destino actual
                 val currentDest = navController.currentDestination?.id
-                // Comprobar si estamos en algún listFragment para mostrar search y sort
-                val isListFragment = (currentDest == R.id.listDiscosFragment)
-                        || (currentDest == R.id.listDiscosFavFragment)
-                        || (currentDest == R.id.tabListDiscosFragment)
+                val isListFragment = (currentDest == R.id.listRecursosFragment)
+                        || (currentDest == R.id.listRecursosFavFragment)
+                        || (currentDest == R.id.tabListRecursosFragment)
+
+                supportActionBar?.setDisplayHomeAsUpEnabled(!isListFragment)
+
                 val searchItem = menu.findItem(R.id.action_search)
                 searchItem?.isVisible = isListFragment
                 val sortItem = menu.findItem(R.id.action_sort)
                 sortItem?.isVisible = isListFragment
 
-                // Buscador
                 if (isListFragment && searchItem != null) {
                     val searchView = searchItem.actionView as androidx.appcompat.widget.SearchView
-                    searchView.queryHint = R.string.hintBuscar.toString()
+                    searchView.queryHint = getString(R.string.hintBuscar)
 
-                    searchView.setOnQueryTextListener(object :
-                        androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                    searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String?): Boolean = false
                         override fun onQueryTextChange(newText: String?): Boolean {
-                            // Conectamos con el ViewModel
-                            listViewModel.setFilter(newText)
+                            recursosViewModel.setFilter(newText)
                             return true
                         }
                     })
                 }
-
             }
 
-            // Listener para "ordenar" y "más" del menú superior
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+                    R.id.action_open_drawer -> {
+                        binding.drawerLayout.openDrawer(GravityCompat.END)
+                        true
+                    }
                     R.id.action_sort -> {
-                        listViewModel.toggleSort()
+                        recursosViewModel.toggleSort()
                         true
                     }
-                    R.id.action_more -> {
-                        true
-                    }
-
                     else -> false
                 }
             }
         }, this, Lifecycle.State.RESUMED)
 
-
-        /* Menú inferior BNM */
+        /* Bottom Navigation (Menú Inferior) */
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.bnm_list -> {
-                    navController.navigate(R.id.tabListDiscosFragment)
-                    true
-                }
-                R.id.bnm_contact -> {
-                    navController.navigate(R.id.contactFragment)
-                    true
-                }
-                R.id.bnm_settings -> {
-                    navController.navigate(R.id.preferencesFragment)
-                    true
-                }
-                else -> false
+                R.id.bnm_list -> navController.navigate(R.id.tabListRecursosFragment)
+                R.id.bnm_contact -> navController.navigate(R.id.contactFragment)
+                R.id.bnm_settings -> navController.navigate(R.id.preferencesFragment)
             }
+            true
         }
 
-        // Escuchar destinos
+        // Observador de cambios de destino para ocultar/mostrar elementos de UI
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            invalidateMenu() // Redibujar toolbar ejecutando onCreateMenu
+            invalidateMenu()
+            val isListFragment = (destination.id == R.id.listRecursosFragment)
+                    || (destination.id == R.id.tabListRecursosFragment)
 
-            val isListFragment = (destination.id == R.id.listDiscosFragment)
-                    || (destination.id == R.id.listDiscosFavFragment)
-                    || (destination.id == R.id.tabListDiscosFragment)
-
-            // Gestión menús completos
             when (destination.id) {
                 R.id.loginFragment, R.id.registerFragment -> {
-                    // Escondemos menus en Login y Registro
                     binding.appBarLayout.visibility = View.GONE
                     binding.bottomNavigation.visibility = View.GONE
-                    // Bloquear Drawer para que no se pueda abrir deslizando
                     binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     binding.floatingActionButton.hide()
                 }
-
                 else -> {
-                    // Mostramos los menús en el resto de la app
                     binding.appBarLayout.visibility = View.VISIBLE
                     binding.bottomNavigation.visibility = View.VISIBLE
                     binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-                    if (isListFragment) binding.floatingActionButton.show()
-                    else binding.floatingActionButton.hide()
+                    if (isListFragment) binding.floatingActionButton.show() else binding.floatingActionButton.hide()
                 }
             }
         }
 
-        // Callback personalizado
-        val callback = object : OnBackPressedCallback(true) {
+        // Gestión personalizada del botón Atrás
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
-                // Si el menú lateral (Drawer) está abierto, lo cerramos
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                 } else {
-                    // Ver dónde estamos ahora mismo
                     val currentDestination = navController.currentDestination?.id
-
-                    when (currentDestination) {
-                        // Punto de entrada tras login. No se permite retroceder. Aviso usar logout
-                        R.id.tabListDiscosFragment -> Toast.makeText(
-                            applicationContext,
-                            R.string.cierraSesion,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        // Volver atrás en login cierra la App. Register oK porque sólo se llega desde login
-                        R.id.loginFragment -> finish()
-                        else -> {
-                            isEnabled = false
-                            onBackPressedDispatcher.onBackPressed()
-                            isEnabled = true
-                        }
+                    if (currentDestination == R.id.tabListRecursosFragment) {
+                        Toast.makeText(applicationContext, R.string.cierraSesion, Toast.LENGTH_SHORT).show()
+                    } else if (currentDestination == R.id.loginFragment) {
+                        finish()
+                    } else {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                        isEnabled = true
                     }
                 }
             }
-        }
-        onBackPressedDispatcher.addCallback(this, callback)
-
+        })
     }
-
 }

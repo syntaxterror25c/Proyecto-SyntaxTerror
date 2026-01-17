@@ -44,11 +44,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/contacta"
-                        android:fontFamily="@font/fredoka_one"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginBottom="24dp" />
+                        android:fontFamily="@font/fredoka_one"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="24dp"
+                        android:textColor="?attr/colorOnSurface"/>
 
                 <LinearLayout
                         android:layout_width="match_parent"
@@ -83,9 +84,9 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter" />
                 </LinearLayout>
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -45,7 +45,7 @@
     <string name="crearNuevo">Nuevo</string>
     <string name="notificaciones">Notificaciones</string>
     <string name="modoOscuro">Modo oscuro</string>
-    <string name="sincronizar">Sincronizar datos</string>
+    <string name="idioma">Idioma</string>
     <string name="hintBuscar">Buscar zona...</string>
     <string name="cierraSesion">Para salir cierra sesión</string>
 </resources>

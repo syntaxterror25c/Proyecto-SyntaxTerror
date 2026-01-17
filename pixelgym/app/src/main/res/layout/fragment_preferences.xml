@@ -69,7 +69,7 @@
                         android:id="@+id/switchSync"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/sincronizar"
+                        android:text="@string/idioma"
                         android:padding="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

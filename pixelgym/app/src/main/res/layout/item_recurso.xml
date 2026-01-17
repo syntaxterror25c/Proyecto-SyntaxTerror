@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+        <ImageView
+                android:id="@+id/ivRecurso"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/im_rec_musculacion" />
+
+        <TextView
+                android:id="@+id/tvNombreRecurso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btnFav"
+                app:layout_constraintStart_toEndOf="@+id/ivRecurso"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Aquí aparecerá el nombre real" />
+
+        <TextView
+                android:id="@+id/tvTipoRecurso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                app:layout_constraintStart_toStartOf="@+id/tvNombreRecurso"
+                app:layout_constraintTop_toBottomOf="@+id/tvNombreRecurso"
+                tools:text="Categoría" />
+
+        <ImageButton
+                android:id="@+id/btnFav"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Favorito"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_heart_outline" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

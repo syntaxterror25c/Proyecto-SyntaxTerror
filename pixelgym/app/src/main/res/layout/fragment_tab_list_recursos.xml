@@ -30,7 +30,7 @@
                 android:text="@string/tab_todos" />
     </com.google.android.material.tabs.TabLayout>
 
-    <!-- Contenido (Fragmentos ListSalasFragment y ListSalasFavFragment) -->
+    <!-- Contenido (Fragmentos ListRecursosFragment y ListRecursosFavFragment) -->
     <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="0dp"

@@ -17,22 +17,9 @@
             app:iconTint="?attr/colorOnSurface"
             app:showAsAction="ifRoom"/>
     <item
-            android:id="@+id/action_more"
-            android:icon="@drawable/ic_more_vert"
-            android:title="@string/mas"
-            app:iconTint="?attr/colorOnSurface"
-            app:showAsAction="ifRoom">
-
-
-        <menu>
-            <item
-                    android:id="@+id/subitem1"
-                    android:title="Subitem 1"/> // OJO --> @string
-            <item
-                    android:id="@+id/subitem2"
-                    android:title="Subitem 2"/> // OJO --> @string
-        </menu>
-
-    </item>
+            android:id="@+id/action_open_drawer"
+            android:icon="@drawable/ic_menu"
+            android:title="@string/navigation_drawer_open"
+            app:showAsAction="always" />
 </menu>
 

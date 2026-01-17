@@ -25,10 +25,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="?attr/colorPrimary"
-                    app:titleTextAppearance="@style/TextAppearance.App.ToolbarTitle"
-                    app:navigationIconTint="?attr/colorOnPrimary"
-                    app:popupTheme="@style/Theme.Aplicacion"
-                    app:menu="@menu/toolbar"/>
+                    app:titleEnabled="false">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/logo"
+                    android:contentDescription="@string/app_name" />
+
+            </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
@@ -73,7 +78,7 @@
     android:id="@+id/navigation_view"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:layout_gravity="start"
+    android:layout_gravity="end"
     app:headerLayout="@layout/nav_header"
     app:menu="@menu/drawer" />
 
