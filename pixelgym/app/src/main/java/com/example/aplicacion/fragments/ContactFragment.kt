@@ -38,16 +38,6 @@ class ContactFragment : Fragment(R.layout.fragment_contact) {
             startActivity(intent)
         }
 
-        val videoUri = Uri.parse("android.resource://${requireContext().packageName}/${R.raw.videosound}")
-        val mediaController = MediaController(requireContext())
-        mediaController.setAnchorView(binding.videoView)
-        binding.videoView.setMediaController(mediaController)
-        binding.videoView.setVideoURI(videoUri)
-        binding.videoView.requestFocus()
-        binding.videoView.setOnPreparedListener { mediaPlayer ->
-            mediaPlayer.isLooping = true
-            binding.videoView.start()
-        }
 
     }
 

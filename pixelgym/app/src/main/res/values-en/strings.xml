@@ -10,7 +10,7 @@
     <string name="action_create_account">"Create account"</string>
     <string name="register_link_text">"Don't have an account? Create one"</string>
     <string name="login_success">"Login successful. Welcome!"</string>
-    <string name="login_error">"Invalid credentials"</string>
+    <string name="login_error">"Incorrect credentials"</string>
     <string name="login_error_field">"Incorrect username or password"</string>
     <string name="snackbar_action_close">"CLOSE"</string>
     <string name="feature_not_implemented">"Feature not yet implemented"</string>
@@ -18,13 +18,14 @@
     <string name="password_mismatch">"Passwords do not match"</string>
     <string name="fill_date">"Select a date"</string>
     <string name="register_success_message">"Registration completed"</string>
-
-    <string name="text_artista">"Trainer"</string> <string name="text_ano">"Year"</string>
+    <string name="text_artista">"Artist"</string>
+    <string name="text_ano">"Year"</string>
     <string name="text_favorito">"Favorite"</string>
     <string name="text_nombre_sala">"Title"</string>
-
-    <string name="tab_todos">"All areas"</string> <string name="tab_favoritos">"Favorites"</string>
-    <string name="text_imagen_sala">"Area image"</string> <string name="fav">"FAV"</string>
+    <string name="tab_todos">"All areas"</string>
+    <string name="tab_favoritos">"Favorites"</string>
+    <string name="text_imagen_sala">"Area image"</string>
+    <string name="fav">"FAV"</string>
     <string name="user_image">"User image"</string>
     <string name="user">"User"</string>
     <string name="navigation_drawer_open">"Open menu"</string>
@@ -37,7 +38,7 @@
     <string name="mas">"More"</string>
     <string name="logout">"Logout"</string>
     <string name="contacta">"Contact us"</string>
-    <string name="llamarTelefono">"Call us"</string>
+    <string name="llamarTelefono">"Call by phone"</string>
     <string name="enviarMensaje">"Send a message"</string>
     <string name="enviarCorreo">"Send an email"</string>
     <string name="opciones">"Options"</string>
@@ -45,6 +46,6 @@
     <string name="notificaciones">"Notifications"</string>
     <string name="modoOscuro">"Dark mode"</string>
     <string name="sincronizar">"Sync data"</string>
-
-    <string name="hintBuscar">"Search area..."</string> <string name="cierraSesion">"To exit, please logout"</string>
-</resources>d
+    <string name="hintBuscar">"Search area..."</string>
+    <string name="cierraSesion">"To exit, please logout"</string>
+</resources>
