@@ -3,24 +3,24 @@ package com.example.aplicacion.recycler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aplicacion.databinding.ItemDiscoBinding
+import com.example.aplicacion.databinding.ItemSalaBinding
 
 // SÓLO para la lista de favoritos.
-class NuloDiscoFavAdapter(private var listaDiscos: MutableList<Disco>) :
+class NuloDiscoFavAdapter(private var listaSalas: MutableList<Sala>) :
     RecyclerView.Adapter<NuloDiscoFavAdapter.DiscoViewHolder>() {
 
     // inner class
-    class DiscoViewHolder(private val binding: ItemDiscoBinding) :
+    class DiscoViewHolder(private val binding: ItemSalaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(disco: Disco) {
+        fun bind(sala: Sala) {
             // Asignar datos
-            binding.tvDiscoTitulo.text = disco.titulo
-            binding.tvDiscoAutor.text = disco.autor
-            binding.tvDiscoAno.text = disco.ano.toString()
+            binding.tvSalaTitulo.text = sala.titulo
+            binding.tvSalaAutor.text = sala.autor
+            binding.tvSalaAno.text = sala.ano.toString()
 
             // Configurar el estado del Switch (debe ser true)
-            binding.switchFavorito.isChecked = disco.fav
+            binding.switchFavorito.isChecked = sala.fav
 
             // bloquear switch
             binding.switchFavorito.isEnabled = false
@@ -31,7 +31,7 @@ class NuloDiscoFavAdapter(private var listaDiscos: MutableList<Disco>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoViewHolder {
-        val binding = ItemDiscoBinding.inflate(
+        val binding = ItemSalaBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -40,11 +40,11 @@ class NuloDiscoFavAdapter(private var listaDiscos: MutableList<Disco>) :
     }
 
     override fun onBindViewHolder(holder: DiscoViewHolder, position: Int) {
-        val discoActual = listaDiscos[position]
+        val discoActual = listaSalas[position]
         holder.bind(discoActual)
     }
 
     override fun getItemCount(): Int {
-        return listaDiscos.size
+        return listaSalas.size
     }
 }

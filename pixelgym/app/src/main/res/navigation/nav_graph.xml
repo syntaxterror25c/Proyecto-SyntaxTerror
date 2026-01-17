@@ -41,18 +41,18 @@
 
     <fragment
             android:id="@+id/listDiscosFragment"
-            android:name="com.example.aplicacion.fragments.ListDiscosFragment"
+            android:name="com.example.aplicacion.fragments.ListSalasFragment"
             android:label="Lista de Discos"
-            tools:layout="@layout/fragment_list_discos" />
+            tools:layout="@layout/fragment_list_salas" />
     <fragment
             android:id="@+id/tabListDiscosFragment"
-            android:name="com.example.aplicacion.fragments.TabListDiscosFragment"
+            android:name="com.example.aplicacion.fragments.TabListSalasFragment"
             android:label="Colección de Discos"
-            tools:layout="@layout/fragment_tab_list_discos" />
+            tools:layout="@layout/fragment_tab_list_salas" />
     <fragment android:id="@+id/contactFragment" android:name="com.example.aplicacion.fragments.ContactFragment"
               android:label="ContactFragment"/>
     <fragment android:id="@+id/listDiscosFavFragment"
-              android:name="com.example.aplicacion.fragments.ListDiscosFavFragment"
+              android:name="com.example.aplicacion.fragments.ListSalasFavFragment"
               android:label="ListDiscosFavFragment"/>
     <fragment android:id="@+id/preferencesFragment" android:name="com.example.aplicacion.fragments.PreferencesFragment"
               android:label="PreferencesFragment"/>

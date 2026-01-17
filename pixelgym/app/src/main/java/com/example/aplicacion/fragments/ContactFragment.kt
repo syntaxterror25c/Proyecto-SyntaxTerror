@@ -33,7 +33,7 @@ class ContactFragment : Fragment(R.layout.fragment_contact) {
 
         binding.btnEmail.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse("mailto:info@discos.com")
+            intent.data = Uri.parse("mailto:info@salas.com")
             intent.putExtra(Intent.EXTRA_SUBJECT, "Consulta desde la app")
             startActivity(intent)
         }

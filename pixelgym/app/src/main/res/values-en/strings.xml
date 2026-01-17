@@ -1,50 +1,50 @@
 <resources>
-    <string name="app_name">RPM</string>
-    <string name="welcome_title">Welcome. Login</string>
-    <string name="hint_username">Username</string>
-    <string name="hint_password">Password</string>
-    <string name="hint_confirm_password">Confirm Password</string>
-    <string name="hint_birthdate">Birthdate</string>
-    <string name="action_login">Log In</string>
-    <string name="action_login_google">Sign in with Google</string>
-    <string name="action_create_account">Create Account</string>
-    <string name="register_link_text">"Don't have an account? Create one"</string> <string name="login_success">Login Successful. Welcome!</string>
-    <string name="login_error">Incorrect credentials</string>
-    <string name="login_error_field">Incorrect username or password</string>
-    <string name="snackbar_action_close">CLOSE</string>
-    <string name="feature_not_implemented">Functionality not implemented yet</string>
-    <string name="nav_to_register">Navigating to registration...</string>
-    <string name="password_mismatch">Passwords do not match</string>
-    <string name="fill_date">Select a date</string>
-    <string name="register_success_message">Registration completed</string>
-    <string name="text_artista">Artist</string>
-    <string name="text_ano">Year</string>
-    <string name="text_favorito">Favorite</string>
-    <string name="text_titulo_disco">Title</string>
-    <string name="tab_todos">All disks</string>
-    <string name="tab_favoritos">Favorites</string>
-    <string name="text_caratula_del_disco">Cover</string>
-    <string name="fav">FAV</string>
-    <string name="user_image">User image</string>
-    <string name="user">User</string>
-    <string name="navigation_drawer_open">Open menu</string>
-    <string name="navigation_drawer_close">Close menu</string>
-    <string name="lista">List</string>
-    <string name="contacto">Contact</string>
-    <string name="preferencias">Preferences</string>
-    <string name="buscar">Search</string>
-    <string name="ordenar">Sort</string>
-    <string name="mas">More</string>
-    <string name="logout">Logout</string>
-    <string name="contacta">Contact us</string>
-    <string name="llamarTelefono">Call by phone</string>
-    <string name="enviarMensaje">Send a message</string>
-    <string name="enviarCorreo">Send an email</string>
-    <string name="opciones">Options</string>
-    <string name="crearNuevo">New</string>
-    <string name="notificaciones">Notifications</string>
-    <string name="modoOscuro">Dark mode</string>
-    <string name="sincronizar">Sync data</string>
-    <string name="hintBuscar">Search disc...</string>
-    <string name="cierraSesion">To exit, please logout</string>
-</resources>
+    <string name="app_name">"PixelGym"</string>
+    <string name="welcome_title">"Welcome. Login"</string>
+    <string name="hint_username">"Username"</string>
+    <string name="hint_password">"Password"</string>
+    <string name="hint_confirm_password">"Confirm password"</string>
+    <string name="hint_birthdate">"Date of birth"</string>
+    <string name="action_login">"Login"</string>
+    <string name="action_login_google">"Sign in with Google"</string>
+    <string name="action_create_account">"Create account"</string>
+    <string name="register_link_text">"Don't have an account? Create one"</string>
+    <string name="login_success">"Login successful. Welcome!"</string>
+    <string name="login_error">"Invalid credentials"</string>
+    <string name="login_error_field">"Incorrect username or password"</string>
+    <string name="snackbar_action_close">"CLOSE"</string>
+    <string name="feature_not_implemented">"Feature not yet implemented"</string>
+    <string name="nav_to_register">"Navigating to registration..."</string>
+    <string name="password_mismatch">"Passwords do not match"</string>
+    <string name="fill_date">"Select a date"</string>
+    <string name="register_success_message">"Registration completed"</string>
+
+    <string name="text_artista">"Trainer"</string> <string name="text_ano">"Year"</string>
+    <string name="text_favorito">"Favorite"</string>
+    <string name="text_nombre_sala">"Title"</string>
+
+    <string name="tab_todos">"All areas"</string> <string name="tab_favoritos">"Favorites"</string>
+    <string name="text_imagen_sala">"Area image"</string> <string name="fav">"FAV"</string>
+    <string name="user_image">"User image"</string>
+    <string name="user">"User"</string>
+    <string name="navigation_drawer_open">"Open menu"</string>
+    <string name="navigation_drawer_close">"Close menu"</string>
+    <string name="lista">"List"</string>
+    <string name="contacto">"Contact"</string>
+    <string name="preferencias">"Preferences"</string>
+    <string name="buscar">"Search"</string>
+    <string name="ordenar">"Sort"</string>
+    <string name="mas">"More"</string>
+    <string name="logout">"Logout"</string>
+    <string name="contacta">"Contact us"</string>
+    <string name="llamarTelefono">"Call us"</string>
+    <string name="enviarMensaje">"Send a message"</string>
+    <string name="enviarCorreo">"Send an email"</string>
+    <string name="opciones">"Options"</string>
+    <string name="crearNuevo">"New"</string>
+    <string name="notificaciones">"Notifications"</string>
+    <string name="modoOscuro">"Dark mode"</string>
+    <string name="sincronizar">"Sync data"</string>
+
+    <string name="hintBuscar">"Search area..."</string> <string name="cierraSesion">"To exit, please logout"</string>
+</resources>d

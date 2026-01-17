@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 import com.example.aplicacion.R // Necesitas esto si inicializas la lista aquí
-import com.example.aplicacion.recycler.Disco
+import com.example.aplicacion.recycler.Sala
 
 class ListViewModel : ViewModel() {
 
-    private val _listaDiscosMaster = MutableLiveData<MutableList<Disco>>()
-    val listaDiscosMaster: LiveData<MutableList<Disco>> = _listaDiscosMaster
+    private val _listaDiscosMaster = MutableLiveData<MutableList<Sala>>()
+    val listaDiscosMaster: LiveData<MutableList<Sala>> = _listaDiscosMaster
 
     private var filterText: String = ""
     private var isAscending: Boolean = true
@@ -18,12 +18,12 @@ class ListViewModel : ViewModel() {
     init {
         // Cargar datos discos ejemplo
         _listaDiscosMaster.value = mutableListOf(
-            Disco("Thriller", "Michael Jackson", 1982, false, R.drawable.im_disco_thriller),
-            Disco("Abbey Road", "The Beatles", 1969, true, R.drawable.im_disco_abbey_road),
-            Disco("A Night at the Opera", "Queen", 1975, false, R.drawable.im_disco_a_night_at_the_opera),
-            Disco("Back in Black", "AC/DC", 1980, true, R.drawable.im_disco_back_in_black),
-            Disco("My sharona", "The Knack", 1979, true,R.drawable.im_disco_my_sharona),
-            Disco("September", "Earth, wind and Fire", 1979, false,R.drawable.im_disco_september)
+            Sala("Thriller", "Michael Jackson", 1982, false, R.drawable.im_disco_thriller),
+            Sala("Abbey Road", "The Beatles", 1969, true, R.drawable.im_disco_abbey_road),
+            Sala("A Night at the Opera", "Queen", 1975, false, R.drawable.im_disco_a_night_at_the_opera),
+            Sala("Back in Black", "AC/DC", 1980, true, R.drawable.im_disco_back_in_black),
+            Sala("My sharona", "The Knack", 1979, true,R.drawable.im_disco_my_sharona),
+            Sala("September", "Earth, wind and Fire", 1979, false,R.drawable.im_disco_september)
 
         )
     }
@@ -40,7 +40,7 @@ class ListViewModel : ViewModel() {
         }
 
     /* Devuelve la lista filtrada y ordenada */
-    fun getProcessedList(onlyFavs: Boolean = false): List<Disco> {
+    fun getProcessedList(onlyFavs: Boolean = false): List<Sala> {
         var list = _listaDiscosMaster.value?.toList() ?: emptyList()
 
         // Filtrar por favoritos si se pide
@@ -66,13 +66,13 @@ class ListViewModel : ViewModel() {
 
         return list
         }
-    fun toggleFavStatus(toggledDisco: Disco) {
+    fun toggleFavStatus(toggledSala: Sala) {
         val currentList = listaDiscosMaster.value
 
         if (currentList != null) {
 
             // buscar disco en la lista maestra
-            val positionToUpdate = currentList.indexOf(toggledDisco)
+            val positionToUpdate = currentList.indexOf(toggledSala)
 
             if (positionToUpdate != -1) {
 
