@@ -30,7 +30,7 @@
     <string name="user">"User"</string>
     <string name="navigation_drawer_open">"Open menu"</string>
     <string name="navigation_drawer_close">"Close menu"</string>
-    <string name="lista">"List"</string>
+    <string name="lista">"Catalog"</string>
     <string name="contacto">"Contact"</string>
     <string name="preferencias">"Preferences"</string>
     <string name="buscar">"Search"</string>
@@ -48,4 +48,16 @@
     <string name="idioma">"Language"</string>
     <string name="hintBuscar">"Search area..."</string>
     <string name="cierraSesion">"To exit, please logout"</string>
+    <string name="mis_reservas">My bookings</string>
+    <string name="estado_confirmada">Confirmed</string>
+    <string name="default_recurso_name">Area</string>
+    <string name="placeholder_fecha">1, January 2040</string>
+    <string name="recurso">Resource</string>
+    <string name="reserva_guardada">Booking saved successfully</string>
+    <string name="error_guardar">Error saving booking</string>
+    <string name="campos_incompletos">Please, complete all fields</string>
+    <string name="titulo_nueva_reserva">New Booking</string>
+    <string name="hint_selecciona_fecha">Select Date</string>
+    <string name="hint_horario_disponible">Available Hours</string>
+    <string name="btn_confirmar_reserva">CONFIRM BOOKING</string>
 </resources>

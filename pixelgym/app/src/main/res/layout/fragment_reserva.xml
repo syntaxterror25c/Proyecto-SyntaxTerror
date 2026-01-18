@@ -44,7 +44,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/fredoka_one"
-                        android:text="Nueva Reserva"
+                        android:text="@string/titulo_nueva_reserva"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="22sp" />
 
@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:hint="Selecciona Fecha"
+                android:hint="@string/hint_selecciona_fecha"
                 app:startIconDrawable="@android:drawable/ic_menu_my_calendar"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent"
                 app:layout_constraintTop_toBottomOf="@id/cardRecursoInfo">
@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Horario Disponible"
+                android:hint="@string/hint_horario_disponible"
                 app:startIconDrawable="@android:drawable/ic_menu_recent_history"
                 app:layout_constraintTop_toBottomOf="@id/layoutFecha">
 
@@ -108,7 +108,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="24dp"
-                android:text="CONFIRMAR RESERVA"
+                android:text="@string/btn_confirmar_reserva"
                 android:fontFamily="@font/fredoka_one"
                 android:textSize="16sp"
                 app:cornerRadius="100dp"

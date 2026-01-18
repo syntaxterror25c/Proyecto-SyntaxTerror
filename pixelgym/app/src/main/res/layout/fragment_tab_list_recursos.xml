@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.TabListSalasFragment">
+        tools:context=".fragments.TabListRecursosFragment">
 
     <!-- Pestañas (Headers) -->
     <com.google.android.material.tabs.TabLayout
@@ -18,16 +18,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- TabItem 1: Todos los salas -->
-        <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_favoritos"/>
-        <!-- TabItem 2: Favoritos-->
+        <!-- TabItem 1: Todos los recursos -->
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_todos" />
+        <!-- TabItem 2: Favoritos -->
+        <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_favoritos"/>
+
     </com.google.android.material.tabs.TabLayout>
 
     <!-- Contenido (Fragmentos ListRecursosFragment y ListRecursosFavFragment) -->

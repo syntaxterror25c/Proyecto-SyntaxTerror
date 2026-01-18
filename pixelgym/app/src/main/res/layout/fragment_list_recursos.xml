@@ -8,7 +8,7 @@
         tools:context=".fragments.ListRecursosFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_salas"
+            android:id="@+id/recycler_view_recursos"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:paddingTop="8dp"

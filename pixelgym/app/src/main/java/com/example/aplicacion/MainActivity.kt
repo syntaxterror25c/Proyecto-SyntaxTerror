@@ -1,5 +1,6 @@
 package com.example.aplicacion
 
+import android.content.Context // Importante añadir
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,6 +10,8 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate // Importante añadir
+import androidx.core.os.LocaleListCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
@@ -24,26 +27,38 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Cambio de tema: Splash --> Por defecto
+
+        val prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+
+        // APLICAR IDIOMA (Añade esto aquí)
+        val isEnglish = prefs.getBoolean("language_en", false)
+        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(if (isEnglish) "en" else "es")
+        AppCompatDelegate.setApplicationLocales(appLocale)
+
+        // APLICAR MODO OSCURO ANTES DE MOSTRAR LA VISTA
+        val isDarkMode = prefs.getBoolean("dark_mode", false)
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
         setTheme(R.style.Theme_Aplicacion)
         super.onCreate(savedInstanceState)
 
-        // Inicialización del Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inicializamos el ViewModel compartido a nivel de Actividad
         recursosViewModel = ViewModelProvider(this)[RecursosViewModel::class.java]
 
-        /* TOOLBAR PERSONALIZADA */
+        /* TOOLBAR */
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-        }
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        /* DRAWER (Menú Lateral) */
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        /* DRAWER */
         toggle = ActionBarDrawerToggle(
             this,
             binding.drawerLayout,
@@ -54,33 +69,30 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Configuración del NavController
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        // Listeners del Menú Lateral (Drawer)
+        // Listener del Drawer
         binding.navigationView.setNavigationItemSelectedListener { item ->
+            val currentDest = navController.currentDestination?.id
+
             when (item.itemId) {
-                R.id.drawer_list -> navController.navigate(R.id.tabListRecursosFragment)
-                R.id.drawer_contact -> navController.navigate(R.id.contactFragment)
-                R.id.drawer_preferences -> navController.navigate(R.id.preferencesFragment)
+                R.id.drawer_list -> if (currentDest != R.id.tabListRecursosFragment) navController.navigate(R.id.tabListRecursosFragment)
+                R.id.drawer_contact -> if (currentDest != R.id.contactFragment) navController.navigate(R.id.contactFragment)
+                R.id.drawer_preferences -> if (currentDest != R.id.preferencesFragment) navController.navigate(R.id.preferencesFragment)
                 R.id.drawer_logOut -> navController.navigate(R.id.loginFragment)
             }
             binding.drawerLayout.closeDrawers()
             true
         }
 
-        // Proveedor de Menú para la Toolbar (Búsqueda y Ordenación)
+        /* TOOLBAR MENU PROVIDER */
         this.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.toolbar, menu)
 
                 val currentDest = navController.currentDestination?.id
-                val isListFragment = (currentDest == R.id.listRecursosFragment)
-                        || (currentDest == R.id.listRecursosFavFragment)
-                        || (currentDest == R.id.tabListRecursosFragment)
+                val isListFragment = (currentDest == R.id.tabListRecursosFragment)
 
                 supportActionBar?.setDisplayHomeAsUpEnabled(!isListFragment)
+                supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 
                 val searchItem = menu.findItem(R.id.action_search)
                 searchItem?.isVisible = isListFragment
@@ -90,7 +102,6 @@ class MainActivity : AppCompatActivity() {
                 if (isListFragment && searchItem != null) {
                     val searchView = searchItem.actionView as androidx.appcompat.widget.SearchView
                     searchView.queryHint = getString(R.string.hintBuscar)
-
                     searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String?): Boolean = false
                         override fun onQueryTextChange(newText: String?): Boolean {
@@ -120,43 +131,61 @@ class MainActivity : AppCompatActivity() {
             }
         }, this, Lifecycle.State.RESUMED)
 
-        /* Bottom Navigation (Menú Inferior) */
+        /* BOTTOM NAVIGATION */
         binding.bottomNavigation.setOnItemSelectedListener { item ->
+            val currentDest = navController.currentDestination?.id
+            if (currentDest == item.itemId) return@setOnItemSelectedListener false
+
             when (item.itemId) {
-                R.id.bnm_list -> navController.navigate(R.id.tabListRecursosFragment)
-                R.id.bnm_contact -> navController.navigate(R.id.contactFragment)
-                R.id.bnm_settings -> navController.navigate(R.id.preferencesFragment)
+                R.id.tabListRecursosFragment -> navController.navigate(R.id.tabListRecursosFragment)
+                R.id.contactFragment -> navController.navigate(R.id.contactFragment) // Nuevo destino
+                R.id.misReservasFragment -> navController.navigate(R.id.misReservasFragment)
             }
             true
         }
 
-        // Observador de cambios de destino para ocultar/mostrar elementos de UI
+        /* DESTINATION CHANGES */
         navController.addOnDestinationChangedListener { _, destination, _ ->
             invalidateMenu()
-            val isListFragment = (destination.id == R.id.listRecursosFragment)
-                    || (destination.id == R.id.tabListRecursosFragment)
+
+            // dentificamos si estamos en la lista principal
+            val isListFragment = (destination.id == R.id.tabListRecursosFragment)
+
+            // SINCRONIZACIÓN DEL BOTTOM NAV:
+            // Si navegamos desde el Drawer a "Contacto",el Bottom Nav debe marcar el icono de Contacto
+            binding.bottomNavigation.menu.findItem(destination.id)?.isChecked = true
 
             when (destination.id) {
                 R.id.loginFragment, R.id.registerFragment -> {
+                    // Pantallas de acceso: ocultamos todo para que sea pantalla completa
                     binding.appBarLayout.visibility = View.GONE
                     binding.bottomNavigation.visibility = View.GONE
                     binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     binding.floatingActionButton.hide()
                 }
                 else -> {
+                    // Pantallas principales: mostramos navegación y desbloqueamos el Drawer
                     binding.appBarLayout.visibility = View.VISIBLE
                     binding.bottomNavigation.visibility = View.VISIBLE
                     binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-                    if (isListFragment) binding.floatingActionButton.show() else binding.floatingActionButton.hide()
+
+                    // El botón flotante (FAB) solo aparece en la lista
+                    if (isListFragment) {
+                        binding.floatingActionButton.show()
+                    } else {
+                        binding.floatingActionButton.hide()
+                    }
                 }
             }
         }
 
-        // Gestión personalizada del botón Atrás
+        /* BACK BUTTON MANAGEMENT */
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
+                } else if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.END)
                 } else {
                     val currentDestination = navController.currentDestination?.id
                     if (currentDestination == R.id.tabListRecursosFragment) {

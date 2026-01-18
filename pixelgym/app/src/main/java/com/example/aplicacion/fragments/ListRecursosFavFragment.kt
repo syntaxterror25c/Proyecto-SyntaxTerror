@@ -32,7 +32,7 @@ class ListRecursosFavFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializamos el adaptador con los 5 parámetros correctos
+        // Inicializamos el adaptador con los parámetros
         recursoAdapter = RecursoAdapter(
             listaRecursos = mutableListOf(),
             onFavClick = { recurso ->
@@ -51,7 +51,7 @@ class ListRecursosFavFragment : Fragment() {
             isFavoritesMode = true // Modo favoritos activado
         )
 
-        binding.recyclerViewSalas.apply {
+        binding.recyclerViewRecursos.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = recursoAdapter
         }

@@ -46,7 +46,7 @@ class ListRecursosFragment : Fragment() {
             isFavoritesMode = false
         )
 
-        binding.recyclerViewSalas.apply {
+        binding.recyclerViewRecursos.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = recursoAdapter
         }

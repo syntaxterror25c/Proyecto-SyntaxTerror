@@ -30,7 +30,7 @@
     <string name="user">Usuario</string>
     <string name="navigation_drawer_open">Desplegar menú</string>
     <string name="navigation_drawer_close">Plegar Menú</string>
-    <string name="lista">Lista</string>
+    <string name="lista">Catálogo</string>
     <string name="contacto">Contacto</string>
     <string name="preferencias">Preferencias</string>
     <string name="buscar">Buscar</string>
@@ -48,4 +48,17 @@
     <string name="idioma">Idioma</string>
     <string name="hintBuscar">Buscar zona...</string>
     <string name="cierraSesion">Para salir cierra sesión</string>
+    <string name="mis_reservas">Mis reservas</string>
+    <string name="estado_confirmada">Confirmada</string>
+    <string name="default_recurso_name">Sala</string>
+    <string name="placeholder_fecha">1 de Enero 2040</string>
+    <string name="recurso">Recurso</string>
+    <string name="reserva_guardada">Reserva guardada con éxito</string>
+    <string name="error_guardar">Error al guardar la reserva</string>
+    <string name="campos_incompletos">Por favor, completa todos los campos</string>
+    <string name="titulo_nueva_reserva">Nueva Reserva</string>
+    <string name="hint_selecciona_fecha">Selecciona Fecha</string>
+    <string name="hint_horario_disponible">Horario Disponible</string>
+    <string name="btn_confirmar_reserva">CONFIRMAR RESERVA</string>
+
 </resources>

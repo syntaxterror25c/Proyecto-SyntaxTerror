@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.aplicacion.databinding.FragmentReservaBinding
 import com.example.aplicacion.viewmodels.RecursosViewModel
+import com.example.aplicacion.R
 import java.util.*
 
 class ReservaFragment : Fragment() {
@@ -30,7 +31,7 @@ class ReservaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recursoIdSeleccionado = arguments?.getInt("recursoId") ?: -1
-        val nombreRecurso = arguments?.getString("nombreRecurso") ?: "Recurso"
+        val nombreRecurso = arguments?.getString("nombreRecurso") ?: getString(R.string.recurso)
         binding.tvNombreRecursoReserva.text = nombreRecurso
 
         // Restaurar estado si el usuario ya había seleccionado algo antes de navegar fuera
@@ -47,16 +48,13 @@ class ReservaFragment : Fragment() {
                 val exito = recursosViewModel.confirmarReserva(recursoIdSeleccionado, usuarioIdActual, fechaText, horaSeleccionada)
 
                 if (exito) {
-                    Toast.makeText(requireContext(), "Reserva guardada", Toast.LENGTH_SHORT).show()
-                    // Limpiamos los datos temporales del VM al terminar con éxito
+                    Toast.makeText(requireContext(), getString(R.string.reserva_guardada), Toast.LENGTH_SHORT).show()                    // Limpiamos los datos temporales del VM al terminar con éxito
                     recursosViewModel.limpiarDatosTemporales()
                     parentFragmentManager.popBackStack()
                 } else {
-                    Toast.makeText(requireContext(), "Error al guardar", Toast.LENGTH_SHORT).show()
-                }
+                    Toast.makeText(requireContext(), getString(R.string.error_guardar), Toast.LENGTH_SHORT).show()                }
             } else {
-                Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show()
-            }
+                Toast.makeText(requireContext(), getString(R.string.campos_incompletos), Toast.LENGTH_SHORT).show()            }
         }
     }
 
@@ -78,7 +76,9 @@ class ReservaFragment : Fragment() {
     private fun showDatePickerDialog() {
         val c = Calendar.getInstance()
         val dpd = DatePickerDialog(requireContext(), { _, y, m, d ->
-            val fechaFormateada = "$d/${m + 1}/$y"
+            val calendar = Calendar.getInstance().apply { set(y, m, d) }
+            val dateFormat = android.text.format.DateFormat.getDateFormat(requireContext())
+            val fechaFormateada = dateFormat.format(calendar.time)
             binding.etFechaReserva.setText(fechaFormateada)
 
             // Guardamos en el VM para que no se pierda al cambiar de Fragment

@@ -2,70 +2,49 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/nav_graph"
+            android:id="@+id/mobile_navigation"
             app:startDestination="@id/loginFragment">
 
-    <!-- 1. PANTALLA DE LOGIN -->
     <fragment
             android:id="@+id/loginFragment"
             android:name="com.example.aplicacion.fragments.LoginFragment"
-            android:label="LoginFragment"
+            android:label="Login"
             tools:layout="@layout/fragment_login">
         <action
                 android:id="@+id/action_loginFragment_to_registerFragment"
                 app:destination="@id/registerFragment" />
-
-        <action
-                android:id="@+id/action_loginFragment_to_listRecursosFragment"
-                app:destination="@id/listRecursosFragment"
-                app:popUpTo="@id/loginFragment"
-                app:popUpToInclusive="true"/>
         <action
                 android:id="@+id/action_loginFragment_to_tabListRecursosFragment"
                 app:destination="@id/tabListRecursosFragment"
                 app:popUpTo="@id/loginFragment"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- 2. PANTALLA DE REGISTRO -->
     <fragment
             android:id="@+id/registerFragment"
             android:name="com.example.aplicacion.fragments.RegisterFragment"
-            android:label="RegisterFragment"
+            android:label="Registro"
             tools:layout="@layout/fragment_register">
         <action
                 android:id="@+id/action_registerFragment_to_loginFragment"
-                app:destination="@id/loginFragment"
-                app:popUpTo="@id/loginFragment"
-                app:popUpToInclusive="true"/>
+                app:destination="@id/loginFragment" />
     </fragment>
-
-    <!-- 3. PANTALLAS DE LISTADOS Y PESTAÑAS -->
-    <fragment
-            android:id="@+id/listRecursosFragment"
-            android:name="com.example.aplicacion.fragments.ListRecursosFragment"
-            android:label="Lista de Salas"
-            tools:layout="@layout/fragment_list_recursos" />
 
     <fragment
             android:id="@+id/tabListRecursosFragment"
             android:name="com.example.aplicacion.fragments.TabListRecursosFragment"
-            android:label="Colección de Recursos"
-            tools:layout="@layout/fragment_tab_list_recursos" />
+            android:label="Gimnasio"
+            tools:layout="@layout/fragment_tab_list_recursos">
+        <action
+                android:id="@+id/action_recursos_to_reserva"
+                app:destination="@id/reservaFragment" />
+    </fragment>
 
-    <fragment
-            android:id="@+id/listRecursosFavFragment"
-            android:name="com.example.aplicacion.fragments.ListRecursosFavFragment"
-            android:label="ListRecursosFavFragment"/>
-
-    <!-- 4. PANTALLA DE RESERVA (Añadida) -->
     <fragment
             android:id="@+id/reservaFragment"
             android:name="com.example.aplicacion.fragments.ReservaFragment"
-            android:label="Reservar Sala"
+            android:label="Nueva Reserva"
             tools:layout="@layout/fragment_reserva">
-
-        <!-- Definición de los argumentos que recibe del Adaptador -->
         <argument
                 android:name="recursoId"
                 app:argType="integer" />
@@ -74,23 +53,22 @@
                 app:argType="string" />
     </fragment>
 
-    <!-- 5. ACCIÓN GLOBAL (Añadida) -->
-    <!-- Permite que el RecursoAdapter navegue a Reserva desde cualquier pestaña -->
-    <action
-            android:id="@+id/action_global_reservaFragment"
-            app:destination="@id/reservaFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+    <fragment
+            android:id="@+id/misReservasFragment"
+            android:name="com.example.aplicacion.fragments.MisReservasFragment"
+            android:label="Mis Reservas"
+            tools:layout="@layout/fragment_mis_reservas" />
 
-    <!-- OTROS FRAGMENTOS -->
     <fragment
             android:id="@+id/contactFragment"
             android:name="com.example.aplicacion.fragments.ContactFragment"
-            android:label="ContactFragment"/>
+            android:label="Contacto"
+            tools:layout="@layout/fragment_contact" />
 
     <fragment
             android:id="@+id/preferencesFragment"
             android:name="com.example.aplicacion.fragments.PreferencesFragment"
-            android:label="PreferencesFragment"/>
+            android:label="Ajustes"
+            tools:layout="@layout/fragment_preferences" />
 
 </navigation>
