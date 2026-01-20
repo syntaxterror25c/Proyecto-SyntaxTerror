@@ -8,12 +8,12 @@ import java.util.List;
 
 public class PlanPrecioDAOImpl {
     public void insertar(PlanPrecio plan) throws SQLException {
-        String sql = "INSERT INTO plan_precios (nombre_plan, precio_mensual, limite_actividades) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO gym.plan_precios (nombre_plan, precio_mensual, limite_sesiones) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, plan.getNombrePlan());
             ps.setDouble(2, plan.getPrecioMensual());
-            ps.setInt(3, plan.getLimiteActividades());
+            ps.setInt(3, plan.getLimiteSesiones());
             ps.executeUpdate();
         }
     }
@@ -22,7 +22,7 @@ public class PlanPrecioDAOImpl {
         List<PlanPrecio> lista = new ArrayList<>();
 
         // Usamos PreparedStatement como hemos quedado para todas las consultas SQL
-        String sql = "SELECT id, nombre_plan, precio_mensual, limite_actividades FROM plan_precios WHERE activo = true";
+        String sql = "SELECT id, nombre_plan, precio_mensual, limite_sesiones FROM gym.plan_precios WHERE activo = true";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -33,7 +33,7 @@ public class PlanPrecioDAOImpl {
                 p.setId(rs.getInt("id"));
                 p.setNombrePlan(rs.getString("nombre_plan"));
                 p.setPrecioMensual(rs.getDouble("precio_mensual"));
-                p.setLimiteActividades(rs.getInt("limite_actividades"));
+                p.setLimiteSesiones(rs.getInt("limite_sesiones"));
                 lista.add(p);
             }
         }

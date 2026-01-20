@@ -11,7 +11,7 @@ public class SuscripcionDAOImpl {
 
     public void insertar(Suscripcion s) throws SQLException {
         // El estado se inserta con el cast al ENUM de Postgres
-        String sql = "INSERT INTO suscripciones (id_usuario, id_plan, fecha_inicio, fecha_fin, estado) " +
+        String sql = "INSERT INTO gym.suscripciones (id_usuario, id_plan, fecha_inicio, fecha_fin, estado) " +
                 "VALUES (?, ?, ?, ?, ?::gym.estado_suscripcion)";
 
         try (Connection conn = DBConnection.getConnection();
@@ -27,21 +27,6 @@ public class SuscripcionDAOImpl {
         }
     }
 
-    public List<Suscripcion> listarPorUsuario(int idUsuario) throws SQLException {
-        List<Suscripcion> lista = new ArrayList<>();
-        String sql = "SELECT * FROM suscripciones WHERE id_usuario = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idUsuario);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    // Aquí mapearías el ResultSet a tu objeto Suscripcion
-                }
-            }
-        }
-        return lista;
-    }
 
     public List<ActividadConfigurada> listarHorarioCompleto() throws SQLException {
         List<ActividadConfigurada> lista = new ArrayList<>();

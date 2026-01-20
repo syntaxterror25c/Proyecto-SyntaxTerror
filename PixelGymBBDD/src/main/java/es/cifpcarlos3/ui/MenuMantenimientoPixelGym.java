@@ -2,7 +2,6 @@ package es.cifpcarlos3.ui;
 
 import es.cifpcarlos3.dao.impl.*;
 import es.cifpcarlos3.model.*;
-import es.cifpcarlos3.model.enums.TipoSala;
 
 import java.sql.SQLException;
 import java.time.LocalTime;
@@ -24,29 +23,37 @@ public class MenuMantenimientoPixelGym {
         int opcion;
         do {
             System.out.println("\n********** PIXEL GYM - PANEL DE CONTROL **********");
-            System.out.println("1. GESTIÓN DE RECURSOS (Altas de Usuarios, Profesores, Salas, Tipos)");
-            System.out.println("2. CONFIGURACIÓN DE HORARIOS (Plantillas)");
-            System.out.println("3. CONSULTAS Y LISTADOS (Ver qué hay)");
+            System.out.println("1. CONSULTAS Y LISTADOS (Ver qué hay)");
+            System.out.println("2. GESTIÓN DE RECURSOS (Altas de Usuarios, Profesores, Salas, Tipos)");
+            System.out.println("3. CONFIGURACIÓN DE HORARIOS (Plantillas)");
             System.out.println("4. GENERAR SESIONES DEL MES (Motor)");
-            System.out.println("5. GESTIÓN DIARIA (Cancelar/Sustituciones)");
+            System.out.println("5. GESTIÓN DIARIA (Cancelar sesión/Sustituciones)");
+            System.out.println("6. Reservar sesión");
+            System.out.println("7. Ver reservas de un socio");
+            System.out.println("8. Probar Login de Socio");
+            System.out.println("9. Cancelar una Reserva específica");
             System.out.println("0. SALIR");
             System.out.print("Elige una categoría: ");
 
             opcion = leerEntero();
 
             switch (opcion) {
-                case 1 -> menuGestionRecursos();
-                case 2 -> menuNuevaActividadConfigurada();
-                case 3 -> menuListados();
+                case 1 -> menuListados();
+                case 2 -> menuGestionRecursos();
+                case 3 -> menuNuevaActividadConfigurada();
                 case 4 -> menuGenerarSesionesMes();
                 case 5 -> menuGestionSesiones();
+                case 6 -> procesarReserva();
+                case 7 -> listarReservasSocio();
+                case 8 -> procesarLogin();
+                case 9 -> procesarCancelacionReserva();
                 case 0 -> System.out.println("¡Hasta pronto!");
                 default -> System.out.println("Opción no válida.");
             }
         } while (opcion != 0);
     }
 
-    // --- MÉTODO QUE FALTABA ---
+
     private static void menuGestionRecursos() {
         System.out.println("\n--- GESTIÓN DE RECURSOS ---");
         System.out.println("1. Registrar nuevo Socio (con Plan)");
@@ -69,13 +76,12 @@ public class MenuMantenimientoPixelGym {
 
     private static void menuListados() {
         System.out.println("\n--- SUBMENÚ DE CONSULTAS ---");
-        System.out.println("1. Estado de socios (Usuarios + Planes)");
+        System.out.println("1. Listado de socios (Usuarios + Planes)");
         System.out.println("2. Listado de Profesores");
         System.out.println("3. Listado de Salas");
         System.out.println("4. Listado de Tipos de Actividad");
         System.out.println("5. Horarios semanal (Plantilla Detallada)");
         System.out.println("6. Sesiones calendario (Ocupación Real)");
-        System.out.println("7. Ver reservas de un socio");
         System.out.println("0. Volver");
         System.out.print("Selecciona: ");
 
@@ -87,7 +93,6 @@ public class MenuMantenimientoPixelGym {
             case 4 -> listarTiposActividad();
             case 5 -> listarHorario();
             case 6 -> mostrarListadoSesiones();
-            case 7 -> listarReservasSocio();
         }
     }
 
@@ -146,9 +151,6 @@ public class MenuMantenimientoPixelGym {
         s.setNombre(teclado.nextLine());
         System.out.print("Capacidad máxima: ");
         s.setCapacidadMaxima(leerEntero());
-        System.out.print("Tipo (1- CLASES, 2- MAQUINAS): ");
-        int tipo = leerEntero();
-        s.setTipo(tipo == 1 ? TipoSala.CLASES : TipoSala.MAQUINAS);
 
         try {
             salaDAO.insertar(s);
@@ -185,7 +187,7 @@ public class MenuMantenimientoPixelGym {
         nuevoPlan.setPrecioMensual(leerDouble()); // El método que valida decimales
 
         System.out.print("Límite de actividades (0 para ilimitado): ");
-        nuevoPlan.setLimiteActividades(leerEntero());
+        nuevoPlan.setLimiteSesiones(leerEntero());
 
         try {
             // Usamos el DAO que ya tienes creado
@@ -201,7 +203,7 @@ public class MenuMantenimientoPixelGym {
             ActividadConfigurada ac = new ActividadConfigurada();
 
             // 1. Datos básicos
-            System.out.print("Nombre de la clase (ej. Yoga Lunes mañana): ");
+            System.out.print("Nombre de la clase (ej. Yoga Lunes 22:00): ");
             ac.setNombreClase(teclado.nextLine());
 
             System.out.print("Día (1-Lunes, 7-Domingo): ");
@@ -226,6 +228,15 @@ public class MenuMantenimientoPixelGym {
             System.out.print("ID del Profesor: ");
             ac.setIdProfesorFijo(leerEntero());
 
+            System.out.print("➤ Aforo específico (Enter para usar el de la sala): ");
+            String inputAforo = teclado.nextLine().trim();
+            if (!inputAforo.isEmpty()) {
+                try {
+                    ac.setAforoEspecifico(Integer.parseInt(inputAforo));
+                } catch (NumberFormatException e) {
+                    System.out.println("⚠️ Formato no válido, se usará el de la sala.");
+                }
+            }
             // Validación de Solapamiento
             // Comprobamos si la SALA está libre en ese rango
             boolean conflictoSala = horarioDAO.existeSolapamiento(
@@ -284,7 +295,6 @@ public class MenuMantenimientoPixelGym {
     // Este es el método que le falta a tu clase de Menú
     private static void listarPlanesPrecios() {
         try {
-            // Llamamos al DAO para traer la lista de la base de datos
             List<PlanPrecio> planes = planPrecioDAO.listarTodos();
 
             if (planes.isEmpty()) {
@@ -297,10 +307,11 @@ public class MenuMantenimientoPixelGym {
             System.out.println("-".repeat(55));
 
             for (PlanPrecio p : planes) {
+                // CORRECCIÓN AQUÍ: Era getLimiteSesiones()
                 System.out.printf("%-3d | %-20s | %-10.2f | %-10d%n",
-                        p.getId(), p.getNombrePlan(), p.getPrecioMensual(), p.getLimiteActividades());
+                        p.getId(), p.getNombrePlan(), p.getPrecioMensual(), p.getLimiteSesiones());
             }
-            System.out.println(""); // Espacio extra para que se vea limpio
+            System.out.println("");
         } catch (SQLException e) {
             System.err.println("❌ Error al recuperar los planes: " + e.getMessage());
         }
@@ -308,19 +319,40 @@ public class MenuMantenimientoPixelGym {
     private static void listarProfesores() {
         System.out.println("\n--- PROFESORES ---");
         try {
-            profesorDAO.listar().forEach(p ->
-                    System.out.printf("ID: %d | %-20s | %s%n", p.getId(), p.getNombre(), p.getEspecialidad()));
+            profesorDAO.listarProfesores().forEach(p ->
+                    System.out.printf("ID: %d | Nombre: %-20s | Especialidad: %-20s | Tel: %s%n",
+                            p.getId(), p.getNombre(), p.getEspecialidad(), p.getTelefono()));
         } catch (Exception e) { System.err.println("❌ Error: " + e.getMessage()); }
     }
 
     private static void listarSalas() {
-        System.out.println("\n--- SALAS ---");
+        System.out.println("\n--- LISTADO GLOBAL DE SALAS ---");
         try {
-            salaDAO.listar().forEach(s ->
-                    System.out.printf("ID: %d | %-15s | Capacidad: %d | Tipo: %s%n", s.getId(), s.getNombre(), s.getCapacidadMaxima(), s.getTipo()));
-        } catch (Exception e) { System.err.println("❌ Error: " + e.getMessage()); }
-    }
+            List<Sala> salas = salaDAO.listar();
 
+            if (salas.isEmpty()) {
+                System.out.println("No hay salas registradas actualmente.");
+                return;
+            }
+
+            // Cabecera formateada para alineación perfecta
+            System.out.printf("%-5s | %-20s | %-10s%n", "ID", "NOMBRE SALA", "CAPACIDAD");
+            System.out.println("---------------------------------------------------------");
+
+            // Usamos el forEach pero con un printf que añade el salto de línea (%n) al final
+            salas.forEach(s ->
+                    System.out.printf("%-5d | %-20s | %-10d%n",
+                            s.getId(),
+                            s.getNombre(),
+                            s.getCapacidadMaxima())
+            );
+
+            System.out.println("---------------------------------------------------------");
+
+        } catch (Exception e) {
+            System.err.println("❌ Error al consultar salas: " + e.getMessage());
+        }
+    }
     private static void listarTiposActividad() {
         System.out.println("\n--- TIPOS DE ACTIVIDAD ---");
         try {
@@ -332,19 +364,31 @@ public class MenuMantenimientoPixelGym {
     private static void listarHorario() {
         System.out.println("\n--- HORARIO SEMANAL DETALLADO ---");
         try {
+            // Usamos el método que ya tienes en el DAO
             List<HorarioDetalleDTO> horario = horarioDAO.listarHorarioDetallado();
             if (horario.isEmpty()) {
                 System.out.println("⚠️ No hay actividades configuradas.");
                 return;
             }
-            System.out.printf("%-3s | %-25s | %-4s | %-5s | %-5s | %-16s | %-15s%n",
-                    "ID", "CLASE", "DÍA", "HORA", "DUR.", "SALA", "PROFESOR");
-            System.out.println("-".repeat(90));
+
+            // Ajustamos la cabecera para que quepa la nueva columna de AFORO
+            System.out.printf("%-3s | %-25s | %-4s | %-5s | %-5s | %-16s | %-20s | %-6s%n",
+                    "ID", "CLASE", "DÍA", "HORA", "DUR.", "SALA", "PROFESOR", "AFORO");
+            System.out.println("-".repeat(110));
 
             for (HorarioDetalleDTO h : horario) {
-                System.out.printf("%-3d | %-25s | %-4s | %-5s | %-5d | %-16s | %-15s%n",
-                        h.getId(), h.getNombreClase(), obtenerNombreDia(h.getDiaSemana()),
-                        h.getHoraInicio(), h.getDuracion(), h.getNombreSala(), h.getNombreProfesor());
+                // Si el aforo es null en la plantilla, mostramos "SALA"
+                String aforoTxt = (h.getAforoEspecifico() != null) ? String.valueOf(h.getAforoEspecifico()) : "SALA";
+
+                System.out.printf("%-3d | %-25s | %-4s | %-5s | %-5d | %-16s | %-20s | %-6s%n",
+                        h.getId(),
+                        h.getNombreClase(),
+                        obtenerNombreDia(h.getDiaSemana()),
+                        h.getHoraInicio(),
+                        h.getDuracion(),
+                        h.getNombreSala(),
+                        h.getNombreProfesor(),
+                        aforoTxt);
             }
         } catch (SQLException e) {
             System.err.println("❌ Error: " + e.getMessage());
@@ -354,26 +398,49 @@ public class MenuMantenimientoPixelGym {
     private static void mostrarListadoSesiones() {
         try {
             List<SesionDetalleDTO> sesiones = sesionDAO.listarSesionesDetalladas();
+
             if (sesiones.isEmpty()) {
-                System.out.println("⚠️ No hay sesiones programadas.");
+                System.out.println("\n⚠️ No hay sesiones programadas en el sistema.");
                 return;
             }
-            System.out.println("\n--- ESTADO DE OCUPACIÓN DE SESIONES ---");
-            System.out.printf("%-4s | %-20s | %-10s | %-8s | %-15s | %-15s | %-6s | %-6s%n",
-                    "ID", "CLASE", "FECHA", "HORA", "SALA", "PROFESOR", "AFORO", "LIBRES");
-            System.out.println("-".repeat(110));
+
+            System.out.println("\n" + "=".repeat(135));
+            System.out.println("                                      CALENDARIO DE SESIONES Y OCUPACIÓN REAL");
+            System.out.println("=".repeat(135));
+
+            // Cabecera con los nuevos campos
+            System.out.printf("%-4s | %-20s | %-10s | %-8s | %-7s | %-20s | %-20s | %-6s | %-6s | %-15s%n",
+                    "ID", "CLASE", "FECHA", "HORA", "DUR.", "SALA", "PROFESOR", "AFORO", "LIBRES", "ESTADO");
+            System.out.println("-".repeat(135));
 
             for (SesionDetalleDTO s : sesiones) {
-                System.out.printf("%-4d | %-20s | %-10s | %-8s | %-15s | %-15s | %-6d | %-6d%n",
-                        s.getIdSesion(), s.getNombreClase(), s.getFecha(),
-                        s.getHoraInicio(), s.getNombreSala(), s.getNombreProfesor(),
-                        s.getAforoMaximo(), s.getPlazasLibres());
+                // Formateamos el estado para que sea visualmente claro
+                String estadoVisual = s.getEstado().equalsIgnoreCase("ACTIVA") ? "🟢 ACTIVA" : "🔴 CANCELADA";
+
+                System.out.printf("%-4d | %-20s | %-10s | %-8s | %-7s | %-20s | %-20s | %-6d | %-6d | %-15s%n",
+                        s.getIdSesion(),
+                        truncarTexto(s.getNombreClase()),
+                        s.getFecha(),
+                        (s.getHoraInicio() != null ? s.getHoraInicio() : "--:--"),                        s.getDuracionMinutos() + "'", // <--- Montamos el String aquí
+                        truncarTexto(s.getNombreSala()),
+                        truncarTexto(s.getNombreProfesor()),
+                        s.getAforoMaximo(),
+                        s.getPlazasLibres(),
+                        estadoVisual);
+
+                // Imprimimos la descripción debajo en una línea secundaria para no ensanchar la tabla
+                System.out.println("     └─ Desc: " + (s.getDescripcion() != null ? s.getDescripcion() : "Sin descripción disponible."));                System.out.println("-".repeat(135));
             }
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("❌ Error al recuperar el listado: " + e.getMessage());
         }
     }
 
+    // Función auxiliar para que el texto no rompa las columnas si es muy largo
+    private static String truncarTexto(String texto) {
+        if (texto == null) return "";
+        return (texto.length() > 20) ? texto.substring(0, 20 - 3) + "..." : texto;
+    }
     private static void listarReservasSocio() {
         System.out.print("\nIntroduce el ID del socio para ver sus reservas: ");
         int idSocio = leerEntero();
@@ -393,13 +460,13 @@ public class MenuMantenimientoPixelGym {
                 return;
             }
 
-            System.out.println("\n--- RESERVAS DEL SOCIO: " + reservas.get(0).getNombreCliente() + " ---");
-            System.out.printf("%-4s | %-20s | %-10s | %-8s | %-12s | %-10s%n",
+            System.out.println("\n--- RESERVAS DEL SOCIO: " + reservas.getFirst().getNombreCliente() + " ---");
+            System.out.printf("%-4s | %-25s | %-10s | %-8s | %-18s | %-10s%n",
                     "ID", "ACTIVIDAD", "FECHA", "HORA", "SALA", "ESTADO");
             System.out.println("-".repeat(75));
 
             for (ReservaDetalleDTO r : reservas) {
-                System.out.printf("%-4d | %-20s | %-10s | %-8s | %-12s | %-10s%n",
+                System.out.printf("%-4d | %-25s | %-10s | %-8s | %-18s | %-10s%n",
                         r.getIdReserva(), r.getNombreActividad(), r.getFechaSesion(),
                         r.getHoraSesion(), r.getNombreSala(), r.getEstadoReserva());
             }
@@ -505,6 +572,101 @@ public class MenuMantenimientoPixelGym {
             } catch (Exception e) {
                 System.out.println("❌ Formato incorrecto. Usa HH:MM (ejemplo: 10:30 o 22:00)");
             }
+        }
+    }
+    private static void procesarReserva() {
+        try {
+            // 1. Cargar las sesiones disponibles
+            List<SesionDetalleDTO> sesiones = sesionDAO.listarSesionesDetalladas();
+
+            // VALIDACIÓN A: ¿Hay sesiones en el sistema?
+            if (sesiones.isEmpty()) {
+                System.out.println("\n⚠️ No hay sesiones generadas. Ve primero al paso 4 (Motor).");
+                return;
+            }
+
+            // 2. Mostrar la información al usuario
+            listarUsuariosYPlanes();
+            mostrarListadoSesiones();
+
+            // 3. Recogida de datos
+            System.out.println("\n>>> FORMULARIO DE RESERVA");
+            System.out.print("➤ ID del Usuario: ");
+            int idU = leerEntero();
+
+            System.out.print("➤ ID de la Sesión: ");
+            int idS = leerEntero();
+
+            // --- NUEVA VALIDACIÓN DE SUSCRIPCIÓN (SEGURIDAD) ---
+            // Comprobamos si el socio tiene plan activo y si no ha caducado para esa sesión
+            String validacionSuscripcion = sesionDAO.verificarSuscripcionVigente(idU, idS);
+            if (!validacionSuscripcion.equals("OK")) {
+                System.err.println("\n" + validacionSuscripcion);
+                return; // Bloqueamos la reserva si no hay suscripción válida
+            }
+
+            // VALIDACIÓN B: ¿Existe la sesión y tiene plazas?
+            SesionDetalleDTO sesionElegida = null;
+            for (SesionDetalleDTO s : sesiones) {
+                if (s.getIdSesion() == idS) {
+                    sesionElegida = s;
+                    break;
+                }
+            }
+
+            if (sesionElegida == null) {
+                System.out.println("❌ Error: La sesión con ID " + idS + " no existe.");
+                return;
+            }
+
+            if (sesionElegida.getPlazasLibres() <= 0) {
+                System.out.println("❌ Error: La sesión '" + sesionElegida.getNombreClase() + "' está llena.");
+                return;
+            }
+
+            // 4. Si todo es correcto, llamamos al DAO para ejecutar la transacción
+            System.out.println("⏳ Procesando reserva...");
+            String resultado = sesionDAO.realizarReserva(idU, idS);
+            System.out.println("\n" + resultado);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private static void procesarLogin() {
+        System.out.println("\n--- PRUEBA DE LOGIN DE SOCIO ---");
+        System.out.print("Introduce Email: ");
+        String email = teclado.nextLine();
+        System.out.print("Introduce Contraseña: ");
+        String pass = teclado.nextLine();
+
+        try {
+            Usuario u = usuarioDAO.validarLogin(email, pass);
+            if (u != null) {
+                System.out.println("✅ Login correcto. ¡Bienvenido, " + u.getNombre() + "! (ID: " + u.getId() + ")");
+            } else {
+                System.out.println("❌ Credenciales incorrectas.");
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error en el login: " + e.getMessage());
+        }
+    }
+
+    private static void procesarCancelacionReserva() {
+        System.out.println("\n--- CANCELACIÓN DE RESERVA ---");
+        System.out.print("Introduce el ID de la Reserva que deseas cancelar: ");
+        int idReserva = leerEntero();
+
+        try {
+            boolean exito = sesionDAO.cancelarReserva(idReserva);
+            if (exito) {
+                System.out.println("✅ Reserva cancelada correctamente. La plaza ha sido liberada.");
+            } else {
+                System.out.println("❌ No se encontró ninguna reserva con ese ID.");
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error al cancelar: " + e.getMessage());
         }
     }
 }

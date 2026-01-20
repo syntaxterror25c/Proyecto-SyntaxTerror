@@ -13,4 +13,5 @@ public class HorarioDetalleDTO {
     private String nombreTipo;
     private String nombreSala;
     private String nombreProfesor;
+    private Integer aforoEspecifico;
 }

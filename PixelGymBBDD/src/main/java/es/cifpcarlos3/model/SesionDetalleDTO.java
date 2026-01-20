@@ -14,4 +14,8 @@ public class SesionDetalleDTO {
     private String nombreProfesor;
     private int aforoMaximo;
     private int plazasLibres;
+    private int idActividadConfigurada;
+    private String descripcion;
+    private String estado;
+    private int duracionMinutos;
 }

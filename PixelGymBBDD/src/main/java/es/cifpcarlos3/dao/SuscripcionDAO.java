@@ -6,6 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 interface SuscripcionDAO {
-    void insertar(Suscripcion s) throws SQLException;
-    List<Suscripcion> listarPorUsuario(int idUsuario) throws SQLException;
+    void insertar(Suscripcion s);
+    List<Suscripcion> listarPorUsuario(int idUsuario);
 }

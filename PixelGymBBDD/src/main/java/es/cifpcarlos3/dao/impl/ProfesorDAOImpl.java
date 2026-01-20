@@ -9,7 +9,7 @@ import java.util.List;
 public class ProfesorDAOImpl {
 
     public void insertar(Profesor p) throws SQLException {
-        String sql = "INSERT INTO profesores (nombre, telefono, especialidad) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO gym.profesores (nombre, telefono, especialidad) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getNombre());
@@ -19,19 +19,27 @@ public class ProfesorDAOImpl {
         }
     }
 
-    public List<Profesor> listar() throws SQLException {
+    public List<Profesor> listarProfesores() throws SQLException {
         List<Profesor> lista = new ArrayList<>();
-        String sql = "SELECT * FROM gym.profesores";
+
+        // 1. Añadimos 'telefono' a la consulta SQL
+        String sql = "SELECT id, nombre, especialidad, telefono FROM gym.profesores ORDER BY nombre ASC";
+
         try (Connection conn = DBConnection.getConnection();
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+             // Usamos PreparedStatement como siempre
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
-                lista.add(new Profesor(
-                        rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("telefono"),
-                        rs.getString("especialidad")
-                ));
+                Profesor p = new Profesor();
+                p.setId(rs.getInt("id"));
+                p.setNombre(rs.getString("nombre"));
+                p.setEspecialidad(rs.getString("especialidad"));
+
+                // 2. Leemos la columna que acabamos de añadir a la BD
+                p.setTelefono(rs.getString("telefono"));
+
+                lista.add(p);
             }
         }
         return lista;

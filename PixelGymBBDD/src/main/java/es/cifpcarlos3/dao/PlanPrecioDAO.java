@@ -7,6 +7,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 interface PlanPrecioDAO {
-    void insertar(PlanPrecio p) throws SQLException;
-    List<PlanPrecio> listar() throws SQLException;
+    void insertar(PlanPrecio p);
+    List<PlanPrecio> listar();
 }

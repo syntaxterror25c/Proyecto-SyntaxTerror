@@ -6,6 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 interface TipoActividadDAO {
-    void insertar(TipoActividad ta) throws SQLException;
-    List<TipoActividad> listar() throws SQLException;
+    void insertar(TipoActividad ta);
+    List<TipoActividad> listar();
 }

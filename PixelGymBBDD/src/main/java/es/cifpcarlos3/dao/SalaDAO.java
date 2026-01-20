@@ -7,6 +7,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 interface SalaDAO {
-    void insertar(Sala s) throws SQLException;
-    List<Sala> listar() throws SQLException;
+    void insertar(Sala s);
+    List<Sala> listar();
 }

@@ -3,7 +3,6 @@ package es.cifpcarlos3.dao.impl;
 import es.cifpcarlos3.config.DBConnection;
 import es.cifpcarlos3.model.ActividadConfigurada;
 import es.cifpcarlos3.model.HorarioDetalleDTO;
-
 import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -11,35 +10,43 @@ import java.util.List;
 
 public class ActividadConfiguradaDAOImpl {
 
+    // 1. INSERTAR (Usando minutos enteros)
     public void insertar(ActividadConfigurada ac) throws SQLException {
-        // Añadimos 'gym.' por seguridad
+        // Añadimos el octavo campo: aforo_especifico_plantilla
         String sql = "INSERT INTO gym.actividad_configurada " +
-                "(nombre_clase, dia_semana, hora_inicio, duracion, id_tipo_actividad, id_sala, id_profesor_fijo) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "(nombre_clase, dia_semana, hora_inicio, duracion, id_tipo_actividad, id_sala, id_profesor_fijo, aforo_especifico_plantilla) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, ac.getNombreClase());
             ps.setInt(2, ac.getDiaSemana());
-            ps.setTime(3, Time.valueOf(ac.getHoraInicio()));
+            ps.setInt(3, ac.getHoraInicioEnMinutos());
             ps.setInt(4, ac.getDuracion());
             ps.setInt(5, ac.getIdTipoActividad());
             ps.setInt(6, ac.getIdSala());
             ps.setInt(7, ac.getIdProfesorFijo());
 
+            // Manejamos el Integer (que puede ser null)
+            if (ac.getAforoEspecifico() == null) {
+                ps.setNull(8, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(8, ac.getAforoEspecifico());
+            }
+
             ps.executeUpdate();
         }
     }
 
+    // 2. LISTAR COMPLETO (Para lógica interna)
     public List<ActividadConfigurada> listarHorarioCompleto() throws SQLException {
         List<ActividadConfigurada> lista = new ArrayList<>();
-        // Ordenamos por día y luego por hora para que el horario tenga sentido
         String sql = "SELECT * FROM gym.actividad_configurada ORDER BY dia_semana, hora_inicio";
 
         try (Connection conn = DBConnection.getConnection();
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 ActividadConfigurada ac = new ActividadConfigurada();
@@ -47,11 +54,8 @@ public class ActividadConfiguradaDAOImpl {
                 ac.setNombreClase(rs.getString("nombre_clase"));
                 ac.setDiaSemana(rs.getInt("dia_semana"));
 
-                // Conversión segura de SQL Time a Java LocalTime
-                Time horaSql = rs.getTime("hora_inicio");
-                if (horaSql != null) {
-                    ac.setHoraInicio(horaSql.toLocalTime());
-                }
+                // IMPORTANTE: Convierte el int de la BD al LocalTime del objeto
+                ac.setHoraInicioDesdeMinutos(rs.getInt("hora_inicio"));
 
                 ac.setDuracion(rs.getInt("duracion"));
                 ac.setIdTipoActividad(rs.getInt("id_tipo_actividad"));
@@ -62,13 +66,15 @@ public class ActividadConfiguradaDAOImpl {
         }
         return lista;
     }
+
     public List<HorarioDetalleDTO> listarHorarioDetallado() throws SQLException {
         List<HorarioDetalleDTO> lista = new ArrayList<>();
         String sql = "SELECT ac.id, ac.nombre_clase, ac.dia_semana, ac.hora_inicio, ac.duracion, " +
-                "ta.nombre as tipo, s.nombre as sala, p.nombre as profesor " +
+                "t.nombre as nombre_tipo, sa.nombre as nombre_sala, p.nombre as nombre_profesor, " +
+                "ac.aforo_especifico_plantilla " +
                 "FROM gym.actividad_configurada ac " +
-                "JOIN gym.tipo_actividad ta ON ac.id_tipo_actividad = ta.id " +
-                "JOIN gym.salas s ON ac.id_sala = s.id " +
+                "JOIN gym.tipo_actividad t ON ac.id_tipo_actividad = t.id " +
+                "JOIN gym.salas sa ON ac.id_sala = sa.id " +
                 "JOIN gym.profesores p ON ac.id_profesor_fijo = p.id " +
                 "ORDER BY ac.dia_semana, ac.hora_inicio";
 
@@ -81,57 +87,63 @@ public class ActividadConfiguradaDAOImpl {
                 dto.setId(rs.getInt("id"));
                 dto.setNombreClase(rs.getString("nombre_clase"));
                 dto.setDiaSemana(rs.getInt("dia_semana"));
-                dto.setHoraInicio(rs.getTime("hora_inicio").toLocalTime());
+                // Convertimos minutos a LocalTime
+                int minutos = rs.getInt("hora_inicio");
+                dto.setHoraInicio(LocalTime.of(minutos / 60, minutos % 60));
                 dto.setDuracion(rs.getInt("duracion"));
-                dto.setNombreTipo(rs.getString("tipo"));
-                dto.setNombreSala(rs.getString("sala"));
-                dto.setNombreProfesor(rs.getString("profesor"));
+                dto.setNombreTipo(rs.getString("nombre_tipo"));
+                dto.setNombreSala(rs.getString("nombre_sala"));
+                dto.setNombreProfesor(rs.getString("nombre_profesor"));
+                // Usamos el nombre exacto de tu atributo
+                dto.setAforoEspecifico((Integer) rs.getObject("aforo_especifico_plantilla"));
+
                 lista.add(dto);
             }
         }
         return lista;
     }
-    public boolean existeSolapamiento(int diaSemana, LocalTime inicio, int duracionMinutos, int idSala) throws SQLException {
-        LocalTime fin = inicio.plusMinutes(duracionMinutos);
 
-        // Esta consulta busca cualquier actividad en el mismo día y sala
-        // cuyo rango de tiempo se cruce con el nuevo
+    // 4. SOLAPAMIENTO SALA
+    public boolean existeSolapamiento(int diaSemana, LocalTime inicio, int duracion, int idSala) throws SQLException {
+        int inicioMin = (inicio.getHour() * 60) + inicio.getMinute();
+        int finMin = inicioMin + duracion;
+
+        // Buscamos si hay alguna clase donde:
+        // El inicio de la nueva sea menor que el fin de la existente
+        // Y el fin de la nueva sea mayor que el inicio de la existente
         String sql = "SELECT COUNT(*) FROM gym.actividad_configurada " +
                 "WHERE dia_semana = ? AND id_sala = ? " +
-                "AND (? < (hora_inicio + (duracion || ' minutes')::interval)) " +
-                "AND ((? + (? || ' minutes')::interval) > hora_inicio)";
+                "AND (? < (hora_inicio + duracion)) " +
+                "AND (? > hora_inicio)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, diaSemana);
             ps.setInt(2, idSala);
-            ps.setTime(3, java.sql.Time.valueOf(inicio));
-            ps.setTime(4, java.sql.Time.valueOf(inicio));
-            ps.setInt(5, duracionMinutos);
+            ps.setInt(3, inicioMin);
+            ps.setInt(4, finMin);
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                return rs.next() && rs.getInt(1) > 0;
             }
         }
-        return false;
     }
-    public boolean existeSolapamientoProfesor(int diaSemana, LocalTime inicio, int duracionMinutos, int idProfesor) throws SQLException {
+
+    // 5. SOLAPAMIENTO PROFESOR
+    public boolean existeSolapamientoProfesor(int diaSemana, LocalTime inicio, int duracion, int idProfesor) throws SQLException {
+        int inicioMin = (inicio.getHour() * 60) + inicio.getMinute();
         String sql = "SELECT COUNT(*) FROM gym.actividad_configurada " +
                 "WHERE dia_semana = ? AND id_profesor_fijo = ? " +
-                "AND (? < (hora_inicio + (duracion || ' minutes')::interval)) " +
-                "AND ((? + (? || ' minutes')::interval) > hora_inicio)";
+                "AND (? < (hora_inicio + duracion)) " +
+                "AND ((? + ?) > hora_inicio)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, diaSemana);
             ps.setInt(2, idProfesor);
-            ps.setTime(3, java.sql.Time.valueOf(inicio));
-            ps.setTime(4, java.sql.Time.valueOf(inicio));
-            ps.setInt(5, duracionMinutos);
+            ps.setInt(3, inicioMin);
+            ps.setInt(4, inicioMin);
+            ps.setInt(5, duracion);
 
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next() && rs.getInt(1) > 0;

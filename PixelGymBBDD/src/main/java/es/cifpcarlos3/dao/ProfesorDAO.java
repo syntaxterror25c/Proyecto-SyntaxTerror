@@ -5,6 +5,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 interface ProfesorDAO {
-    void insertar(Profesor p) throws SQLException;
-    List<Profesor> listar() throws SQLException;
+    void insertar(Profesor p);
+    List<Profesor> listar();
 }

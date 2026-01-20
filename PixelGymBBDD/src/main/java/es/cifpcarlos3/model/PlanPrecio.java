@@ -7,5 +7,5 @@ public class PlanPrecio {
     private int id;
     private String nombrePlan;      // Genera getNombrePlan()
     private double precioMensual;   // Genera getPrecioMensual()
-    private int limiteActividades;  // Genera getLimiteActividades()
+    private int limiteSesiones;  // Genera getLimiteSesiones()
 }
