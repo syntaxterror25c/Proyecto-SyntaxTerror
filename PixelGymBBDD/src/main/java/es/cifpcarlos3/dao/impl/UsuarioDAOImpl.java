@@ -127,7 +127,7 @@ public class UsuarioDAOImpl {
         String sql = "SELECT u.id, u.nombre, u.email, p.nombre_plan, s.fecha_fin, s.estado " +
                 "FROM gym.usuarios u " +
                 "LEFT JOIN gym.suscripciones s ON u.id = s.id_usuario " +
-                "LEFT JOIN gym.plan_precios p ON s.id_plan = p.id " +
+                "LEFT JOIN gym.planprecios p ON s.id_plan = p.id " +
                 "ORDER BY u.id ASC";
 
         try (Connection conn = DBConnection.getConnection();

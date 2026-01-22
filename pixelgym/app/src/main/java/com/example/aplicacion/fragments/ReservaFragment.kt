@@ -13,6 +13,8 @@ import com.example.aplicacion.databinding.FragmentReservaBinding
 import com.example.aplicacion.viewmodels.RecursosViewModel
 import com.example.aplicacion.R
 import java.util.*
+import androidx.navigation.fragment.findNavController
+
 
 class ReservaFragment : Fragment() {
 
@@ -24,6 +26,16 @@ class ReservaFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentReservaBinding.inflate(inflater, container, false)
+        binding.btnDetalles.setOnClickListener {
+            val bundle = Bundle().apply {
+                putInt("recursoId", recursoIdSeleccionado)
+            }
+
+            findNavController().navigate(
+                R.id.action_reservaFragment_to_detalleRecursoFragment,
+                bundle
+            )
+        }
         return binding.root
     }
 

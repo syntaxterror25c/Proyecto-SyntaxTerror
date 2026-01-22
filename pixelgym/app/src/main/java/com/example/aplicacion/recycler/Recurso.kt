@@ -11,5 +11,7 @@ data class Recurso(
     @DrawableRes val imagen: Int,
     // Estos son los campos que faltaban y causaban el error:
     val capacidadMaxima: Int,
-    var cuposReservados: Int = 0
+    var cuposReservados: Int = 0,
+    // Texto para apartado de detalles (Adri)
+    var textoDetalles: String = ""
 )

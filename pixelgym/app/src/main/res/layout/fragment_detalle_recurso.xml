@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:gravity="center_horizontal"
+              android:padding="24dp"
+              android:background="?attr/colorSurface">
+
+    <ImageView
+            android:id="@+id/ivRecursoDetalle"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"/>
+
+    <TextView
+            android:id="@+id/tvDetallePrueba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp" />
+
+    <TextView
+            android:id="@+id/tvTextoDetalles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp" />
+
+    <TextView
+            android:id="@+id/tvTituloHorarios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Horarios disponibles"
+            android:textStyle="bold" />
+
+    <LinearLayout
+            android:id="@+id/layoutHorarios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp" />
+
+
+</LinearLayout>

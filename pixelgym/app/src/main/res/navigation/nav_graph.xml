@@ -41,6 +41,11 @@
     </fragment>
 
     <fragment
+            android:id="@+id/detalleRecursoFragment"
+            android:name="com.example.aplicacion.fragments.DetalleRecursoFragment"
+            android:label="Detalles" />
+
+    <fragment
             android:id="@+id/reservaFragment"
             android:name="com.example.aplicacion.fragments.ReservaFragment"
             android:label="Nueva Reserva"
@@ -51,6 +56,9 @@
         <argument
                 android:name="nombreRecurso"
                 app:argType="string" />
+        <action
+                android:id="@+id/action_reservaFragment_to_detalleRecursoFragment"
+                app:destination="@id/detalleRecursoFragment" />
     </fragment>
 
     <fragment

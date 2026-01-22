@@ -48,14 +48,14 @@ class RecursosRepositorio {
      */
     fun getRecursosIniciales(): MutableList<Recurso> {
         return mutableListOf(
-            Recurso(1, "Musculación", "Zona de pesas libres.", "Fitness", false, R.drawable.im_rec_musculacion, 40, 5),
-            Recurso(2, "Cardio Express", "Cintas y elípticas.", "Fitness", true, R.drawable.im_rec_cardio, 25, 10),
-            Recurso(3, "Crossfit Box", "Alta intensidad.", "Deportes", true, R.drawable.im_rec_crossfit, 20, 2),
-            Recurso(4, "Fitboxing", "Boxeo funcional.", "Contacto", false, R.drawable.im_rec_fitboxing, 15, 0),
-            Recurso(5, "Pilates Studio", "Máquinas Reformer.", "Cuerpo y Mente", false, R.drawable.im_rec_pilates, 10, 8),
-            Recurso(6, "Spinning", "Ciclismo indoor.", "Actividades", false, R.drawable.im_rec_spinning, 30, 4),
-            Recurso(7, "Yoga", "Asanas y meditación.", "Cuerpo y Mente", false, R.drawable.im_rec_yoga, 20, 3),
-            Recurso(8, "Zumba", "Baile fitness.", "Actividades", false, R.drawable.im_rec_zumba, 35, 15)
+            Recurso(1, "Musculación", "Zona de pesas libres.", "Fitness", false, R.drawable.im_rec_musculacion, 40, 5, textoDetalles = "La zona de musculación está equipada con pesas libres, bancos y máquinas guiadas para trabajar todos los grupos musculares. Es ideal tanto para entrenamientos de fuerza como de hipertrofia, permitiendo adaptar la carga y el ritmo a cualquier nivel, desde principiantes hasta usuarios avanzados. El espacio está diseñado para entrenar de forma segura y eficiente, favoreciendo una correcta ejecución de los ejercicios."),
+            Recurso(2, "Cardio Express", "Cintas y elípticas.", "Fitness", true, R.drawable.im_rec_cardio, 25, 10, textoDetalles = "textoDetalles = \"Área destinada al entrenamiento cardiovascular con cintas de correr, bicicletas y elípticas. Ideal para mejorar la resistencia, quemar calorías y mantener la salud cardiovascular. Pensada para sesiones dinámicas y rápidas, permite ajustar la intensidad según los objetivos de cada usuario.\""),
+            Recurso(3, "Crossfit Box", "Alta intensidad.", "Deportes", true, R.drawable.im_rec_crossfit, 20, 2, textoDetalles = "Espacio preparado para entrenamientos funcionales de alta intensidad basados en fuerza, resistencia y potencia. El Crossfit Box cuenta con material específico como barras, kettlebells y cajas pliométricas, fomentando entrenamientos variados, exigentes y altamente motivadores."),
+            Recurso(4, "Fitboxing", "Boxeo funcional.", "Contacto", false, R.drawable.im_rec_fitboxing, 15, 0, textoDetalles = "Actividad que combina movimientos de boxeo con ejercicios funcionales al ritmo de la música. El fitboxing mejora la condición física general, la coordinación y la resistencia, ofreciendo entrenamientos intensos, divertidos y enfocados en la quema de calorías."),
+            Recurso(5, "Pilates Studio", "Máquinas Reformer.", "Cuerpo y Mente", false, R.drawable.im_rec_pilates, 10, 8, textoDetalles = "Sala especializada en pilates con máquinas Reformer, enfocada en el control del cuerpo, la postura y la respiración. Ideal para mejorar la flexibilidad, fortalecer el core y prevenir lesiones, ofreciendo un entorno tranquilo y guiado para todos los niveles."),
+            Recurso(6, "Spinning", "Ciclismo indoor.", "Actividades", false, R.drawable.im_rec_spinning, 30, 4, textoDetalles = "Sesiones de ciclismo indoor dirigidas y motivadoras, diseñadas para mejorar la resistencia cardiovascular y la fuerza del tren inferior. Las clases se adaptan a diferentes niveles de intensidad, combinando música, ritmo y energía."),
+            Recurso(7, "Yoga", "Asanas y meditación.", "Cuerpo y Mente", false, R.drawable.im_rec_yoga, 20, 3, textoDetalles = "Espacio dedicado a la práctica de yoga, combinando posturas (asanas), respiración y meditación. Favorece la relajación, la flexibilidad y el equilibrio mental, siendo ideal para reducir el estrés y mejorar el bienestar general."),
+            Recurso(8, "Zumba", "Baile fitness.", "Actividades", false, R.drawable.im_rec_zumba, 35, 15, textoDetalles = "Actividad de baile fitness que mezcla coreografías sencillas con ritmos latinos y actuales. Zumba es ideal para entrenar de forma divertida, mejorar la coordinación y quemar calorías en un ambiente dinámico y social."),
         )
     }
 }
