@@ -60,5 +60,25 @@
     <string name="hint_selecciona_fecha">Selecciona Fecha</string>
     <string name="hint_horario_disponible">Horario Disponible</string>
     <string name="btn_confirmar_reserva">CONFIRMAR RESERVA</string>
+    <!-- REGISTRO (DEFAULT - ES) -->
+    <string name="hint_name">Nombre</string>
+    <string name="hint_phone">Teléfono</string>
+    <string name="hint_tarifa">Tarifa</string>
 
+    <string name="tarifa_standard">Standard</string>
+    <string name="tarifa_duo">Duo</string>
+    <string name="tarifa_premium">Premium</string>
+
+    <string name="error_email">Email no válido</string>
+    <string name="error_name_letters">El nombre solo puede tener letras y espacios</string>
+    <string name="error_phone_numbers">El teléfono solo puede tener números</string>
+    <string name="error_phone_len">El teléfono debe tener 9 números</string>
+    <string name="error_password_len">La contraseña debe tener entre 5 y 7 caracteres</string>
+    <string name="error_tarifa">Selecciona una tarifa</string>
+
+
+    <string name="action_select_photo">"Seleccionar foto"</string>
+    <string name="snackbar_invalid_data">"Datos incorrectos"</string>
+    <string name="snackbar_account_created">"Cuenta creada"</string>
+    <string name="snackbar_go_login">"Ir al login"</string>
 </resources>

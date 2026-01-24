@@ -60,4 +60,20 @@
     <string name="hint_selecciona_fecha">Select Date</string>
     <string name="hint_horario_disponible">Available Hours</string>
     <string name="btn_confirmar_reserva">CONFIRM BOOKING</string>
+    <string name="action_select_photo">"Select photo"</string>
+    <string name="snackbar_invalid_data">"Invalid data"</string>
+    <string name="snackbar_account_created">"Account created"</string>
+    <string name="snackbar_go_login">"Go to login"</string>
+    <string name="hint_name">"Name"</string>
+    <string name="hint_phone">"Phone"</string>
+    <string name="hint_tarifa">"Plan"</string>
+    <string name="tarifa_standard">Standard</string>
+    <string name="tarifa_duo">Duo</string>
+    <string name="tarifa_premium">Premium</string>
+    <string name="error_email">"Invalid email"</string>
+    <string name="error_name_letters">"Name can only contain letters and spaces"</string>
+    <string name="error_phone_numbers">"Phone can only contain numbers"</string>
+    <string name="error_phone_len">"Phone must be 9 digits"</string>
+    <string name="error_password_len">"Password must be 5 to 7 characters"</string>
+    <string name="error_tarifa">"Select a plan"</string>
 </resources>
