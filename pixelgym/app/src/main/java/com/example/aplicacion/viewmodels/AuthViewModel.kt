@@ -3,54 +3,66 @@ package com.example.aplicacion.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.aplicacion.data.RecursosRepositorio
-import com.example.aplicacion.data.Usuario
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 
-/**
- * ViewModel encargado de la lógica de autenticación.
- * Centraliza el estado del usuario logueado y la validación del formulario.
- */
 class AuthViewModel : ViewModel() {
 
-    // Instanciamos el repositorio para acceder a la "base de datos" de usuarios
-    private val repositorio = RecursosRepositorio()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    // LiveData para habilitar/deshabilitar el botón de login en la UI
-    private val _isLoginValid = MutableLiveData<Boolean>()
-    val isLoginValid: LiveData<Boolean> get() = _isLoginValid
+    // Validación para habilitar botón (lo que ya usas)
+    private val _isLoginValid = MutableLiveData(false)
+    val isLoginValid: LiveData<Boolean> = _isLoginValid
 
-    // LiveData para guardar el objeto Usuario que ha iniciado sesión
-    private val _usuarioLogueado = MutableLiveData<Usuario?>()
-    val usuarioLogueado: LiveData<Usuario?> get() = _usuarioLogueado
-
-    /**
-     * Intenta realizar el login delegando la búsqueda al repositorio.
-     * @return true si las credenciales son válidas, false en caso contrario.
-     */
-    fun login(user: String, pass: String): Boolean {
-        // Llamamos al método del repositorio que centraliza los usuarios de prueba
-        val usuarioEncontrado = repositorio.comprobarLogin(user, pass)
-
-        // Actualizamos el estado del LiveData (esto notificará a los observadores)
-        _usuarioLogueado.value = usuarioEncontrado
-
-        return usuarioEncontrado != null
+    fun updateValidation(username: String, password: String) {
+        _isLoginValid.value = username.isNotBlank() && password.length >= 6
     }
 
-    /**
-     * Limpia los datos de la sesión actual.
-     */
-    fun logout() {
-        _usuarioLogueado.value = null
+    // Estado del login (nuevo)
+    sealed class LoginState {
+        data object Idle : LoginState()
+        data object Loading : LoginState()
+        data class Success(val uid: String) : LoginState()
+        data class Error(val message: String) : LoginState()
     }
 
-    /**
-     * Valida si los campos de texto cumplen con los requisitos mínimos.
-     * Se llama desde los listeners de texto del LoginFragment.
-     */
-    fun updateValidation(user: String, pass: String) {
-        // Regla: Usuario no vacío y contraseña de al menos 4 caracteres
-        val isValid = user.isNotEmpty() && pass.length >= 4
-        _isLoginValid.value = isValid
+    private val _loginState = MutableLiveData<LoginState>(LoginState.Idle)
+    val loginState: LiveData<LoginState> = _loginState
+
+    fun login(email: String, password: String) {
+        val e = email.trim()
+        val p = password.trim()
+
+        _loginState.value = LoginState.Loading
+
+        auth.signInWithEmailAndPassword(e, p)
+            .addOnSuccessListener {
+                val uid = auth.currentUser!!.uid
+
+                // (Opcional pero recomendado) crear/asegurar doc /users/{uid}
+                ensureUserDoc(uid, e)
+
+                _loginState.value = LoginState.Success(uid)
+            }
+            .addOnFailureListener { ex ->
+                _loginState.value = LoginState.Error(ex.message ?: "Error de login")
+            }
+    }
+
+    private fun ensureUserDoc(uid: String, email: String) {
+        val ref = db.collection("users").document(uid)
+        ref.get()
+            .addOnSuccessListener { snap ->
+                if (!snap.exists()) {
+                    val data = hashMapOf(
+                        "email" to email,
+                        "createdAt" to FieldValue.serverTimestamp()
+                    )
+                    ref.set(data)
+                }
+            }
+        // si falla aquí no bloqueamos el login
     }
 }

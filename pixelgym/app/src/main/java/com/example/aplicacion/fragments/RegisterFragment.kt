@@ -11,39 +11,36 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.aplicacion.R
 import com.example.aplicacion.databinding.FragmentRegisterBinding
 import com.example.aplicacion.viewmodels.NewUserViewModel
 import com.google.android.material.snackbar.Snackbar
 
-// Fragmento que representa la pantalla de REGISTRO.
-// Aquí preparo el formulario con todos los campos y conecto la UI con el ViewModel.
+// ✅ Firebase imports
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+
 class RegisterFragment : Fragment() {
 
-    // ---------- VIEW BINDING ----------
-    // Uso ViewBinding para acceder al layout fragment_register.xml sin findViewById.
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
-    // ---------- VIEWMODEL ----------
-    // Uso el delegado viewModels() para obtener el ViewModel de forma limpia.
     private val registerViewModel: NewUserViewModel by viewModels()
 
-    // ---------- FOTO ----------
-    // Aquí guardo la Uri de la foto que el usuario elija.
     private var selectedPhotoUri: Uri? = null
 
-    // Launcher moderno para elegir una imagen de la galería (sin pedir permisos raros).
+    // ✅ Firebase instances
+    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val db: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
             selectedPhotoUri = uri
-            // Pinto la imagen en el ImageView
             binding.ivUserPhoto.setImageURI(uri)
-            // Revalido para activar el botón si procede
             validateAll()
         }
     }
@@ -64,19 +61,10 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Preparo el desplegable de tarifas (Standard / Duo / Premium)
         setupTarifaDropdown()
-
-        // Pongo filtros típicos (nombre solo letras, teléfono solo números y 9 máx)
         setupInputFilters()
-
-        // Escucho cambios en campos y clicks
         setupListeners()
-
-        // Observo el LiveData para habilitar/deshabilitar el botón y cambiar su color
         setupObservers()
-
-        // Validación inicial (botón desactivado)
         validateAll()
     }
 
@@ -86,27 +74,24 @@ class RegisterFragment : Fragment() {
             getString(R.string.tarifa_duo),
             getString(R.string.tarifa_premium)
         )
-
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, tarifas)
         binding.actvTarifa.setAdapter(adapter)
     }
 
     private fun setupInputFilters() {
-        // Nombre: solo letras y espacios (incluye acentos)
         val nameFilter = InputFilter { source, _, _, _, _, _ ->
             val ok = source.all { it.isLetter() || it.isWhitespace() }
             if (ok) null else ""
         }
         binding.etRegName.filters = arrayOf(nameFilter)
 
-        // Teléfono: solo números + máximo 9 dígitos
         val phoneDigitsFilter = InputFilter { source, _, _, _, _, _ ->
             val ok = source.all { it.isDigit() }
             if (ok) null else ""
         }
         binding.etRegPhone.filters = arrayOf(
             phoneDigitsFilter,
-            InputFilter.LengthFilter(9) // 👈 clave para que no acepte más de 9
+            InputFilter.LengthFilter(9)
         )
     }
 
@@ -115,14 +100,11 @@ class RegisterFragment : Fragment() {
             val btn = binding.btnCreateAccount
             btn.isEnabled = enabled
 
-            // Cambio de colores para que se note:
             if (enabled) {
-                // Botón activo: morado + texto blanco
                 btn.setBackgroundColor(0xFF7B61FF.toInt())
                 btn.setTextColor(0xFFFFFFFF.toInt())
                 btn.alpha = 1f
             } else {
-                // Botón desactivado: gris + texto gris
                 btn.setBackgroundColor(0xFFE0E0E0.toInt())
                 btn.setTextColor(0xFF777777.toInt())
                 btn.alpha = 0.85f
@@ -132,7 +114,6 @@ class RegisterFragment : Fragment() {
 
     private fun setupListeners() {
 
-        // Cuando escribo en cualquier campo, limpio errores y revalido
         val clearErrorsAndValidate = {
             binding.tilRegEmail.error = null
             binding.tilRegPass.error = null
@@ -149,38 +130,33 @@ class RegisterFragment : Fragment() {
         binding.etRegName.addTextChangedListener { clearErrorsAndValidate() }
         binding.etRegPhone.addTextChangedListener { clearErrorsAndValidate() }
 
-        // Tarifa: cuando selecciono de la lista también revalido
         binding.actvTarifa.setOnItemClickListener { _, _, _, _ ->
             binding.tilRegTarifa.error = null
             validateAll()
         }
 
-        // Botón "Seleccionar foto"
         binding.btnPickPhoto.setOnClickListener {
-            // Esto abre el selector de imágenes
             pickImageLauncher.launch("image/*")
         }
 
-        // Botón "Crear cuenta"
+        // ✅ Botón "Crear cuenta" -> Firebase Auth + Firestore
         binding.btnCreateAccount.setOnClickListener {
 
-            // Si hay errores → muestro Snackbar + pinto errores en campos
             if (!showFieldErrorsIfNeeded()) {
-                Snackbar.make(binding.root, getString(R.string.snackbar_invalid_data), Snackbar.LENGTH_SHORT)
-                    .show()
+                Snackbar.make(binding.root, getString(R.string.snackbar_invalid_data), Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // ✅ Todo correcto → Snackbar de éxito
-            Snackbar.make(binding.root, getString(R.string.snackbar_account_created), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.snackbar_go_login)) {
-                    // Vuelvo al login
-                    findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-                }
-                .show()
-            // También navego automáticamente al login
-            view?.findNavController()?.navigate(
-                R.id.action_registerFragment_to_loginFragment)
+            val email = binding.etRegEmail.text.toString().trim()
+            val pass1 = binding.etRegPass.text.toString()
+            val name = binding.etRegName.text.toString().trim()
+            val phone = binding.etRegPhone.text.toString().trim()
+            val tarifa = binding.actvTarifa.text.toString().trim()
+            val photoUri = selectedPhotoUri?.toString()
+
+            setInputsEnabled(false)
+
+            createFirebaseUser(email, pass1, name, phone, tarifa, photoUri)
         }
     }
 
@@ -191,9 +167,8 @@ class RegisterFragment : Fragment() {
         val name = binding.etRegName.text.toString().trim()
         val phone = binding.etRegPhone.text.toString().trim()
         val tarifa = binding.actvTarifa.text.toString().trim()
-        val photoSelected = (selectedPhotoUri != null)
+        val photoSelected = true
 
-        // Le paso todo al ViewModel para que calcule si el botón debe estar activo
         registerViewModel.updateValidation(
             email = email,
             pass1 = pass1,
@@ -205,10 +180,6 @@ class RegisterFragment : Fragment() {
         )
     }
 
-    /**
-     * Devuelve true si todo es válido.
-     * Si no lo es, pinto errores "típicos" en cada campo.
-     */
     private fun showFieldErrorsIfNeeded(): Boolean {
         val email = binding.etRegEmail.text.toString().trim()
         val pass1 = binding.etRegPass.text.toString()
@@ -257,5 +228,74 @@ class RegisterFragment : Fragment() {
         }
 
         return ok
+    }
+
+    // ------------------------
+    // ✅ Firebase helpers
+    // ------------------------
+    private fun createFirebaseUser(
+        email: String,
+        password: String,
+        name: String,
+        phone: String,
+        tarifa: String,
+        photoUri: String?
+    ) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                val uid = auth.currentUser!!.uid
+                saveUserProfile(uid, email, name, phone, tarifa, photoUri)
+            }
+            .addOnFailureListener { e ->
+                setInputsEnabled(true)
+                Snackbar.make(binding.root, "Registro falló: ${e.message}", Snackbar.LENGTH_LONG).show()
+            }
+    }
+
+    private fun saveUserProfile(
+        uid: String,
+        email: String,
+        name: String,
+        phone: String,
+        tarifa: String,
+        photoUri: String?
+    ) {
+        val userData = hashMapOf(
+            "email" to email,
+            "name" to name,
+            "phone" to phone,
+            "tarifa" to tarifa,
+            "photoUri" to photoUri,
+            "createdAt" to FieldValue.serverTimestamp()
+        )
+
+        db.collection("users").document(uid).set(userData)
+            .addOnSuccessListener {
+                setInputsEnabled(true)
+
+                Snackbar.make(binding.root, getString(R.string.snackbar_account_created), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.snackbar_go_login)) {
+                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                    }
+                    .show()
+
+                // Navegar al login automáticamente también
+                findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+            }
+            .addOnFailureListener { e ->
+                setInputsEnabled(true)
+                Snackbar.make(binding.root, "Error guardando perfil: ${e.message}", Snackbar.LENGTH_LONG).show()
+            }
+    }
+
+    private fun setInputsEnabled(enabled: Boolean) {
+        binding.etRegEmail.isEnabled = enabled
+        binding.etRegPass.isEnabled = enabled
+        binding.etRegPassConfirm.isEnabled = enabled
+        binding.etRegName.isEnabled = enabled
+        binding.etRegPhone.isEnabled = enabled
+        binding.actvTarifa.isEnabled = enabled
+        binding.btnPickPhoto.isEnabled = enabled
+        binding.btnCreateAccount.isEnabled = if (enabled) (registerViewModel.isRegisterValid.value ?: false) else false
     }
 }

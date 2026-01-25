@@ -21,7 +21,6 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    // Usamos activityViewModels para que la sesión se mantenga globalmente
     private val viewModel: AuthViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -39,16 +38,42 @@ class LoginFragment : Fragment() {
         setupObservers()
     }
 
-    // Función para observar el LiveData del ViewModel
     private fun setupObservers() {
+        // Tu observer original (habilitar botón)
         viewModel.isLoginValid.observe(viewLifecycleOwner) { isValid ->
-            // Cuando el valor cambia, actualiza la propiedad 'isEnabled' del botón
             binding.buttonLogin.isEnabled = isValid
+        }
+
+        // ✅ NUEVO: observer del estado de login Firebase
+        viewModel.loginState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is AuthViewModel.LoginState.Idle -> {
+                    // nada
+                }
+                is AuthViewModel.LoginState.Loading -> {
+                    setInputsEnabled(false)
+                }
+                is AuthViewModel.LoginState.Success -> {
+                    setInputsEnabled(true)
+
+                    val snack = Snackbar.make(binding.root, getString(R.string.login_success), Snackbar.LENGTH_LONG)
+                    val tv = snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                    tv.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    snack.show()
+
+                    findNavController().navigate(R.id.action_loginFragment_to_tabListRecursosFragment)
+                }
+                is AuthViewModel.LoginState.Error -> {
+                    setInputsEnabled(true)
+
+                    Snackbar.make(binding.root, getString(R.string.login_error), Snackbar.LENGTH_LONG).show()
+                    binding.textInputLayoutPassword.error = getString(R.string.login_error_field)
+                }
+            }
         }
     }
 
     private fun setupListeners(view: View) {
-        // Listener para inputs
         val watcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 binding.textInputLayoutPassword.error = null
@@ -56,10 +81,8 @@ class LoginFragment : Fragment() {
                 val username = binding.editTextUsername.text.toString()
                 val password = binding.editTextPassword.text.toString()
 
-                // NOTIFICAR al ViewModel del cambio de texto
                 viewModel.updateValidation(username, password)
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
@@ -67,31 +90,17 @@ class LoginFragment : Fragment() {
         binding.editTextUsername.addTextChangedListener(watcher)
         binding.editTextPassword.addTextChangedListener(watcher)
 
-        // Botón Login
+        // ✅ LOGIN: ahora llama al ViewModel (Firebase) y el observer decide éxito/error
         binding.buttonLogin.setOnClickListener {
             val username = binding.editTextUsername.text.toString()
             val password = binding.editTextPassword.text.toString()
 
-            binding.textInputLayoutPassword.error = null // Limpiar error previo
-
-            // Ajustado a .login() para coincidir con el ViewModel actualizado
-            if (viewModel.login(username, password)) {
-
-                val snack = Snackbar.make(binding.root, getString(R.string.login_success), Snackbar.LENGTH_LONG)
-                val tv = snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                tv.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                snack.show()
-
-                findNavController().navigate(R.id.action_loginFragment_to_tabListRecursosFragment)
-            } else {
-                Snackbar.make(binding.root, getString(R.string.login_error), Snackbar.LENGTH_LONG).show()
-                binding.textInputLayoutPassword.error = getString(R.string.login_error_field)
-            }
+            binding.textInputLayoutPassword.error = null
+            viewModel.login(username, password)
         }
 
-        // Botón loguearse Gmail
+        // Gmail (igual)
         binding.buttonGmail.setOnClickListener {
-            // Bloquear inputs
             setInputsEnabled(false)
             val successSnackbar =
                 Snackbar.make(binding.root, getString(R.string.feature_not_implemented), Snackbar.LENGTH_INDEFINITE)
@@ -102,14 +111,12 @@ class LoginFragment : Fragment() {
             successSnackbar.show()
         }
 
-        // Link Registro con Navigation
+        // Registro (igual)
         binding.textViewRegisterLink.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment)
         }
-
     }
 
-    // Bloquear inputs
     private fun setInputsEnabled(enabled: Boolean) {
         binding.editTextUsername.isEnabled = enabled
         binding.editTextPassword.isEnabled = enabled
@@ -120,6 +127,6 @@ class LoginFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        this._binding = null
+        _binding = null
     }
 }
