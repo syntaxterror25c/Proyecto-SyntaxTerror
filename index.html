@@ -819,8 +819,8 @@ footer::before {
             </thead>
             <tbody>
                 <tr>
-                    <td>Curva de aprendizaje, pruebas y documentación, integración multiplataforma.</td>
-                    <td>Limitación de tiempo, ciberseguridad/RGPD, cambios de versiones.</td>
+                    <td>Curva de aprendizaje, pruebas y documentación.</td>
+                    <td>Limitación de tiempo, cambios de versiones.</td>
                 </tr>
             </tbody>
         </table>
@@ -853,7 +853,7 @@ footer::before {
 
         <p class="section-title">Cronograma (Gantt)</p>
         <p class="small">
-            Imagen del cronograma (Gantt) tomada como referencia visual y guardada dentro del repositorio para que GitHub Pages la cargue siempre. Ruta recomendada: <code>Multimedia/Imagenes/gantt.png</code>.
+            Imagen del cronograma (Gantt) tomada como referencia visual y guardada dentro del repositorio para que GitHub Pages la cargue siempre.
         </p>
         <img src="Multimedia/Imagenes/gantt.png"
              alt="Cronograma / diagrama de Gantt del proyecto"
@@ -1144,8 +1144,8 @@ footer::before {
 
         <p class="section-title">Diagrama Entidad-Relación (ER)</p>
         <p class="small">
-            Imagen guardada dentro del repo para que se vea en GitHub Pages.
-            Ruta recomendada: <code>BBDD/BBDD ER.png</code> (si el nombre tiene espacios, se recomienda renombrar a <code>bbdd_er.png</code>).
+            Imagen guardada dentro del repo para que se vea en GitHub
+        
         </p>
 
         <div class="frame">
@@ -1159,7 +1159,7 @@ footer::before {
                 <code>BBDD/script_tablas.sql</code> y <code>BBDD/script_datos_ejemplo.sql</code>.
             </p>
             <p class="small">
-                Nota: si los ficheros están sin extensión, renómbralos con <code>.sql</code> para que GitHub los previsualice.
+               
             </p>
         </details>
     </section>
@@ -1225,9 +1225,13 @@ footer::before {
     <img src="diagrama/DISEÑO_UML.png" alt="Diagrama UML del modelo de datos" style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;"><br><br>
 
     <strong>Explicación breve:</strong><br>
-    El modelo se basa en: <em>TipoSala → Sala → Clase</em>, donde una sala pertenece a un tipo y en esa sala se imparten clases.
-    Cada clase usa un horario (inicio/fin) y los usuarios pueden generar reservas asociadas a una clase. Además, el aforo/plazas máximas
-    limitan el número de reservas permitidas por sesión.
+    El funcionamiento de la aplicación es sencillo e intuitivo. 
+Primero, el usuario debe registrarse o iniciar sesión en la plataforma. 
+Una vez autenticado, puede visualizar las salas disponibles y seleccionar la que desea utilizar. 
+Después, elige el día y la hora disponibles y realiza su reserva. 
+
+Cada reserva queda asociada al usuario, a la sala seleccionada y al horario elegido. 
+Además, el sistema controla el aforo máximo de cada sala para evitar que se superen las plazas disponibles en una misma franja horaria.
   </div>
 </li>
 
