@@ -1,23 +1,23 @@
 # Archivos de compilación de Android/Java
 **/build/
-.gradle/
-Capturas/
-bin/
+**/.gradle/
+**/Capturas/
+**/bin/
 
 # Configuración de IntelliJ / Android Studio para cualquier proyecto
-.idea/
-*.iml
-*.iws
-*.ipr
-out/
+**/.idea/
+**/*.iml
+**/*.iws
+**/*.ipr
+**/out/
 
 # Archivos de configuración local (Muy importante para seguridad)
-local.properties
-.kotlin/
+**/local.properties
+**/.kotlin/
 
 # Archivos del sistema
-.DS_Store
-Thumbs.db
+**/.DS_Store
+**/Thumbs.db
 
 # Limpieza de errores tipográficos que vimos antes
 .gitnore
