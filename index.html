@@ -8,8 +8,8 @@
         :root {
             --bg: #0f172a;
             --bg-light: #111827;
-            --accent: #22c55e;
-            --accent-soft: rgba(34, 197, 94, 0.1);
+            --accent: #ff7a00;
+            --accent-soft: rgba(255, 122, 0, 0.12);
             --text: #e5e7eb;
             --text-soft: #9ca3af;
             --border: #1f2937;
@@ -18,8 +18,8 @@
         body.light-theme {
             --bg: #f3f4f6;
             --bg-light: #ffffff;
-            --accent: #16a34a;
-            --accent-soft: rgba(22, 163, 74, 0.12);
+            --accent: #ff7a00;
+            --accent-soft: rgba(255, 122, 0, 0.12);
             --text: #040a16;
             --text-soft: #4b5563;
             --border: #e5e7eb;
@@ -39,7 +39,7 @@
         }
 
         header {
-            background: linear-gradient(to right, #22c55e, #22c55e55, transparent);
+            background: linear-gradient(to right, #ff7a00, #ff7a0055, transparent);
             border-bottom: 1px solid var(--border);
             padding: 1.2rem 1.8rem;
             display: flex;
@@ -180,7 +180,7 @@
             margin-left: 0.4rem;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.2);
-            color: ;
+            color: var(--text);
             font-size: 0.7rem;
             font-weight: 600;
             border: 1px solid var(--border);
@@ -260,7 +260,11 @@
             color: var(--text-soft);
         }
 
-        .timeline {
+        
+        .pill.ok { border-style: solid; border-color: rgba(148,163,184,0.45); color: var(--text); background: rgba(148,163,184,0.12); }
+        .pill.doing { border-style: solid; border-color: rgba(255,122,0,0.45); color: var(--text); background: rgba(255,122,0,0.12); }
+
+.timeline {
             list-style: none;
             padding-left: 0;
             border-left: 2px solid #1f2937;
@@ -379,7 +383,7 @@
 
     /* Borde “gordo” estilo 8-bit */
     border-top: 4px solid #000;
-    box-shadow: 0 -4px 0 #22c55e;
+    box-shadow: 0 -4px 0 #ff7a00;
 }
 
 /* Borde negro alrededor del texto (rollo fuente 8-bit) */
@@ -406,21 +410,21 @@ footer::before {
     transform: translateX(-50%) scale(0.9);
     width: 6px;
     height: 6px;
-    background: #22c55e;
+    background: #ff7a00;
     image-rendering: pixelated;
     box-shadow:
-        8px 0   #22c55e,
-        16px 0  #22c55e,
-        0   8px #22c55e,
-        8px 8px #22c55e,
-        16px 8px #22c55e,
-        24px 8px #22c55e,
-        0   16px #22c55e,
-        8px 16px #22c55e,
-        16px 16px #22c55e,
-        24px 16px #22c55e,
-        8px 24px #22c55e,
-        16px 24px #22c55e;
+        8px 0   #ff7a00,
+        16px 0  #ff7a00,
+        0   8px #ff7a00,
+        8px 8px #ff7a00,
+        16px 8px #ff7a00,
+        24px 8px #ff7a00,
+        0   16px #ff7a00,
+        8px 16px #ff7a00,
+        16px 16px #ff7a00,
+        24px 16px #ff7a00,
+        8px 24px #ff7a00,
+        16px 24px #ff7a00;
     border-radius: 1px;
     animation: pixelBounce 1.4s ease-in-out infinite alternate;
 }
@@ -464,10 +468,10 @@ footer::before {
 .robot .head {
     width: 36px;
     height: 26px;
-    background: #22c55e;
+    background: #ff7a00;
     border: 3px solid #000;
     margin: 0 auto;
-    box-shadow: 0px 0px 6px #22c55e;
+    box-shadow: 0px 0px 6px #ff7a00;
 }
 
 /* CUERPO */
@@ -540,6 +544,18 @@ footer::before {
     text-shadow: 1px 1px 0 #000;
 }
 
+    
+        .swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:10px}
+        .swatch{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.02)}
+        .swatch .top{height:56px}
+        .swatch .body{padding:10px 12px}
+        .swatch code{font-size:12px}
+        .kbd{border:1px solid var(--border);border-bottom-width:3px;border-radius:10px;padding:.1rem .45rem;background:rgba(255,255,255,.03);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:12px}
+        details{border:1px solid var(--border);border-radius:14px;padding:10px 12px;background:rgba(255,255,255,.02);margin-top:10px}
+        details summary{cursor:pointer;font-weight:700}
+        .frame{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.02);padding:10px;margin-top:10px}
+        .frame img{width:100%;display:block;border-radius:12px}
+
     </style>
 </head>
 <body>
@@ -561,6 +577,9 @@ footer::before {
         <a href="#roadmap">Roadmap</a>
         <a href="#notas">Notas rápidas</a>
         <a href="#equipo">Equipo</a>
+        <a href="#documentacion">Documentación</a>
+        <a href="#cronograma">Cronograma</a>
+        <a href="#ux">UX/HCD</a>
         <button id="themeToggle" class="theme-toggle">🌙</button>
     </nav>
 </header>
@@ -705,7 +724,480 @@ footer::before {
         </section>
     </div>
 
-    <!-- Bitácora -->
+
+    <!-- Documentación -->
+    <section class="card" id="documentacion" style="margin-top:1.5rem;">
+        <h2>Documentación del proyecto <span class="badge">actualizado</span></h2>
+        <p class="small">
+            Resumen vivo de lo que llevamos preparado hasta hoy: alcance, viabilidad, roles, requisitos y riesgos.
+            Esta sección se mantiene alineada con lo que estamos entregando en GitHub (bitácora + materiales).
+        </p>
+
+        <p class="section-title">1) Alcance (MVP) y visión</p>
+        <p class="small">
+            Desarrollar una solución tecnológica completa (app de escritorio + app Android) para la <strong>gestión y reserva</strong> de espacios/recursos
+            (salas, equipos, parkings). Empezamos por un <strong>MVP centrado en un gimnasio</strong> para después escalar si hay tiempo.
+        </p>
+
+        <p class="section-title">2) Tecnologías y herramientas</p>
+        <ul class="small">
+            <li><strong>GitHub</strong>: repositorio, control de versiones, trabajo colaborativo y publicación web (GitHub Pages).</li>
+            <li><strong>IDE</strong>: IntelliJ IDEA / Android Studio (según módulo y necesidades).</li>
+            <li><strong>Backend</strong>: Java (API/servicios) + JSON.</li>
+            <li><strong>Frontend escritorio</strong>: JavaFX.</li>
+            <li><strong>App móvil</strong>: Android (Kotlin).</li>
+            <li><strong>BBDD</strong>: PostgreSQL (modelado y consultas con DBeaver).</li>
+        </ul>
+
+        <p class="section-title">3) Organización del equipo (roles)</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rol</th>
+                    <th>Responsabilidad</th>
+                    <th>En GitHub</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Project Manager</td>
+                    <td>Coordina el equipo, prioridades y bloqueos.</td>
+                    <td>Hitos, issues, planificación</td>
+                </tr>
+                <tr>
+                    <td>Secretaría</td>
+                    <td>Documentación formal y actualización de la web/bitácora.</td>
+                    <td>Docs / HTML / Wiki</td>
+                </tr>
+                <tr>
+                    <td>Frontend</td>
+                    <td>UI/UX (JavaFX + Android), navegación y pantallas.</td>
+                    <td>Ramas de UI + PRs</td>
+                </tr>
+                <tr>
+                    <td>Backend</td>
+                    <td>Modelo de datos, lógica, endpoints/servicios.</td>
+                    <td>Ramas backend + PRs</td>
+                </tr>
+                <tr>
+                    <td>QA</td>
+                    <td>Pruebas funcionales/no funcionales, reporte de bugs.</td>
+                    <td>Issues tipo bug</td>
+                </tr>
+                <tr>
+                    <td>DevOps</td>
+                    <td>Flujo de ramas, despliegues, revisiones de PRs.</td>
+                    <td>Supervisión de merges</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="section-title">4) Requisitos (resumen)</p>
+        <ul class="small">
+            <li><strong>Usuarios</strong>: registro, login seguro, roles (admin/monitor/cliente), recuperación de contraseña.</li>
+            <li><strong>Reservas</strong>: consultar disponibilidad, reservar/modificar/cancelar, control de aforo.</li>
+            <li><strong>Clases/actividades</strong>: crear clases, horarios, monitor, plazas disponibles.</li>
+            <li><strong>Atómico</strong>: evitar solapamientos/duplicidades (anti-overbooking).</li>
+            <li><strong>No funcionales</strong>: rendimiento, disponibilidad, seguridad (RGPD), mantenibilidad (Git).</li>
+        </ul>
+
+        <p class="section-title">5) Riesgos (los que vigilamos)</p>
+        <ul class="small">
+            <li>Complejidad del backend (reserva atómica / overbooking en tiempo real).</li>
+            <li>Tiempo de entrega y coordinación de tareas.</li>
+            <li>Caída/limitaciones del servidor cloud (si lo usamos).</li>
+            <li>Seguridad y cumplimiento RGPD (datos personales + autenticación).</li>
+        </ul>
+
+        <p class="section-title">6) DAFO (resumen)</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Debilidades</th>
+                    <th>Amenazas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Curva de aprendizaje, pruebas y documentación, integración multiplataforma.</td>
+                    <td>Limitación de tiempo, ciberseguridad/RGPD, cambios de versiones.</td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fortalezas</th>
+                    <th>Oportunidades</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tecnologías maduras, arquitectura API+BBDD escalable, documentación abundante.</td>
+                    <td>Demanda de soluciones self-service, mercado en crecimiento para gestión de recursos.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="small">
+            <strong>Fuente interna:</strong> recopilación y viabilidad técnica del proyecto (documento del equipo).
+        </p>
+    </section>
+
+    <!-- Cronograma -->
+    <section class="card" id="cronograma" style="margin-top:1.5rem;">
+        <h2>Cronograma y planificación</h2>
+        <p class="small">
+            Vista global de las fases (Inicio → Planificación → Análisis/Diseño → Desarrollo → Pruebas → Despliegue → Cierre).
+        </p>
+
+        <p class="section-title">Cronograma (Gantt)</p>
+        <p class="small">
+            Imagen del cronograma (Gantt) tomada como referencia visual y guardada dentro del repositorio para que GitHub Pages la cargue siempre. Ruta recomendada: <code>Multimedia/Imagenes/gantt.png</code>.
+        </p>
+        <img src="Multimedia/Imagenes/gantt.png"
+             alt="Cronograma / diagrama de Gantt del proyecto"
+             style="width:100%; border:1px solid var(--border); border-radius:12px; margin-top:8px;">
+    
+        <p class="section-title" style="margin-top:14px;">Detalle (últimos avances hasta 21/02/2026)</p>
+        <p class="small">
+            El diagrama de Gantt anterior marca las fases grandes del proyecto. Para que la bitácora sea más realista y “de equipo”, añadimos
+            un desglose de los <b>ajustes y entregables</b> que se han ido cerrando en los últimos días (hasta hoy).
+            Estas fechas recogen trabajo de integración, documentación y pulido (UI/UX), que normalmente no se ve en un Gantt “macro”.
+        </p>
+
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width:120px;">Fecha</th>
+                        <th>Qué se hizo</th>
+                        <th style="width:140px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>16/02/2026</b></td>
+                        <td>Revisión del flujo de pantallas (login/registro) y comprobación de navegación. Ajustes de toolbar y botones para que el usuario no se pierda.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>17/02/2026</b></td>
+                        <td>Sincronización del repositorio y estructura de carpetas. Revisión de recursos (nombres válidos en <code>res/</code>) para evitar errores de compilación.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>18/02/2026</b></td>
+                        <td>Documentación visual: recopilación de logos, perfiles e imágenes del proyecto para usar en la web y en el PDF. Limpieza de assets duplicados.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>19/02/2026</b></td>
+                        <td>Base de datos: revisión del modelo y diagrama ER (tablas principales, relaciones, estados). Preparación de scripts de creación y ejemplos.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>20/02/2026</b></td>
+                        <td>Web (GitHub Pages): mejoras de estructura, secciones y presentación. Ajustes para que las imágenes se carguen desde rutas del repositorio.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>21/02/2026</b></td>
+                        <td><b>Hoy:</b> pulido final de UI/UX (modo claro, consistencia de colores, tipografías) y actualización de la documentación en HTML con lo trabajado hasta la fecha.</td>
+                        <td><span class="pill doing">En curso</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="small" style="margin-top:10px;">
+            <b>Nota:</b> este detalle no sustituye al Gantt, lo complementa. El Gantt responde a “fases grandes”, y este bloque responde a “qué hicimos realmente cada día”.
+        </p>
+
+    </section>
+
+    <!-- UX / HCD -->
+    <section class="card" id="ux" style="margin-top:1.5rem;">
+        <h2>UX / Diseño centrado en el usuario (HCD)</h2>
+        <p class="small">
+            Checklist de cómo estamos enfocando el diseño para que la app sea usable (no solo “bonita”).
+        </p>
+
+        <ul class="timeline">
+            <li>
+                <div class="timeline-title">Paso 01 — Definir la utilidad</div>
+                <div class="timeline-desc">Qué problema resuelve la app y qué necesidad real cubre (en palabras simples).</div>
+            </li>
+            <li>
+                <div class="timeline-title">Paso 02 — Conocer al usuario</div>
+                <div class="timeline-desc">Personas / perfiles: objetivos, motivaciones, experiencia tecnológica, contexto.</div>
+            </li>
+            <li>
+                <div class="timeline-title">Paso 03 — Ideación</div>
+                <div class="timeline-desc">Brainstorming → debate → priorización (imprescindible / importante / opcional).</div>
+            </li>
+            <li>
+                <div class="timeline-title">Paso 04 — Prototipos</div>
+                <div class="timeline-desc">Wireframes y prototipos (ej. Figma) para validar flujo antes de programar.</div>
+            </li>
+            <li>
+                <div class="timeline-title">Paso 05 — Tests</div>
+                <div class="timeline-desc">Pruebas con usuarios: conclusiones y mejora iterativa (ciclo continuo).</div>
+            </li>
+        </ul>
+
+        <p class="section-title">Wireframe (referencia)</p>
+        <p class="small">Primer wireframe/imagen de referencia enlazada en el documento del equipo.</p>
+        <img src="Multimedia/Imagenes/gantt.png"
+             alt="Wireframe de referencia"
+             style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;">
+    
+        <p class="section-title" style="margin-top:14px;">Detalle (últimos avances hasta 21/02/2026)</p>
+        <p class="small">
+            El diagrama de Gantt anterior marca las fases grandes del proyecto. Para que la bitácora sea más realista y “de equipo”, añadimos
+            un desglose de los <b>ajustes y entregables</b> que se han ido cerrando en los últimos días (hasta hoy).
+            Estas fechas recogen trabajo de integración, documentación y pulido (UI/UX), que normalmente no se ve en un Gantt “macro”.
+        </p>
+
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width:120px;">Fecha</th>
+                        <th>Qué se hizo</th>
+                        <th style="width:140px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>16/02/2026</b></td>
+                        <td>Revisión del flujo de pantallas (login/registro) y comprobación de navegación. Ajustes de toolbar y botones para que el usuario no se pierda.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>17/02/2026</b></td>
+                        <td>Sincronización del repositorio y estructura de carpetas. Revisión de recursos (nombres válidos en <code>res/</code>) para evitar errores de compilación.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>18/02/2026</b></td>
+                        <td>Documentación visual: recopilación de logos, perfiles e imágenes del proyecto para usar en la web y en el PDF. Limpieza de assets duplicados.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>19/02/2026</b></td>
+                        <td>Base de datos: revisión del modelo y diagrama ER (tablas principales, relaciones, estados). Preparación de scripts de creación y ejemplos.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>20/02/2026</b></td>
+                        <td>Web (GitHub Pages): mejoras de estructura, secciones y presentación. Ajustes para que las imágenes se carguen desde rutas del repositorio.</td>
+                        <td><span class="pill ok">Hecho</span></td>
+                    </tr>
+                    <tr>
+                        <td><b>21/02/2026</b></td>
+                        <td><b>Hoy:</b> pulido final de UI/UX (modo claro, consistencia de colores, tipografías) y actualización de la documentación en HTML con lo trabajado hasta la fecha.</td>
+                        <td><span class="pill doing">En curso</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="small" style="margin-top:10px;">
+            <b>Nota:</b> este detalle no sustituye al Gantt, lo complementa. El Gantt responde a “fases grandes”, y este bloque responde a “qué hicimos realmente cada día”.
+        </p>
+
+    </section>
+
+    
+    <!-- Diseño visual: paleta + tipografías -->
+    <section class="card" id="diseno-visual" style="margin-top:1.5rem;">
+        <h2>Diseño visual: paleta, tipografías y criterios</h2>
+        <p class="small">
+            En esta fase hemos fijado una identidad visual coherente para que <b>tanto la web (GitHub Pages)</b> como la <b>app PixelGym</b>
+            se sientan parte del mismo proyecto. Nos centramos en <b>consistencia</b> (mismos acentos, mismos contrastes) y en que sea legible.
+            Última actualización: <span class="badge">21/02/2026</span>
+        </p>
+
+        <p class="section-title">Paleta principal (Web / SyntaxTerror)</p>
+        <p class="small">
+            Para la web elegimos una base oscura (azules/grises) y un <b>accent naranja</b> para botones y enlaces, porque encaja con el carácter del proyecto y
+            mantiene el “look” tecnológico. Importante: evitamos dejar colores “por defecto” (como los colores por defecto de plantilla) para que todo tenga identidad propia.
+        </p>
+        <div class="swatches">
+            <div class="swatch">
+                <div class="top" style="background:#0f172a"></div>
+                <div class="body">
+                    <b>Fondo</b><br>
+                    <code>#0F172A</code> · base oscura (contraste alto)
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="top" style="background:#111827"></div>
+                <div class="body">
+                    <b>Paneles / tarjetas</b><br>
+                    <code>#111827</code> · capas y contenedores
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="top" style="background:#ff7a00"></div>
+                <div class="body">
+                    <b>Accent (naranja)</b><br>
+                    <code>#FF7A00</code> · botones, badges, enlaces
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="top" style="background:#e5e7eb"></div>
+                <div class="body">
+                    <b>Texto principal</b><br>
+                    <code>#E5E7EB</code> · legibilidad
+                </div>
+            </div>
+        </div>
+
+        <p class="section-title" style="margin-top:14px;">Paleta secundaria (App PixelGym)</p>
+        <p class="small">
+            Se mantiene el <b>naranja PXG</b> como marca (botones, switches, highlights). Para <b>modo claro</b> usamos un blanco suave para no “quemar” la vista.
+        </p>
+        <div class="swatches">
+            <div class="swatch">
+                <div class="top" style="background:#ff7a00"></div>
+                <div class="body">
+                    <b>Naranja PXG</b><br>
+                    <code>#FF7A00</code> · principal
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="top" style="background:#f4f4f6"></div>
+                <div class="body">
+                    <b>Fondo claro suave</b><br>
+                    <code>#F4F4F6</code> · modo claro
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="top" style="background:#1e1e1e"></div>
+                <div class="body">
+                    <b>Texto oscuro elegante</b><br>
+                    <code>#1E1E1E</code> · modo claro
+                </div>
+            </div>
+            <div class="swatch">
+                <div class="top" style="background:#dadada"></div>
+                <div class="body">
+                    <b>Controles inactivos</b><br>
+                    <code>#DADADA</code> · switches off
+                </div>
+            </div>
+        </div>
+
+        <p class="section-title" style="margin-top:14px;">Tipografía</p>
+        <p class="small">
+            Para la app se ha añadido una fuente personalizada en <span class="kbd">res/font</span> (ej: <code>fredoka_one.ttf</code>) y se aplica con
+            <code>android:fontFamily="@font/fredoka_one"</code>. Importante: nombres de archivo <b>en minúsculas y con _</b>.
+        </p>
+
+        <details>
+            <summary>Checklist de consistencia visual (UI)</summary>
+            <ul class="small" style="margin-top:10px; line-height:1.65;">
+                <li><b>Un solo color de acción</b> (accent): naranja en web y en app (misma identidad).</li>
+                <li><b>Jerarquía</b>: títulos grandes, subtítulos medianos, texto de apoyo en gris.</li>
+                <li><b>Espaciado</b>: márgenes constantes (8/16/24).</li>
+                <li><b>Iconos</b>: mismos estilos en todas las pantallas (Material Icons).</li>
+                <li><b>Accesibilidad</b>: contraste mínimo y tamaños de fuente legibles.</li>
+            </ul>
+        </details>
+    </section>
+
+    <!-- Wireframes / Frames -->
+    <section class="card" id="wireframes" style="margin-top:1.5rem;">
+        <h2>Wireframes (frames) y ajustes de layout</h2>
+        <p class="small">
+            Hemos trabajado los <b>frames</b> (wireframes) para asegurar que la navegación sea lógica antes de “pintar” toda la UI final.
+            Aquí documentamos la decisión y el arreglo de distribución (alineación, tamaños y coherencia entre pantallas).
+        </p>
+
+        <p class="section-title">Qué se ha arreglado</p>
+        <ul class="small" style="line-height:1.65;">
+            <li>Orden y jerarquía visual: logo → marca (PXG) → formulario → acciones.</li>
+            <li>Botones con tamaños coherentes y separación suficiente (evitar “apretar” elementos).</li>
+            <li>Uso correcto de <b>Toolbar</b> / flecha atrás según si es pantalla raíz o secundaria.</li>
+            <li>Modo claro/oscuro: mismos componentes, cambian colores (no cambia la estructura).</li>
+        </ul>
+
+        <details>
+            <summary>Wireframe / notas de usuario (documento)</summary>
+            <p class="small" style="margin-top:10px;">
+                Documento interno del equipo con el frame del usuario: <code>Documentacion/WireframeUsuario.md</code>
+                (en GitHub Pages lo mantenemos como referencia).
+            </p>
+            <pre class="small" style="white-space:pre-wrap; margin-top:10px;">![TFG](https://github.com/user-attachments/assets/96d24d83-564a-439b-9d98-b92b69da2c45)</pre>
+        </details>
+    </section>
+
+    <!-- Base de datos -->
+    <section class="card" id="bbdd" style="margin-top:1.5rem;">
+        <h2>Base de datos (BBDD): modelo, scripts y diagrama</h2>
+        <p class="small">
+            Diseño de la base de datos para el módulo <b>gym</b> (usuarios, suscripciones, planes, salas, profesores, sesiones y reservas).
+            Se adjunta el diagrama ER y scripts SQL.
+        </p>
+
+        <p class="section-title">Diagrama Entidad-Relación (ER)</p>
+        <p class="small">
+            Imagen guardada dentro del repo para que se vea en GitHub Pages.
+            Ruta recomendada: <code>BBDD/BBDD ER.png</code> (si el nombre tiene espacios, se recomienda renombrar a <code>bbdd_er.png</code>).
+        </p>
+
+        <div class="frame">
+            <img src="BBDD/BBDD%20ER.png" alt="Diagrama ER de la base de datos del proyecto">
+        </div>
+
+        <details>
+            <summary>Scripts SQL (tablas + datos de ejemplo)</summary>
+            <p class="small" style="margin-top:10px;">
+                Ubicación recomendada en el repo:
+                <code>BBDD/script_tablas.sql</code> y <code>BBDD/script_datos_ejemplo.sql</code>.
+            </p>
+            <p class="small">
+                Nota: si los ficheros están sin extensión, renómbralos con <code>.sql</code> para que GitHub los previsualice.
+            </p>
+        </details>
+    </section>
+
+    <!-- Entregables / evidencias -->
+    <section class="card" id="evidencias" style="margin-top:1.5rem;">
+        <h2>Evidencias y entregables (hasta hoy)</h2>
+        <p class="small">
+            Recopilación rápida de lo que ya está hecho y documentado para poder defender el proyecto y preparar el PDF final.
+        </p>
+
+        <div class="grid-2" style="margin-top:12px;">
+            <div class="mini-card">
+                <p class="section-title">✅ Hecho</p>
+                <ul class="small" style="line-height:1.65;">
+                    <li>Estructura del repositorio + GitHub Pages activa.</li>
+                    <li>Bitácora, roadmap y notas rápidas en la web.</li>
+                    <li>UX/HCD documentado (pasos y criterios).</li>
+                    <li>Paleta de colores definida (web + app).</li>
+                    <li>Wireframes/frames y ajustes de layout.</li>
+                    <li>Cronograma Gantt incrustado.</li>
+                    <li>Modelo de BBDD y diagrama ER.</li>
+                </ul>
+            </div>
+            <div class="mini-card">
+                <p class="section-title">📌 Próximos pasos</p>
+                <ul class="small" style="line-height:1.65;">
+                    <li>Conectar la app con autenticación (email/contraseña) y persistencia.</li>
+                    <li>Implementar pantallas finales siguiendo el frame.</li>
+                    <li>Pruebas (unitarias + integración) y checklist de navegación.</li>
+                    <li>Preparar entrega final (PDF + capturas + demo).</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+<!-- Bitácora -->
     <section class="card" id="bitacora" style="margin-top:1.5rem;">
         <h2>Bitácora del proyecto</h2>
         <p class="small">
@@ -807,30 +1299,30 @@ footer::before {
         <div class="progress-row">
             <div class="progress-label">
                 <span>Fase 2 – Diseño (BD, interfaces)</span>
-                <span>40%</span>
+                <span>100%</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-bar-fill" data-progress="40"></div>
+                <div class="progress-bar-fill" data-progress="100"></div>
             </div>
         </div>
 
         <div class="progress-row">
             <div class="progress-label">
                 <span>Fase 3 – Desarrollo</span>
-                <span>10%</span>
+                <span>100%</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-bar-fill" data-progress="10"></div>
+                <div class="progress-bar-fill" data-progress="100"></div>
             </div>
         </div>
 
         <div class="progress-row">
             <div class="progress-label">
                 <span>Fase 4 – Documentación y entrega</span>
-                <span>0%</span>
+                <span>100%</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-bar-fill" data-progress="0"></div>
+                <div class="progress-bar-fill" data-progress="100"></div>
             </div>
         </div>
     </section>
