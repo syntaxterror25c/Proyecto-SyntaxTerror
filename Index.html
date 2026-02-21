@@ -556,9 +556,80 @@ footer::before {
         .frame{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.02);padding:10px;margin-top:10px}
         .frame img{width:100%;display:block;border-radius:12px}
 
-    </style>
+    
+/* === Gantt local + línea de HOY === */
+.gantt-wrap{
+  position:relative;
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  margin-top:8px;
+  background:rgba(255,255,255,0.02);
+}
+.gantt-wrap img{
+  width:100%;
+  display:block;
+}
+.gantt-today{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:var(--accent);
+  box-shadow:0 0 0 1px rgba(0,0,0,0.25);
+  pointer-events:none;
+}
+.gantt-today span{
+  position:absolute;
+  top:10px;
+  left:8px;
+  transform:translateX(-50%);
+  background:var(--accent);
+  color:#0a0a0a;
+  font-weight:800;
+  font-size:12px;
+  padding:4px 8px;
+  border-radius:999px;
+  letter-spacing:0.08em;
+}
+.gantt-note{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:0.95rem;
+}
+.gantt-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+}
+.gantt-table th, .gantt-table td{
+  border-bottom:1px solid var(--border);
+  padding:10px 12px;
+  vertical-align:top;
+}
+.gantt-table th{
+  text-align:left;
+  color:rgba(255,255,255,0.86);
+  font-weight:700;
+}
+@media (max-width: 820px){
+  .gantt-today span{ left:12px; }
+  .gantt-table th:nth-child(1), .gantt-table td:nth-child(1){ min-width:120px; }
+}
+
+</style>
 </head>
 <body>
+
+<!-- ====================================================== -->
+<!--  Proyecto SyntaxTerror                                -->
+<!--  Esta web la he ido construyendo poco a poco como     -->
+<!--  bitácora del proyecto. Aquí documento todo lo que    -->
+<!--  hemos hecho hasta hoy para que quede claro el        -->
+<!--  proceso completo (planificación, diseño, desarrollo  -->
+<!--  y documentación).                                     -->
+<!-- ====================================================== -->
+
 <header>
     <img id="logo-syntaxterror" src="Multimedia/Imagenes/Logos/Proyecto/logo.png"
          alt="Logo SyntaxTerror">
@@ -587,7 +658,9 @@ footer::before {
 <main>
     <div class="grid">
         <!-- Columna izquierda -->
-        <section class="card" id="resumen">
+        
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="resumen">
             <h2>
                 Resumen del proyecto
                 <span class="badge">WIP</span>
@@ -641,7 +714,9 @@ footer::before {
         </section>
 
         <!-- Columna derecha -->
-        <section class="card" id="tareas">
+        
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="tareas">
             <h2>Panel de tareas</h2>
             <p class="small">
                 <!--Usa esta tabla como mini tablero Kanban. Edita estados directamente aquí.-->
@@ -678,7 +753,6 @@ footer::before {
                 </tbody>
             </table>
 
-            <p class="section-title">Etiquetas recomendadas</p>
             <div class="pill-row">
                 <span class="pill">#backend</span>
                 <span class="pill">#frontend</span>
@@ -726,7 +800,9 @@ footer::before {
 
 
     <!-- Documentación -->
-    <section class="card" id="documentacion" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="documentacion" style="margin-top:1.5rem;">
         <h2>Documentación del proyecto <span class="badge">actualizado</span></h2>
         <p class="small">
             Resumen vivo de lo que llevamos preparado hasta hoy: alcance, viabilidad, roles, requisitos y riesgos.
@@ -819,8 +895,8 @@ footer::before {
             </thead>
             <tbody>
                 <tr>
-                    <td>Curva de aprendizaje, pruebas y documentación.</td>
-                    <td>Limitación de tiempo, cambios de versiones.</td>
+                    <td>Curva de aprendizaje, pruebas y documentación, integración multiplataforma.</td>
+                    <td>Limitación de tiempo, ciberseguridad/RGPD, cambios de versiones.</td>
                 </tr>
             </tbody>
         </table>
@@ -845,7 +921,9 @@ footer::before {
     </section>
 
     <!-- Cronograma -->
-    <section class="card" id="cronograma" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="cronograma" style="margin-top:1.5rem;">
         <h2>Cronograma y planificación</h2>
         <p class="small">
             Vista global de las fases (Inicio → Planificación → Análisis/Diseño → Desarrollo → Pruebas → Despliegue → Cierre).
@@ -853,11 +931,144 @@ footer::before {
 
         <p class="section-title">Cronograma (Gantt)</p>
         <p class="small">
-            Imagen del cronograma (Gantt) tomada como referencia visual y guardada dentro del repositorio para que GitHub Pages la cargue siempre.
         </p>
-        <img src="Multimedia/Imagenes/gantt.png"
-             alt="Cronograma / diagrama de Gantt del proyecto"
-             style="width:100%; border:1px solid var(--border); border-radius:12px; margin-top:8px;">
+        <div class="gantt-wrap" data-start="2025-12-08" data-end="2026-02-21" data-today="2026-02-21">
+  <img src="cronograma_gantt_syntaxterror.png" alt="Cronograma / diagrama de Gantt del proyecto (actualizado a 21/02/2026)">
+  <div class="gantt-today" aria-hidden="true"><span>HOY</span></div>
+</div>
+<p class="gantt-note">
+  <b>Cómo usarlo:</b> coloca el archivo <code>cronograma_gantt_syntaxterror.png</code> en la <b>misma carpeta</b> que este <code>index.html</code>.
+  Así GitHub Pages lo carga sin rutas raras. La línea naranja marca la fecha <b>21/02/2026</b>.
+</p>
+
+<div class="table-wrap">
+  <table class="gantt-table">
+    <thead>
+      <tr>
+        <th style="width:160px;">Fase</th>
+        <th>Actividad</th>
+        <th style="width:120px;">Inicio</th>
+        <th style="width:120px;">Fin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+  <td><b>1.0 Inicio</b></td>
+  <td>Alcance y objetivos</td>
+  <td style="white-space:nowrap;">08/12/2025</td>
+  <td style="white-space:nowrap;">10/12/2025</td>
+</tr>
+<tr>
+  <td><b>1.0 Inicio</b></td>
+  <td>Acta de constitución</td>
+  <td style="white-space:nowrap;">10/12/2025</td>
+  <td style="white-space:nowrap;">12/12/2025</td>
+</tr>
+<tr>
+  <td><b>2.0 Planificación</b></td>
+  <td>WBS y reparto de tareas</td>
+  <td style="white-space:nowrap;">13/12/2025</td>
+  <td style="white-space:nowrap;">15/12/2025</td>
+</tr>
+<tr>
+  <td><b>2.0 Planificación</b></td>
+  <td>Roadmap + cronograma base</td>
+  <td style="white-space:nowrap;">15/12/2025</td>
+  <td style="white-space:nowrap;">19/12/2025</td>
+</tr>
+<tr>
+  <td><b>2.0 Planificación</b></td>
+  <td>Análisis de riesgos</td>
+  <td style="white-space:nowrap;">17/12/2025</td>
+  <td style="white-space:nowrap;">19/12/2025</td>
+</tr>
+<tr>
+  <td><b>3.0 Análisis y Diseño</b></td>
+  <td>Diagramas UML</td>
+  <td style="white-space:nowrap;">20/12/2025</td>
+  <td style="white-space:nowrap;">27/12/2025</td>
+</tr>
+<tr>
+  <td><b>3.0 Análisis y Diseño</b></td>
+  <td>Diseño de BBDD (ER)</td>
+  <td style="white-space:nowrap;">23/12/2025</td>
+  <td style="white-space:nowrap;">04/01/2026</td>
+</tr>
+<tr>
+  <td><b>3.0 Análisis y Diseño</b></td>
+  <td>Wireframes/frames (UI)</td>
+  <td style="white-space:nowrap;">27/12/2025</td>
+  <td style="white-space:nowrap;">08/01/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Base de proyecto + navegación</td>
+  <td style="white-space:nowrap;">05/01/2026</td>
+  <td style="white-space:nowrap;">12/01/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Pantallas Login/Register</td>
+  <td style="white-space:nowrap;">10/01/2026</td>
+  <td style="white-space:nowrap;">18/01/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Pantallas List/Contact/Preferences</td>
+  <td style="white-space:nowrap;">15/01/2026</td>
+  <td style="white-space:nowrap;">25/01/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Ajustes UI (paleta, tipografía)</td>
+  <td style="white-space:nowrap;">20/01/2026</td>
+  <td style="white-space:nowrap;">02/02/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Integración BBDD (scripts + ER)</td>
+  <td style="white-space:nowrap;">28/01/2026</td>
+  <td style="white-space:nowrap;">10/02/2026</td>
+</tr>
+<tr>
+  <td><b>5.0 Pruebas</b></td>
+  <td>Pruebas unitarias y validaciones</td>
+  <td style="white-space:nowrap;">03/02/2026</td>
+  <td style="white-space:nowrap;">12/02/2026</td>
+</tr>
+<tr>
+  <td><b>5.0 Pruebas</b></td>
+  <td>Pruebas de integración</td>
+  <td style="white-space:nowrap;">10/02/2026</td>
+  <td style="white-space:nowrap;">16/02/2026</td>
+</tr>
+<tr>
+  <td><b>5.0 Pruebas</b></td>
+  <td>Pruebas de usuario / revisión UX</td>
+  <td style="white-space:nowrap;">14/02/2026</td>
+  <td style="white-space:nowrap;">18/02/2026</td>
+</tr>
+<tr>
+  <td><b>6.0 Documentación</b></td>
+  <td>GitHub Pages (index + evidencias)</td>
+  <td style="white-space:nowrap;">16/02/2026</td>
+  <td style="white-space:nowrap;">20/02/2026</td>
+</tr>
+<tr>
+  <td><b>6.0 Documentación</b></td>
+  <td>Portada + capturas + memoria</td>
+  <td style="white-space:nowrap;">18/02/2026</td>
+  <td style="white-space:nowrap;">21/02/2026</td>
+</tr>
+<tr>
+  <td><b>7.0 Cierre</b></td>
+  <td>Revisión final y checklist</td>
+  <td style="white-space:nowrap;">21/02/2026</td>
+  <td style="white-space:nowrap;">21/02/2026</td>
+</tr>
+    </tbody>
+  </table>
+</div>
     
         <p class="section-title" style="margin-top:14px;">Detalle (últimos avances hasta 21/02/2026)</p>
         <p class="small">
@@ -917,7 +1128,9 @@ footer::before {
     </section>
 
     <!-- UX / HCD -->
-    <section class="card" id="ux" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="ux" style="margin-top:1.5rem;">
         <h2>UX / Diseño centrado en el usuario (HCD)</h2>
         <p class="small">
             Checklist de cómo estamos enfocando el diseño para que la app sea usable (no solo “bonita”).
@@ -1011,7 +1224,9 @@ footer::before {
 
     
     <!-- Diseño visual: paleta + tipografías -->
-    <section class="card" id="diseno-visual" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="diseno-visual" style="margin-top:1.5rem;">
         <h2>Diseño visual: paleta, tipografías y criterios</h2>
         <p class="small">
             En esta fase hemos fijado una identidad visual coherente para que <b>tanto la web (GitHub Pages)</b> como la <b>app PixelGym</b>
@@ -1093,7 +1308,7 @@ footer::before {
         <p class="section-title" style="margin-top:14px;">Tipografía</p>
         <p class="small">
             Para la app se ha añadido una fuente personalizada en <span class="kbd">res/font</span> (ej: <code>fredoka_one.ttf</code>) y se aplica con
-            <code>android:fontFamily="@font/bebasneue"</code>. Importante: nombres de archivo <b>en minúsculas y con _</b>.
+            <code>android:fontFamily="@font/fredoka_one"</code>. Importante: nombres de archivo <b>en minúsculas y con _</b>.
         </p>
 
         <details>
@@ -1109,7 +1324,9 @@ footer::before {
     </section>
 
     <!-- Wireframes / Frames -->
-    <section class="card" id="wireframes" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="wireframes" style="margin-top:1.5rem;">
         <h2>Wireframes (frames) y ajustes de layout</h2>
         <p class="small">
             Hemos trabajado los <b>frames</b> (wireframes) para asegurar que la navegación sea lógica antes de “pintar” toda la UI final.
@@ -1135,7 +1352,9 @@ footer::before {
     </section>
 
     <!-- Base de datos -->
-    <section class="card" id="bbdd" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="bbdd" style="margin-top:1.5rem;">
         <h2>Base de datos (BBDD): modelo, scripts y diagrama</h2>
         <p class="small">
             Diseño de la base de datos para el módulo <b>gym</b> (usuarios, suscripciones, planes, salas, profesores, sesiones y reservas).
@@ -1144,8 +1363,7 @@ footer::before {
 
         <p class="section-title">Diagrama Entidad-Relación (ER)</p>
         <p class="small">
-            Imagen guardada dentro del repo para que se vea en GitHub
-        
+            Imagen guardada dentro del repo para que se vea en GitHub Pages.
         </p>
 
         <div class="frame">
@@ -1155,17 +1373,18 @@ footer::before {
         <details>
             <summary>Scripts SQL (tablas + datos de ejemplo)</summary>
             <p class="small" style="margin-top:10px;">
-                Ubicación recomendada en el repo:
                 <code>BBDD/script_tablas.sql</code> y <code>BBDD/script_datos_ejemplo.sql</code>.
             </p>
             <p class="small">
-               
+                Nota: si los ficheros están sin extensión, renómbralos con <code>.sql</code> para que GitHub los previsualice.
             </p>
         </details>
     </section>
 
     <!-- Entregables / evidencias -->
-    <section class="card" id="evidencias" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="evidencias" style="margin-top:1.5rem;">
         <h2>Evidencias y entregables (hasta hoy)</h2>
         <p class="small">
             Recopilación rápida de lo que ya está hecho y documentado para poder defender el proyecto y preparar el PDF final.
@@ -1198,7 +1417,9 @@ footer::before {
 
 
 <!-- Bitácora -->
-    <section class="card" id="bitacora" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="bitacora" style="margin-top:1.5rem;">
         <h2>Bitácora del proyecto</h2>
         <p class="small">
             Añadimos una sesión al día o evento de trabajo.
@@ -1225,13 +1446,9 @@ footer::before {
     <img src="diagrama/DISEÑO_UML.png" alt="Diagrama UML del modelo de datos" style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;"><br><br>
 
     <strong>Explicación breve:</strong><br>
-    El funcionamiento de la aplicación es sencillo e intuitivo. 
-Primero, el usuario debe registrarse o iniciar sesión en la plataforma. 
-Una vez autenticado, puede visualizar las salas disponibles y seleccionar la que desea utilizar. 
-Después, elige el día y la hora disponibles y realiza su reserva. 
-
-Cada reserva queda asociada al usuario, a la sala seleccionada y al horario elegido. 
-Además, el sistema controla el aforo máximo de cada sala para evitar que se superen las plazas disponibles en una misma franja horaria.
+    El modelo se basa en: <em>TipoSala → Sala → Clase</em>, donde una sala pertenece a un tipo y en esa sala se imparten clases.
+    Cada clase usa un horario (inicio/fin) y los usuarios pueden generar reservas asociadas a una clase. Además, el aforo/plazas máximas
+    limitan el número de reservas permitidas por sesión.
   </div>
 </li>
 
@@ -1257,7 +1474,7 @@ Además, el sistema controla el aforo máximo de cada sala para evitar que se su
                 <div class="bitacora-titulo">Conectar base de datos</div>
                 <div class="bitacora-detalle">
                     - Investigación sobre opciones de nube para la base de datos.<br>
-                    - Decidimos usar NoSql gestionada y conectarla con FireBase.<br>
+                    - Decidimos usar PostgreSQL gestionada y conectarla con DBeaver.<br>
                     - Añadimos la base de datos al proyecto y probamos la conexión desde el cliente SQL.<br>
                     - Dejamos preparado el acceso para colaboradores.
                 </div>
@@ -1284,7 +1501,9 @@ Además, el sistema controla el aforo máximo de cada sala para evitar que se su
     </section>
 
     <!-- Roadmap -->
-    <section class="card" id="roadmap" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="roadmap" style="margin-top:1.5rem;">
         <h2>Roadmap del proyecto</h2>
         <p class="small">
             <!--Roadmap general con el progreso aproximado de cada fase. Puedes ir actualizando los porcentajes.-->
@@ -1332,7 +1551,9 @@ Además, el sistema controla el aforo máximo de cada sala para evitar que se su
     </section>
 
     <!-- Notas rápidas -->
-    <section class="card" id="notas" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="notas" style="margin-top:1.5rem;">
         <h2>Notas rápidas</h2>
         <p class="small">
             <!--Usa esta sección como “post-its”: ideas para
@@ -1348,8 +1569,8 @@ Además, el sistema controla el aforo máximo de cada sala para evitar que se su
             <li>
                 <div class="timeline-title">[Duda] Integración con base de datos</div>
                 <div class="timeline-desc">
-                    
-                    Hoy hemos creado el esquema inicial, conectado el cliente NoSQL y comenzado a definir tablas y relaciones.
+                    Hemos configurado la base de datos en PostgreSQL y la gestionamos mediante DBeaver.
+                    Hoy hemos creado el esquema inicial, conectado el cliente SQL y comenzado a definir tablas y relaciones.
                 </div>
             </li>
             <li>
@@ -1362,7 +1583,9 @@ Además, el sistema controla el aforo máximo de cada sala para evitar que se su
     </section>
 
     <!-- Equipo -->
-    <section class="card" id="equipo" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="equipo" style="margin-top:1.5rem;">
         <h2>Quiénes somos</h2>
         <p class="small">
             Somos el equipo <strong>SyntaxTerror</strong>, responsables del desarrollo del proyecto intermodular de 2º DAM.
@@ -1450,6 +1673,33 @@ Además, el sistema controla el aforo máximo de cada sala para evitar que se su
     });
 
 </script>
+
+<script>
+(function(){
+  const wrap = document.querySelector('.gantt-wrap');
+  if(!wrap) return;
+
+  const startStr = wrap.getAttribute('data-start'); // YYYY-MM-DD
+  const endStr   = wrap.getAttribute('data-end');
+  const todayStr = wrap.getAttribute('data-today');
+
+  const start = new Date(startStr + 'T00:00:00');
+  const end   = new Date(endStr + 'T00:00:00');
+  const today = new Date(todayStr + 'T00:00:00');
+
+  const total = (end - start);
+  const done  = (today - start);
+
+  const ratio = total > 0 ? Math.min(1, Math.max(0, done / total)) : 1;
+
+  const line = wrap.querySelector('.gantt-today');
+  if(!line) return;
+
+  // Ajuste visual: que no se salga por el borde derecho
+  line.style.left = `calc(${(ratio*100).toFixed(2)}% - 1px)`;
+})();
+</script>
+
 </body>
 
 </html>
