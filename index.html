@@ -557,151 +557,78 @@ footer::before {
         .frame img{width:100%;display:block;border-radius:12px}
 
     
+/* === Gantt local + línea de HOY === */
+.gantt-wrap{
+  position:relative;
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  margin-top:8px;
+  background:rgba(255,255,255,0.02);
+}
+.gantt-wrap img{
+  width:100%;
+  display:block;
+}
+.gantt-today{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:var(--accent);
+  box-shadow:0 0 0 1px rgba(0,0,0,0.25);
+  pointer-events:none;
+}
+.gantt-today span{
+  position:absolute;
+  top:10px;
+  left:8px;
+  transform:translateX(-50%);
+  background:var(--accent);
+  color:#0a0a0a;
+  font-weight:800;
+  font-size:12px;
+  padding:4px 8px;
+  border-radius:999px;
+  letter-spacing:0.08em;
+}
+.gantt-note{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:0.95rem;
+}
+.gantt-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+}
+.gantt-table th, .gantt-table td{
+  border-bottom:1px solid var(--border);
+  padding:10px 12px;
+  vertical-align:top;
+}
+.gantt-table th{
+  text-align:left;
+  color:rgba(255,255,255,0.86);
+  font-weight:700;
+}
+@media (max-width: 820px){
+  .gantt-today span{ left:12px; }
+  .gantt-table th:nth-child(1), .gantt-table td:nth-child(1){ min-width:120px; }
+}
 
-        /* =========================
-           GANTT INTERACTIVO (AÑADIDO)
-           - No toca lo que ya hay
-           - Solo añade estilos para el cronograma interactivo
-           ========================= */
-        .gantt-tools{
-            display:flex;
-            flex-wrap:wrap;
-            gap:10px;
-            align-items:center;
-            margin-top:10px;
-            margin-bottom:10px;
-        }
-        .gantt-field{
-            display:flex;
-            align-items:center;
-            gap:8px;
-            padding:8px 10px;
-            border-radius:12px;
-            border:1px solid var(--border);
-            background: rgba(255,255,255,.02);
-        }
-        .gantt-field label{
-            font-size:0.82rem;
-            color: var(--text-soft);
-            font-weight:600;
-        }
-        .gantt-field select,
-        .gantt-field input[type="range"]{
-            accent-color: var(--accent);
-        }
-        .gantt-field select{
-            border:1px solid var(--border);
-            background: var(--bg-light);
-            color: var(--text);
-            border-radius:10px;
-            padding:6px 8px;
-            font-family: inherit;
-            font-size:0.85rem;
-        }
-        .gantt-wrap{
-            border:1px solid var(--border);
-            border-radius:12px;
-            overflow:hidden;
-            background: rgba(255,255,255,.02);
-            margin-top:8px;
-        }
-        .gantt-head{
-            display:flex;
-            justify-content:space-between;
-            gap:12px;
-            padding:10px 12px;
-            border-bottom:1px solid var(--border);
-            align-items:center;
-        }
-        .gantt-hint{
-            font-size:0.78rem;
-            color: var(--text-soft);
-        }
-        .gantt-canvas{
-            width:100%;
-            overflow:auto;
-        }
-        #ganttSvg{
-            display:block;
-        }
-        .gantt-tip{
-            position: fixed;
-            pointer-events:none;
-            z-index: 9999;
-            background: rgba(2,6,23,.92);
-            color: #fff;
-            border: 1px solid rgba(255,122,0,.35);
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-size: 0.84rem;
-            box-shadow: 0 18px 40px rgba(0,0,0,.35);
-            max-width: 340px;
-            display:none;
-        }
-        body.light-theme .gantt-tip{
-            background: rgba(15,23,42,.95);
-        }
-
-    
-        /* =========================
-           VIDEO (AL PRINCIPIO) + BOTÓN IMPRIMIR/PDF
-           ========================= */
-        .video-half{
-            width: 50%;
-            max-width: 560px;
-            min-width: 320px;
-            margin: 0 auto;
-        }
-        @media (max-width: 900px){
-            .video-half{ width: 100%; min-width: 0; }
-        }
-
-        .print-btn{
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            z-index: 9999;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,122,0,.35);
-            background: rgba(2,6,23,.68);
-            color: rgba(255,255,255,.92);
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 18px 40px rgba(0,0,0,.25);
-        }
-        .print-btn:hover{
-            border-color: rgba(255,122,0,.65);
-            transform: translateY(-1px);
-        }
-        .print-btn svg{
-            width: 18px;
-            height: 18px;
-            opacity: .92;
-        }
-        @media print{
-            .print-btn{ display:none !important; }
-        }
-
-    </style>
+</style>
 </head>
 <body>
 
-<button class="print-btn" type="button" onclick="window.print()" aria-label="Imprimir o guardar como PDF">
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M7 8V4h10v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M7 17h10v3H7v-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M6 17H5a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3h-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M17 13h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-  </svg>
-  Imprimir / PDF
-</button>
+<!-- ====================================================== -->
+<!--  Proyecto SyntaxTerror                                -->
+<!--  Esta web la he ido construyendo poco a poco como     -->
+<!--  bitácora del proyecto. Aquí documento todo lo que    -->
+<!--  hemos hecho hasta hoy para que quede claro el        -->
+<!--  proceso completo (planificación, diseño, desarrollo  -->
+<!--  y documentación).                                     -->
+<!-- ====================================================== -->
 
 <header>
     <img id="logo-syntaxterror" src="Multimedia/Imagenes/Logos/Proyecto/logo.png"
@@ -729,27 +656,11 @@ footer::before {
 </header>
 
 <main>
-
-<section class="card reveal" id="video">
-  <div class="hd">
-    <h2>Vídeo demo <span class="badge">extra</span></h2>
-    <span class="small">Pantallazo rápido del proyecto</span>
-  </div>
-  <div class="bd">
-    <p class="small">
-      Aquí dejo un vídeo corto del funcionamiento para que se vea el flujo completo (registro/login → salas → reserva por día y hora).
-    </p>
-
-    <video controls style="width:100%; border-radius:14px; border:1px solid var(--border); background: rgba(0,0,0,.25);" class="video-half"
-           src="Multimedia/PYXELGYM.mp4">
-      Tu navegador no soporta vídeo HTML5.
-    </video>
-  </div>
-</section>
-
     <div class="grid">
         <!-- Columna izquierda -->
-        <section class="card" id="resumen">
+        
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="resumen">
             <h2>
                 Resumen del proyecto
                 <span class="badge">WIP</span>
@@ -757,7 +668,7 @@ footer::before {
             <p class="small">
                  El objetivo principal del proyecto es desarrollar una aplicación completa que combine interfaz,
     lógica de negocio y base de datos, aplicando los conocimientos de 2º DAM. Buscamos trabajar como un
-    equipo real usando herramientas como GitHub, Kotlin y Firestore (Firebase NoSQL), y entregar una solución funcional y
+    equipo real usando herramientas como GitHub, Kotlin y PostgreSQL, y entregar una solución funcional y
     bien documentada que demuestre nuestras competencias como desarrolladores.
             </p>
 
@@ -770,7 +681,7 @@ footer::before {
             <p class="section-title">Objetivos del proyecto</p>
             <ul class="small">
                 <li>Analizar y definir los requisitos funcionales y técnicos del proyecto.</li>
-                <li>Diseñar la estructura de la base de datos en Firestore (Firebase NoSQL) con integridad referencial.</li>
+                <li>Diseñar la estructura de la base de datos en PostgreSQL con integridad referencial.</li>
                 <li>Implementar la lógica de negocio en Java con código modular y mantenible.</li>
                 <li>Desarrollar una interfaz gráfica clara, funcional y adaptada al usuario.</li>
                 <li>Gestionar la base de datos con DBeaver y validar consultas durante el desarrollo.</li>
@@ -803,7 +714,9 @@ footer::before {
         </section>
 
         <!-- Columna derecha -->
-        <section class="card" id="tareas">
+        
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="tareas">
             <h2>Panel de tareas</h2>
             <p class="small">
                 <!--Usa esta tabla como mini tablero Kanban. Edita estados directamente aquí.-->
@@ -840,7 +753,6 @@ footer::before {
                 </tbody>
             </table>
 
-            <p class="section-title">Etiquetas recomendadas</p>
             <div class="pill-row">
                 <span class="pill">#backend</span>
                 <span class="pill">#frontend</span>
@@ -868,7 +780,7 @@ footer::before {
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>Diseño de BD (Firestore (Firebase NoSQL)) y conexión con DBeaver.</td>
+                    <td>Diseño de BD (PostgreSQL) y conexión con DBeaver.</td>
                     <td>⏳ En progreso</td>
                 </tr>
                 <tr>
@@ -886,8 +798,11 @@ footer::before {
         </section>
     </div>
 
+
     <!-- Documentación -->
-    <section class="card" id="documentacion" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="documentacion" style="margin-top:1.5rem;">
         <h2>Documentación del proyecto <span class="badge">actualizado</span></h2>
         <p class="small">
             Resumen vivo de lo que llevamos preparado hasta hoy: alcance, viabilidad, roles, requisitos y riesgos.
@@ -907,7 +822,7 @@ footer::before {
             <li><strong>Backend</strong>: Java (API/servicios) + JSON.</li>
             <li><strong>Frontend escritorio</strong>: JavaFX.</li>
             <li><strong>App móvil</strong>: Android (Kotlin).</li>
-            <li><strong>BBDD</strong>: Firestore (Firebase NoSQL) (modelado y consultas con DBeaver).</li>
+            <li><strong>BBDD</strong>: PostgreSQL (modelado y consultas con DBeaver).</li>
         </ul>
 
         <p class="section-title">3) Organización del equipo (roles)</p>
@@ -1006,7 +921,9 @@ footer::before {
     </section>
 
     <!-- Cronograma -->
-    <section class="card" id="cronograma" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="cronograma" style="margin-top:1.5rem;">
         <h2>Cronograma y planificación</h2>
         <p class="small">
             Vista global de las fases (Inicio → Planificación → Análisis/Diseño → Desarrollo → Pruebas → Despliegue → Cierre).
@@ -1014,46 +931,144 @@ footer::before {
 
         <p class="section-title">Cronograma (Gantt)</p>
         <p class="small">
-            Imagen del cronograma (Gantt) tomada como referencia visual y guardada dentro del repositorio para que GitHub Pages la cargue siempre. </p>
-        <!-- =========================
-             GANTT INTERACTIVO (AÑADIDO)
-             - Mantengo la imagen y el detalle que ya había
-             - Esto es un extra para que sea más visual e interactivo
-             ========================= -->
-        <p class="section-title" style="margin-top:14px;">Cronograma interactivo (Gantt)</p>
-        <p class="small">
-            Este cronograma se puede <b>filtrar</b> por fases, hacer <b>zoom</b> y ver detalles pasando el ratón por cada barra.
-            La línea naranja marca el día de <b>hoy</b> (automático).
         </p>
+        <div class="gantt-wrap" data-start="2025-12-08" data-end="2026-02-21" data-today="2026-02-21">
+  <img src="cronograma_gantt_syntaxterror.png" alt="Cronograma / diagrama de Gantt del proyecto (actualizado a 21/02/2026)">
+  <div class="gantt-today" aria-hidden="true"><span>HOY</span></div>
+</div>
+<p class="gantt-note">
+  <b>Cómo usarlo:</b> coloca el archivo <code>cronograma_gantt_syntaxterror.png</code> en la <b>misma carpeta</b> que este <code>index.html</code>.
+  Así GitHub Pages lo carga sin rutas raras. La línea naranja marca la fecha <b>21/02/2026</b>.
+</p>
 
-        <div class="gantt-tools">
-            <div class="gantt-field">
-                <label for="ganttPhase">Fase</label>
-                <select id="ganttPhase">
-                    <option value="all">Todas</option>
-                </select>
-            </div>
-
-            <div class="gantt-field">
-                <label for="ganttZoom">Zoom</label>
-                <input id="ganttZoom" type="range" min="1" max="4" step="1" value="2" />
-                <span class="small" id="ganttZoomLabel">medio</span>
-            </div>
-
-            <div class="gantt-field">
-                <label for="ganttOnlyDone">Solo hecho</label>
-                <input id="ganttOnlyDone" type="checkbox" />
-            </div>
-        </div>
-
-        <div class="gantt-wrap">
-            <div class="gantt-head">
-                <div class="gantt-hint">🖱️ Pasa por encima de una barra para ver el detalle · 📅 Línea naranja = HOY</div>
-                <div class="gantt-hint">Si no cabe, desliza horizontal (scroll) en el gráfico</div>
-            </div>
-            <div class="gantt-canvas" id="ganttCanvas"></div>
-        </div>
-
+<div class="table-wrap">
+  <table class="gantt-table">
+    <thead>
+      <tr>
+        <th style="width:160px;">Fase</th>
+        <th>Actividad</th>
+        <th style="width:120px;">Inicio</th>
+        <th style="width:120px;">Fin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+  <td><b>1.0 Inicio</b></td>
+  <td>Alcance y objetivos</td>
+  <td style="white-space:nowrap;">08/12/2025</td>
+  <td style="white-space:nowrap;">10/12/2025</td>
+</tr>
+<tr>
+  <td><b>1.0 Inicio</b></td>
+  <td>Acta de constitución</td>
+  <td style="white-space:nowrap;">10/12/2025</td>
+  <td style="white-space:nowrap;">12/12/2025</td>
+</tr>
+<tr>
+  <td><b>2.0 Planificación</b></td>
+  <td>WBS y reparto de tareas</td>
+  <td style="white-space:nowrap;">13/12/2025</td>
+  <td style="white-space:nowrap;">15/12/2025</td>
+</tr>
+<tr>
+  <td><b>2.0 Planificación</b></td>
+  <td>Roadmap + cronograma base</td>
+  <td style="white-space:nowrap;">15/12/2025</td>
+  <td style="white-space:nowrap;">19/12/2025</td>
+</tr>
+<tr>
+  <td><b>2.0 Planificación</b></td>
+  <td>Análisis de riesgos</td>
+  <td style="white-space:nowrap;">17/12/2025</td>
+  <td style="white-space:nowrap;">19/12/2025</td>
+</tr>
+<tr>
+  <td><b>3.0 Análisis y Diseño</b></td>
+  <td>Diagramas UML</td>
+  <td style="white-space:nowrap;">20/12/2025</td>
+  <td style="white-space:nowrap;">27/12/2025</td>
+</tr>
+<tr>
+  <td><b>3.0 Análisis y Diseño</b></td>
+  <td>Diseño de BBDD (ER)</td>
+  <td style="white-space:nowrap;">23/12/2025</td>
+  <td style="white-space:nowrap;">04/01/2026</td>
+</tr>
+<tr>
+  <td><b>3.0 Análisis y Diseño</b></td>
+  <td>Wireframes/frames (UI)</td>
+  <td style="white-space:nowrap;">27/12/2025</td>
+  <td style="white-space:nowrap;">08/01/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Base de proyecto + navegación</td>
+  <td style="white-space:nowrap;">05/01/2026</td>
+  <td style="white-space:nowrap;">12/01/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Pantallas Login/Register</td>
+  <td style="white-space:nowrap;">10/01/2026</td>
+  <td style="white-space:nowrap;">18/01/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Pantallas List/Contact/Preferences</td>
+  <td style="white-space:nowrap;">15/01/2026</td>
+  <td style="white-space:nowrap;">25/01/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Ajustes UI (paleta, tipografía)</td>
+  <td style="white-space:nowrap;">20/01/2026</td>
+  <td style="white-space:nowrap;">02/02/2026</td>
+</tr>
+<tr>
+  <td><b>4.0 Desarrollo</b></td>
+  <td>Integración BBDD (scripts + ER)</td>
+  <td style="white-space:nowrap;">28/01/2026</td>
+  <td style="white-space:nowrap;">10/02/2026</td>
+</tr>
+<tr>
+  <td><b>5.0 Pruebas</b></td>
+  <td>Pruebas unitarias y validaciones</td>
+  <td style="white-space:nowrap;">03/02/2026</td>
+  <td style="white-space:nowrap;">12/02/2026</td>
+</tr>
+<tr>
+  <td><b>5.0 Pruebas</b></td>
+  <td>Pruebas de integración</td>
+  <td style="white-space:nowrap;">10/02/2026</td>
+  <td style="white-space:nowrap;">16/02/2026</td>
+</tr>
+<tr>
+  <td><b>5.0 Pruebas</b></td>
+  <td>Pruebas de usuario / revisión UX</td>
+  <td style="white-space:nowrap;">14/02/2026</td>
+  <td style="white-space:nowrap;">18/02/2026</td>
+</tr>
+<tr>
+  <td><b>6.0 Documentación</b></td>
+  <td>GitHub Pages (index + evidencias)</td>
+  <td style="white-space:nowrap;">16/02/2026</td>
+  <td style="white-space:nowrap;">20/02/2026</td>
+</tr>
+<tr>
+  <td><b>6.0 Documentación</b></td>
+  <td>Portada + capturas + memoria</td>
+  <td style="white-space:nowrap;">18/02/2026</td>
+  <td style="white-space:nowrap;">21/02/2026</td>
+</tr>
+<tr>
+  <td><b>7.0 Cierre</b></td>
+  <td>Revisión final y checklist</td>
+  <td style="white-space:nowrap;">21/02/2026</td>
+  <td style="white-space:nowrap;">21/02/2026</td>
+</tr>
+    </tbody>
+  </table>
+</div>
     
         <p class="section-title" style="margin-top:14px;">Detalle (últimos avances hasta 21/02/2026)</p>
         <p class="small">
@@ -1113,7 +1128,9 @@ footer::before {
     </section>
 
     <!-- UX / HCD -->
-    <section class="card" id="ux" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="ux" style="margin-top:1.5rem;">
         <h2>UX / Diseño centrado en el usuario (HCD)</h2>
         <p class="small">
             Checklist de cómo estamos enfocando el diseño para que la app sea usable (no solo “bonita”).
@@ -1144,6 +1161,10 @@ footer::before {
 
         <p class="section-title">Wireframe (referencia)</p>
         <p class="small">Primer wireframe/imagen de referencia enlazada en el documento del equipo.</p>
+        <img src="Multimedia/Imagenes/gantt.png"
+             alt="Wireframe de referencia"
+             style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;">
+    
         <p class="section-title" style="margin-top:14px;">Detalle (últimos avances hasta 21/02/2026)</p>
         <p class="small">
             El diagrama de Gantt anterior marca las fases grandes del proyecto. Para que la bitácora sea más realista y “de equipo”, añadimos
@@ -1203,7 +1224,9 @@ footer::before {
 
     
     <!-- Diseño visual: paleta + tipografías -->
-    <section class="card" id="diseno-visual" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="diseno-visual" style="margin-top:1.5rem;">
         <h2>Diseño visual: paleta, tipografías y criterios</h2>
         <p class="small">
             En esta fase hemos fijado una identidad visual coherente para que <b>tanto la web (GitHub Pages)</b> como la <b>app PixelGym</b>
@@ -1301,7 +1324,9 @@ footer::before {
     </section>
 
     <!-- Wireframes / Frames -->
-    <section class="card" id="wireframes" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="wireframes" style="margin-top:1.5rem;">
         <h2>Wireframes (frames) y ajustes de layout</h2>
         <p class="small">
             Hemos trabajado los <b>frames</b> (wireframes) para asegurar que la navegación sea lógica antes de “pintar” toda la UI final.
@@ -1327,26 +1352,18 @@ footer::before {
     </section>
 
     <!-- Base de datos -->
-    <section class="card" id="bbdd" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="bbdd" style="margin-top:1.5rem;">
         <h2>Base de datos (BBDD): modelo, scripts y diagrama</h2>
         <p class="small">
-  <b>Decisión de Base de Datos:</b> inicialmente estuvimos bastante tiempo investigando y trabajando con <b>PostgreSQL</b>,
-  diseñando tablas y analizando cómo estructurar correctamente las relaciones para el sistema de reservas.
-  Sin embargo, tras evaluar la integración con Android y la complejidad del mantenimiento, decidimos cambiar el enfoque
-  y optar por una base de datos <b>NoSQL</b> utilizando <b>Firebase (Cloud Firestore)</b>.
-  Esta decisión nos permitió simplificar la estructura de datos, adaptarla mejor al modelo de usuarios y reservas
-  y aprovechar la integración directa con el ecosistema Android.
-</p>
-
-        <p class="small">
             Diseño de la base de datos para el módulo <b>gym</b> (usuarios, suscripciones, planes, salas, profesores, sesiones y reservas).
-            Se adjunta el diagrama ER y scripts NoSQL.
+            Se adjunta el diagrama ER y scripts SQL.
         </p>
 
         <p class="section-title">Diagrama Entidad-Relación (ER)</p>
         <p class="small">
             Imagen guardada dentro del repo para que se vea en GitHub Pages.
-            Ruta recomendada: <code>BBDD/BBDD ER.png</code> (si el nombre tiene espacios, se recomienda renombrar a <code>bbdd_er.png</code>).
         </p>
 
         <div class="frame">
@@ -1354,10 +1371,9 @@ footer::before {
         </div>
 
         <details>
-            <summary>Scripts NoSQL (tablas + datos de ejemplo)</summary>
+            <summary>Scripts SQL (tablas + datos de ejemplo)</summary>
             <p class="small" style="margin-top:10px;">
-                Ubicación recomendada en el repo:
-                <code>BBDD/colecciones_firestoredemo.md</code> y <code>BBDD/colecciones_firestoredemo.md</code>.
+                <code>BBDD/script_tablas.sql</code> y <code>BBDD/script_datos_ejemplo.sql</code>.
             </p>
             <p class="small">
                 Nota: si los ficheros están sin extensión, renómbralos con <code>.sql</code> para que GitHub los previsualice.
@@ -1366,7 +1382,9 @@ footer::before {
     </section>
 
     <!-- Entregables / evidencias -->
-    <section class="card" id="evidencias" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="evidencias" style="margin-top:1.5rem;">
         <h2>Evidencias y entregables (hasta hoy)</h2>
         <p class="small">
             Recopilación rápida de lo que ya está hecho y documentado para poder defender el proyecto y preparar el PDF final.
@@ -1391,13 +1409,17 @@ footer::before {
                     <li>Conectar la app con autenticación (email/contraseña) y persistencia.</li>
                     <li>Implementar pantallas finales siguiendo el frame.</li>
                     <li>Pruebas (unitarias + integración) y checklist de navegación.</li>
+                    <li>Preparar entrega final (PDF + capturas + demo).</li>
                 </ul>
             </div>
         </div>
     </section>
 
+
 <!-- Bitácora -->
-    <section class="card" id="bitacora" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="bitacora" style="margin-top:1.5rem;">
         <h2>Bitácora del proyecto</h2>
         <p class="small">
             Añadimos una sesión al día o evento de trabajo.
@@ -1415,7 +1437,7 @@ footer::before {
   <div class="bitacora-detalle">
     - Se ha elaborado el <strong>Diagrama Entidad-Relación (ER)</strong> para definir entidades, atributos y relaciones.<br>
     - Se ha construido el <strong>modelo UML</strong> para representar las clases/tablas y sus asociaciones.<br>
-    - Objetivo: dejar clara la estructura antes de pasar a <strong>Firestore (Firebase NoSQL)</strong> y asegurar integridad (claves y relaciones).<br><br>
+    - Objetivo: dejar clara la estructura antes de pasar a <strong>PostgreSQL</strong> y asegurar integridad (claves y relaciones).<br><br>
 
     <strong>Diagrama ER:</strong><br>
     <img src="diagrama/DISEÑO_E-R.png" alt="Diagrama ER de la base de datos" style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;"><br><br>
@@ -1452,8 +1474,8 @@ footer::before {
                 <div class="bitacora-titulo">Conectar base de datos</div>
                 <div class="bitacora-detalle">
                     - Investigación sobre opciones de nube para la base de datos.<br>
-                    - Decidimos usar Firestore (Firebase NoSQL) gestionada y conectarla con DBeaver.<br>
-                    - Añadimos la base de datos al proyecto y probamos la conexión desde el cliente NoSQL.<br>
+                    - Decidimos usar PostgreSQL gestionada y conectarla con DBeaver.<br>
+                    - Añadimos la base de datos al proyecto y probamos la conexión desde el cliente SQL.<br>
                     - Dejamos preparado el acceso para colaboradores.
                 </div>
             </li>
@@ -1479,7 +1501,9 @@ footer::before {
     </section>
 
     <!-- Roadmap -->
-    <section class="card" id="roadmap" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="roadmap" style="margin-top:1.5rem;">
         <h2>Roadmap del proyecto</h2>
         <p class="small">
             <!--Roadmap general con el progreso aproximado de cada fase. Puedes ir actualizando los porcentajes.-->
@@ -1527,7 +1551,9 @@ footer::before {
     </section>
 
     <!-- Notas rápidas -->
-    <section class="card" id="notas" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="notas" style="margin-top:1.5rem;">
         <h2>Notas rápidas</h2>
         <p class="small">
             <!--Usa esta sección como “post-its”: ideas para
@@ -1543,8 +1569,8 @@ footer::before {
             <li>
                 <div class="timeline-title">[Duda] Integración con base de datos</div>
                 <div class="timeline-desc">
-                    Hemos configurado la base de datos en Firestore (Firebase NoSQL) y la gestionamos mediante DBeaver.
-                    Hoy hemos creado el esquema inicial, conectado el cliente NoSQL y comenzado a definir tablas y relaciones.
+                    Hemos configurado la base de datos en PostgreSQL y la gestionamos mediante DBeaver.
+                    Hoy hemos creado el esquema inicial, conectado el cliente SQL y comenzado a definir tablas y relaciones.
                 </div>
             </li>
             <li>
@@ -1557,7 +1583,9 @@ footer::before {
     </section>
 
     <!-- Equipo -->
-    <section class="card" id="equipo" style="margin-top:1.5rem;">
+    
+<!-- Nueva sección añadida por mí para documentar avances -->
+<section class="card" id="equipo" style="margin-top:1.5rem;">
         <h2>Quiénes somos</h2>
         <p class="small">
             Somos el equipo <strong>SyntaxTerror</strong>, responsables del desarrollo del proyecto intermodular de 2º DAM.
@@ -1644,258 +1672,34 @@ footer::before {
         });
     });
 
-    /* =========================
-       GANTT INTERACTIVO (AÑADIDO)
-       - No borra nada de lo anterior
-       - Dibuja un Gantt en SVG sin librerías
-       ========================= */
-
-    (function initGanttInteractive(){
-        const phaseSel = document.getElementById("ganttPhase");
-        const zoomRange = document.getElementById("ganttZoom");
-        const zoomLabel = document.getElementById("ganttZoomLabel");
-        const onlyDone = document.getElementById("ganttOnlyDone");
-        const canvas = document.getElementById("ganttCanvas");
-        const tip = document.getElementById("ganttTip");
-
-        // Si por lo que sea no existe el bloque (por ejemplo, alguien lo borró), no rompe nada.
-        if(!phaseSel || !zoomRange || !zoomLabel || !onlyDone || !canvas || !tip) return;
-
-        // Datos del Gantt (si quiero añadir más tareas, copio una línea y cambio texto/fechas)
-        const ganttData = [
-            { phase: "1.0 Inicio", task: "Alcance y objetivos", start: "2025-11-14", end: "2025-11-14", status: "done" },
-            { phase: "1.0 Inicio", task: "Repositorio GitHub + Pages", start: "2025-11-14", end: "2025-11-15", status: "done" },
-
-            { phase: "2.0 Diseño", task: "BBDD: ER + UML", start: "2025-12-23", end: "2025-12-27", status: "done" },
-            { phase: "2.0 Diseño", task: "Scripts NoSQL + datos ejemplo", start: "2025-12-28", end: "2026-01-04", status: "done" },
-
-            { phase: "3.0 Desarrollo", task: "Estructura app + pantallas base", start: "2026-01-05", end: "2026-01-18", status: "done" },
-            { phase: "3.0 Desarrollo", task: "Flujo login/registro + navegación", start: "2026-01-19", end: "2026-02-16", status: "done" },
-
-            { phase: "4.0 UX/UI", task: "Paleta + tipografía + consistencia", start: "2026-02-17", end: "2026-02-21", status: "doing" },
-
-            { phase: "5.0 Documentación", task: "Bitácora + web + evidencias", start: "2026-02-18", end: "2026-02-21", status: "doing" },
-        ];
-
-        const zoomMap = {
-            1: { pxPerDay: 7,  label: "compacto" },
-            2: { pxPerDay: 11, label: "medio" },
-            3: { pxPerDay: 18, label: "zoom" },
-            4: { pxPerDay: 26, label: "máximo" }
-        };
-
-        function toDate(s){
-            const [y,m,d] = s.split("-").map(Number);
-            return new Date(y, m-1, d);
-        }
-
-        function daysBetween(a,b){
-            const ms = 24*60*60*1000;
-            return Math.round((b - a)/ms);
-        }
-
-        function fmt(d){
-            const dd = String(d.getDate()).padStart(2,"0");
-            const mm = String(d.getMonth()+1).padStart(2,"0");
-            const yy = d.getFullYear();
-            return `${dd}/${mm}/${yy}`;
-        }
-
-        function todayISO(){
-            const d = new Date();
-            const y = d.getFullYear();
-            const m = String(d.getMonth()+1).padStart(2,"0");
-            const da = String(d.getDate()).padStart(2,"0");
-            return `${y}-${m}-${da}`;
-        }
-
-        // Cargo fases al selector
-        (function fillPhases(){
-            const phases = [...new Set(ganttData.map(x => x.phase))];
-            phases.forEach(p => {
-                const opt = document.createElement("option");
-                opt.value = p;
-                opt.textContent = p;
-                phaseSel.appendChild(opt);
-            });
-        })();
-
-        function render(){
-            const z = zoomMap[Number(zoomRange.value)];
-            zoomLabel.textContent = z.label;
-
-            let data = ganttData.slice();
-
-            if(phaseSel.value !== "all"){
-                data = data.filter(x => x.phase === phaseSel.value);
-            }
-            if(onlyDone.checked){
-                data = data.filter(x => x.status === "done");
-            }
-
-            // Si filtras y te quedas sin datos, no rompo la web
-            if(data.length === 0){
-                canvas.innerHTML = '<div style="padding:12px;color:var(--text-soft);font-size:.85rem;">No hay tareas con ese filtro.</div>';
-                return;
-            }
-
-            const starts = data.map(d => toDate(d.start));
-            const ends   = data.map(d => toDate(d.end));
-            const minD   = new Date(Math.min(...starts));
-            const maxD   = new Date(Math.max(...ends));
-
-            const min = new Date(minD); min.setDate(min.getDate()-1);
-            const max = new Date(maxD); max.setDate(max.getDate()+1);
-
-            const totalDays = daysBetween(min, max) + 1;
-
-            const leftCol = 300;     // ancho de la columna de texto
-            const rowH = 28;         // alto de cada fila
-            const headH = 44;        // alto del encabezado del gráfico
-
-            const w = leftCol + totalDays * z.pxPerDay + 40;
-            const h = headH + data.length * rowH + 22;
-
-            const ns = "http://www.w3.org/2000/svg";
-            const svg = document.createElementNS(ns, "svg");
-            svg.setAttribute("id","ganttSvg");
-            svg.setAttribute("width", w);
-            svg.setAttribute("height", h);
-
-            // Fondo alterno para leer mejor
-            for(let i=0;i<data.length;i++){
-                const y = headH + i*rowH;
-                const rect = document.createElementNS(ns,"rect");
-                rect.setAttribute("x", 0);
-                rect.setAttribute("y", y);
-                rect.setAttribute("width", w);
-                rect.setAttribute("height", rowH);
-                rect.setAttribute("fill", i%2===0 ? "rgba(255,255,255,.02)" : "rgba(255,255,255,0)");
-                svg.appendChild(rect);
-            }
-
-            // Líneas verticales del calendario (marco más fuerte los lunes)
-            for(let d=0; d<totalDays; d++){
-                const cur = new Date(min); cur.setDate(min.getDate()+d);
-                const x = leftCol + d*z.pxPerDay;
-                const isMon = cur.getDay() === 1;
-
-                const line = document.createElementNS(ns,"line");
-                line.setAttribute("x1", x);
-                line.setAttribute("y1", 0);
-                line.setAttribute("x2", x);
-                line.setAttribute("y2", h);
-                line.setAttribute("stroke", isMon ? "rgba(255,122,0,.15)" : "rgba(148,163,184,.10)");
-                line.setAttribute("stroke-width", isMon ? "1.2" : "1");
-                svg.appendChild(line);
-
-                // Etiqueta de fecha solo en lunes
-                if(isMon){
-                    const t = document.createElementNS(ns,"text");
-                    t.setAttribute("x", x+2);
-                    t.setAttribute("y", 28);
-                    t.setAttribute("fill", "rgba(229,231,235,.85)");
-                    t.setAttribute("font-size","11");
-                    t.textContent = cur.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"});
-                    svg.appendChild(t);
-                }
-            }
-
-            // Separador de columna izquierda
-            const sep = document.createElementNS(ns,"line");
-            sep.setAttribute("x1", leftCol);
-            sep.setAttribute("y1", 0);
-            sep.setAttribute("x2", leftCol);
-            sep.setAttribute("y2", h);
-            sep.setAttribute("stroke", "rgba(148,163,184,.18)");
-            svg.appendChild(sep);
-
-            // Línea de HOY (automática)
-            const today = toDate(todayISO());
-            const todayX = leftCol + (daysBetween(min, today)) * z.pxPerDay;
-
-            const todayLine = document.createElementNS(ns,"line");
-            todayLine.setAttribute("x1", todayX);
-            todayLine.setAttribute("y1", 0);
-            todayLine.setAttribute("x2", todayX);
-            todayLine.setAttribute("y2", h);
-            todayLine.setAttribute("stroke", "rgba(255,122,0,.95)");
-            todayLine.setAttribute("stroke-width","2");
-            svg.appendChild(todayLine);
-
-            const todayTag = document.createElementNS(ns,"text");
-            todayTag.setAttribute("x", todayX + 6);
-            todayTag.setAttribute("y", 16);
-            todayTag.setAttribute("fill","rgba(255,122,0,.95)");
-            todayTag.setAttribute("font-size","12");
-            todayTag.setAttribute("font-weight","700");
-            todayTag.textContent = "HOY";
-            svg.appendChild(todayTag);
-
-            // Barras
-            data.forEach((t, i) => {
-                const y = headH + i*rowH + 6;
-
-                // Texto de la tarea
-                const name = document.createElementNS(ns,"text");
-                name.setAttribute("x", 12);
-                name.setAttribute("y", headH + i*rowH + 18);
-                name.setAttribute("fill", "rgba(229,231,235,.92)");
-                name.setAttribute("font-size","12");
-                name.textContent = `${t.phase} — ${t.task}`;
-                svg.appendChild(name);
-
-                const s = toDate(t.start);
-                const e = toDate(t.end);
-                const x = leftCol + daysBetween(min, s) * z.pxPerDay;
-                const dur = Math.max(1, (daysBetween(s,e) + 1)) * z.pxPerDay;
-
-                const bar = document.createElementNS(ns,"rect");
-                bar.setAttribute("x", x);
-                bar.setAttribute("y", y);
-                bar.setAttribute("width", dur);
-                bar.setAttribute("height", 16);
-                bar.setAttribute("rx", 8);
-
-                bar.setAttribute("fill", t.status === "done" ? "rgba(148,163,184,.35)" : "rgba(255,122,0,.65)");
-                bar.setAttribute("stroke", t.status === "done" ? "rgba(148,163,184,.35)" : "rgba(255,122,0,.95)");
-                bar.setAttribute("stroke-width","1");
-                bar.style.cursor = "help";
-
-                bar.addEventListener("mousemove", (ev) => {
-                    tip.style.display = "block";
-                    tip.style.left = (ev.clientX + 14) + "px";
-                    tip.style.top  = (ev.clientY + 14) + "px";
-                    tip.innerHTML = `
-                        <b>${t.task}</b><br>
-                        <span style="opacity:.9">${t.phase}</span><br>
-                        <span style="opacity:.85">📅 ${fmt(s)} → ${fmt(e)}</span><br>
-                        <span style="opacity:.85">✅ Estado: ${t.status === "done" ? "Hecho" : "En curso"}</span>
-                    `;
-                });
-                bar.addEventListener("mouseleave", () => {
-                    tip.style.display = "none";
-                });
-
-                svg.appendChild(bar);
-            });
-
-            canvas.innerHTML = "";
-            canvas.appendChild(svg);
-        }
-
-        // Repinto cuando toco controles
-        phaseSel.addEventListener("change", render);
-        zoomRange.addEventListener("input", render);
-        onlyDone.addEventListener("change", render);
-
-        // Primera pintada
-        render();
-    })();
-
 </script>
 
-<div class="gantt-tip" id="ganttTip"></div>
+<script>
+(function(){
+  const wrap = document.querySelector('.gantt-wrap');
+  if(!wrap) return;
+
+  const startStr = wrap.getAttribute('data-start'); // YYYY-MM-DD
+  const endStr   = wrap.getAttribute('data-end');
+  const todayStr = wrap.getAttribute('data-today');
+
+  const start = new Date(startStr + 'T00:00:00');
+  const end   = new Date(endStr + 'T00:00:00');
+  const today = new Date(todayStr + 'T00:00:00');
+
+  const total = (end - start);
+  const done  = (today - start);
+
+  const ratio = total > 0 ? Math.min(1, Math.max(0, done / total)) : 1;
+
+  const line = wrap.querySelector('.gantt-today');
+  if(!line) return;
+
+  // Ajuste visual: que no se salga por el borde derecho
+  line.style.left = `calc(${(ratio*100).toFixed(2)}% - 1px)`;
+})();
+</script>
+
 </body>
 
 </html>
