@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/nav_graph"
+            app:startDestination="@id/loginFragment">
+
+    <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.example.aplicacion.fragments.LoginFragment"
+            android:label="Login"
+            tools:layout="@layout/fragment_login">
+        <action
+                android:id="@+id/action_loginFragment_to_registerFragment"
+                app:destination="@id/registerFragment" />
+        <action
+                android:id="@+id/action_loginFragment_to_tabListReservasFragment"
+                app:destination="@id/tabListReservasFragment"
+                app:popUpTo="@id/loginFragment"
+                app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/registerFragment"
+            android:name="com.example.aplicacion.fragments.RegisterFragment"
+            android:label="Registro"
+            tools:layout="@layout/fragment_register">
+        <action
+                android:id="@+id/action_registerFragment_to_loginFragment"
+                app:destination="@id/loginFragment"
+                app:popUpTo="@id/loginFragment"
+                app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/tabListReservasFragment"
+            android:name="com.example.aplicacion.fragments.TabSesionesFragment"
+            android:label="PixelGym"
+            tools:layout="@layout/fragment_tab_list_reservas">
+        <action
+                android:id="@+id/action_tabSesiones_to_reservaFragment"
+                app:destination="@id/reservaFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/reservaFragment"
+            android:name="com.example.aplicacion.fragments.ReservaFragment"
+            android:label="Reservar Clase"
+            tools:layout="@layout/fragment_reserva">
+        <argument
+                android:name="actividadId"
+                app:argType="string" />
+        <argument
+                android:name="nombreActividad"
+                app:argType="string" />
+        <action
+                android:id="@+id/action_reservaFragment_to_detalleActividadFragment"
+                app:destination="@id/detalleActividadFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/detalleActividadFragment"
+            android:name="com.example.aplicacion.fragments.DetalleActividadFragment"
+            android:label="Detalle de la Actividad"
+            tools:layout="@layout/fragment_detalle_actividad">
+        <argument
+                android:name="actividadId"
+                app:argType="string" />
+    </fragment>
+
+    <fragment android:id="@+id/contactFragment" android:name="com.example.aplicacion.fragments.ContactFragment"
+              android:label="Contacto"/>
+    <fragment android:id="@+id/preferencesFragment" android:name="com.example.aplicacion.fragments.PreferencesFragment"
+              android:label="Preferencias"/>
+</navigation>
