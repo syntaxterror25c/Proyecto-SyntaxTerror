@@ -1208,8 +1208,8 @@ footer::before {
 
         <p class="section-title" style="margin-top:14px;">Tipografía</p>
         <p class="small">
-            Para la app se ha añadido una fuente personalizada en <span class="kbd">res/font</span> (ej: <code>fredoka_one.ttf</code>) y se aplica con
-            <code>android:fontFamily="@font/fredoka_one"</code>. Importante: nombres de archivo <b>en minúsculas y con _</b>.
+            Para la app se ha añadido una fuente personalizada en <span class="kbd">res/font</span> (ej: <code>bebasneue_regular.ttf</code>) y se aplica con
+            <code>android:fontFamily="@font/bebasneue_regular"</code>. Importante: nombres de archivo <b>en minúsculas y con _</b>.
         </p>
 
         <details>
@@ -1243,8 +1243,7 @@ footer::before {
         <details>
             <summary>Wireframe / notas de usuario (documento)</summary>
             <p class="small" style="margin-top:10px;">
-                Documento interno del equipo con el frame del usuario: <code>Documentacion/WireframeUsuario.md</code>
-                (en GitHub Pages lo mantenemos como referencia).
+               
             </p>
             <pre class="small" style="white-space:pre-wrap; margin-top:10px;">![TFG](https://github.com/user-attachments/assets/96d24d83-564a-439b-9d98-b92b69da2c45)</pre>
         </details>
@@ -1254,9 +1253,9 @@ footer::before {
     <section class="card" id="bbdd" style="margin-top:1.5rem;">
         <h2>Base de datos (BBDD): modelo, scripts y diagrama</h2>
         <p class="small">
-          <b>Decisión de Base de Datos:</b> finalmente hemos optado por una base de datos <b>NoSQL</b> usando <b>Firebase (Cloud Firestore)</b>.
-          Empezamos valorando Neon, pero al revisarlo en profundidad vimos que para nuestro caso nos obligaba a depender de planes de pago / límites,
-          así que lo cambiamos por Firebase para tener una solución más sencilla de integrar con Android y más adecuada al flujo de usuarios y reservas.
+         Decisión de Base de Datos: inicialmente estuvimos bastante tiempo investigando y trabajando con PostgreSQL, diseñando tablas y analizando cómo estructurar correctamente las relaciones para el sistema de reservas. Sin embargo, tras evaluar la integración con Android y la complejidad del mantenimiento, decidimos cambiar el enfoque y optar por una base de datos NoSQL utilizando Firebase (Cloud Firestore). Esta decisión nos permitió simplificar la estructura de datos, adaptarla mejor al modelo de usuarios y reservas y aprovechar la integración directa con el ecosistema Android.
+
+Diseño de la base de datos para el módulo gym (usuarios, suscripciones, planes, salas, profesores, sesiones y reservas). Se adjunta el diagrama ER y scripts NoSQL.
         </p>
 
         <p class="small">
@@ -1266,8 +1265,8 @@ footer::before {
 
         <p class="section-title">Diagrama Entidad-Relación (ER)</p>
         <p class="small">
-            Imagen guardada dentro del repo para que se vea en GitHub Pages.
-            Ruta recomendada: <code>BBDD/BBDD ER.png</code> (si el nombre tiene espacios, se recomienda renombrar a <code>bbdd_er.png</code>).
+           
+            
         </p>
 
         <div class="frame">
@@ -1281,7 +1280,7 @@ footer::before {
                 <code>BBDD/colecciones_firestoredemo.md</code> y <code>BBDD/colecciones_firestoredemo.md</code>.
             </p>
             <p class="small">
-                Nota: si los ficheros están sin extensión, renómbralos con <code>.sql</code> para que GitHub los previsualice.
+               
             </p>
         </details>
     </section>
@@ -1527,9 +1526,9 @@ footer::before {
       Aquí dejo un vídeo corto del funcionamiento para que se vea el flujo completo (registro/login → salas → reserva por día y hora).
     </p>
 
-    <video controls style="width:100%; border-radius:14px; border:1px solid var(--border); background: rgba(0,0,0,.25);"
-           src="Multimedia/Video/demo.mp4">
-      Tu navegador no soporta vídeo HTML5.
+    <video controls
+       style="width:100%; border-radius:14px; border:1px solid var(--border);"
+       src="Multimedia/PYXELGYM.mp4">
     </video>
   </div>
 </section>
