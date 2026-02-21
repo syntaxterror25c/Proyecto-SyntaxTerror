@@ -1,4 +1,4 @@
-WEB BITÁCORA-------
+
 | **WEB BITÁCORA** | [https://syntaxterror25c.github.io/Proyecto-SyntaxTerror](https://syntaxterror25c.github.io/Proyecto-SyntaxTerror) |
 | :--- | :--- |
 # 🏋️ PixelGym  
