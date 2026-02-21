@@ -61,7 +61,7 @@
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:layout_marginHorizontal="8dp"
-                            android:src="@drawable/btn_phone"
+                            android:src="@drawable/btn_phone8b"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter" />
 
@@ -70,7 +70,7 @@
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:layout_marginHorizontal="8dp"
-                            android:src="@drawable/btn_whatsapp"
+                            android:src="@drawable/btn_whatsapp8b"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter" />
 
@@ -79,7 +79,7 @@
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:layout_marginHorizontal="8dp"
-                            android:src="@drawable/btn_email"
+                            android:src="@drawable/btn_email8b"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter" />
                 </LinearLayout>

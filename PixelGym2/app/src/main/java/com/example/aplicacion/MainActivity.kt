@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         // ******************
         // PRUEBA MUCHO OJO
-         gymViewModel.resetTotalGimnasioPruebas()
+        // gymViewModel.resetTotalGimnasioPruebas()
         // ******************
 
         this.setSupportActionBar(binding.toolbar)

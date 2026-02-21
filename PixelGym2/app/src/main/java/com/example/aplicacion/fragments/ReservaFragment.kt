@@ -63,17 +63,24 @@ class ReservaFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 gymViewModel.listaSesiones.collect { sesiones ->
-                    // Si la lista está vacía, mostramos el aviso
-                    if (sesiones.isEmpty()) {
+
+                    // FILTRO DINÁMICO: Solo sesiones con plazas libres
+                    val sesionesDisponibles = sesiones.filter { it.plazas_ocupadas < it.capacidad_maxima }
+
+                    if (sesionesDisponibles.isEmpty()) {
                         val aviso = arrayOf("No hay disponibilidad este día")
                         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, aviso)
                         binding.spinnerHoras.setAdapter(adapter)
-                        binding.spinnerHoras.setText("", false) // Limpiamos selección previa
+                        binding.spinnerHoras.setText("", false)
                         binding.btnConfirmarReserva.isEnabled = false
                     } else {
-                        val horas = sesiones.map { it.hora_inicio }
+                        // Solo mapeamos las horas de las que tienen hueco
+                        val horas = sesionesDisponibles.map { it.hora_inicio }
                         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, horas)
                         binding.spinnerHoras.setAdapter(adapter)
+
+                        // Limpiamos el texto para que el usuario tenga que elegir
+                        binding.spinnerHoras.setText("Selecciona hora", false)
                         binding.btnConfirmarReserva.isEnabled = true
                     }
                 }
@@ -100,17 +107,43 @@ class ReservaFragment : Fragment() {
 
     private fun confirmarReservaFinal() {
         val horaSeleccionada = binding.spinnerHoras.text.toString()
+        val fechaSeleccionada = binding.etFechaReserva.text.toString()
 
-        // Evitamos que intente reservar si el texto es el aviso de "No hay disponibilidad"
-        if (horaSeleccionada.isNotEmpty() && horaSeleccionada != "No hay disponibilidad este día") {
+        if (horaSeleccionada.isNotEmpty() &&
+            horaSeleccionada != "No hay disponibilidad este día" &&
+            horaSeleccionada != "Selecciona hora") {
+
+            // 1. Buscamos la sesión que quiere reservar
             val sesionParaReservar = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSeleccionada }
 
             sesionParaReservar?.let { sesion ->
-                gymViewModel.intentarReserva(sesion)
-                findNavController().popBackStack()
+
+                // 2. COMPROBACIÓN: ¿Ya tiene una reserva para esta FECHA y HORA?
+                // Usamos 'listaMisReservas' y los campos 'fecha_sesion' y 'hora_inicio' de tu modelo Reserva
+                val yaTieneReserva = gymViewModel.listaMisReservas.value.any { reserva ->
+                    reserva.fecha_sesion == fechaSeleccionada && reserva.hora_inicio == horaSeleccionada
+                }
+
+                if (yaTieneReserva) {
+                    // AVISO CON SNACKBAR EN NARANJA
+                    com.google.android.material.snackbar.Snackbar.make(
+                        binding.root,
+                        "Atención: Ya tienes una clase reservada el $fechaSeleccionada a las $horaSeleccionada",
+                        com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+                    ).setBackgroundTint(resources.getColor(android.R.color.holo_orange_dark, null))
+                        .show()
+                } else {
+                    // Si no hay conflicto, procedemos a reservar
+                    gymViewModel.intentarReserva(sesion)
+                    findNavController().popBackStack()
+                }
             }
         } else {
-            Toast.makeText(requireContext(), "Selecciona una hora válida", Toast.LENGTH_SHORT).show()
+            com.google.android.material.snackbar.Snackbar.make(
+                binding.root,
+                "Por favor, selecciona una hora válida",
+                com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+            ).show()
         }
     }
 

@@ -31,7 +31,7 @@ class ContactFragment : Fragment(R.layout.fragment_contact) {
     }
 
     private fun setupVideo() {
-        val videoUri = Uri.parse("android.resource://${requireContext().packageName}/${R.raw.videosound}")
+        val videoUri = Uri.parse("android.resource://${requireContext().packageName}/${R.raw.pixelgym_video}")
         binding.videoView.setVideoURI(videoUri)
         binding.videoView.setOnPreparedListener { it.isLooping = true; it.start() }
     }
