@@ -81,22 +81,35 @@ class RegisterFragment : Fragment() {
             val pass = binding.etRegPass.text.toString()
             val nombre = binding.etRegName.text.toString()
 
-            // Obtenemos el objeto Tarifa seleccionado del Spinner
-            val tarifaSeleccionada = binding.spinnerPlan.selectedItem as com.example.aplicacion.models.Tarifa
+            // Cogemos la tarifa seleccionada
+            val tarifaSeleccionada = binding.spinnerPlan.selectedItem as? com.example.aplicacion.models.Tarifa
 
-            viewModel.register(email, pass, nombre, tarifaSeleccionada)
+            if (tarifaSeleccionada != null) {
+                // Registro SIN teléfono (solo 4 parámetros)
+                viewModel.register(email, pass, nombre, tarifaSeleccionada)
+            } else {
+                Toast.makeText(requireContext(), "Selecciona un plan primero", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     // --- FUNCIONES DE APOYO (FUERA DE ONVIEWCREATED) ---
-
     private fun observarPlanes() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.tarifas.collect { lista ->
                     if (lista.isNotEmpty()) {
-                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, lista)
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        // requireContext() está bien, pero si usas el estilo del Spinner
+                        // personalizado, esto lo aplicará correctamente.
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            R.layout.item_spinner, // Diseño del item cerrado
+                            lista
+                        )
+
+                        // Si quieres que el desplegable se vea igual de bien:
+                        adapter.setDropDownViewResource(R.layout.item_spinner)
+
                         binding.spinnerPlan.adapter = adapter
                     }
                 }

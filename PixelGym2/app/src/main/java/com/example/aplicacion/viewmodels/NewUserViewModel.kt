@@ -45,7 +45,6 @@ class NewUserViewModel(private val authRepository: AuthRepository) : ViewModel()
                 email = email,
                 pass = pass,
                 nombre = nombre,
-                telefono = "",
                 idPlan = tarifa.nombre.uppercase(),
                 nombrePlan = tarifa.nombre,
                 limiteSesiones = tarifa.creditos,

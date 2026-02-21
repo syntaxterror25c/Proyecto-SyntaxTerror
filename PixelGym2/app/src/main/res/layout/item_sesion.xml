@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:textSize="18sp"
-                android:fontFamily="@font/fredoka_one"
+                android:fontFamily="@font/bebasneue_regular"
                 app:layout_constraintStart_toEndOf="@+id/iv_sesion_imagen"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

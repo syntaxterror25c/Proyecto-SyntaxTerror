@@ -17,19 +17,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"/>
-    <TextView
-            android:id="@+id/textLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RPM"
-            android:textSize="48sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary"
-            android:fontFamily="@font/fredoka_one"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/logo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutUsername"
@@ -37,8 +24,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/hint_username"
-            android:layout_marginTop="32dp"
-            app:layout_constraintTop_toBottomOf="@id/textLogo"
+            android:layout_marginTop="96dp"
+            app:layout_constraintTop_toBottomOf="@id/logo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -90,18 +77,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/textViewRegisterLink"
-            android:layout_width="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/register_link_text"
-            android:padding="8dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="24dp"
             android:textColor="?attr/colorPrimary"
+            app:strokeColor="?attr/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/buttonGmail"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
     <ProgressBar
             android:id="@+id/progressBar"

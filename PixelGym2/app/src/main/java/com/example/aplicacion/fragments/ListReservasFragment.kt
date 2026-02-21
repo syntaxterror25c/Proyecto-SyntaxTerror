@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplicacion.databinding.FragmentListReservasBinding
-// Eliminado el SesionAdapter ya que usamos ReservaAdapter
 import com.example.aplicacion.viewmodels.GymViewModel
 import com.example.aplicacion.viewmodels.GymViewModelFactory
 import com.example.aplicacion.firebase.ServiceLocator
@@ -46,6 +45,9 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 gymViewModel.listaMisReservas.collect { reservas ->
+                    val isEmpty = reservas.isNullOrEmpty()
+                    binding.tvEmptyReservas.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                    binding.recyclerViewReservas.visibility = if (isEmpty) View.GONE else View.VISIBLE
                     // 2. Aquí también especificamos el tipo para evitar confusiones
                     reservaAdapter = ReservaAdapter(reservas) { reservaAnular: Reserva ->
                         // Acción de anular

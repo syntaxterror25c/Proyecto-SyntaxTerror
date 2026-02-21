@@ -17,7 +17,7 @@ class TabSesionesFragment : Fragment() {
 
     private val tabTitles: Array<String>
         get() = arrayOf(
-            "Cartelera",
+            "Actividades",
             "Mis Reservas"
         )
 

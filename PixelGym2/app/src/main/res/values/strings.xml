@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"RPM"</string>
+    <string name="app_name">"PixelGym"</string>
     <string name="welcome_title">"Bienvenido. Login"</string>
     <string name="hint_username">"Usuario"</string>
     <string name="hint_password">"Contraseña"</string>
