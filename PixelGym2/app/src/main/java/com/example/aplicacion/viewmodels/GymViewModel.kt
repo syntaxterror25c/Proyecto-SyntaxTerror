@@ -194,10 +194,10 @@ class GymViewModel(
             mapOf("nombre" to "Cardio", "coste" to 1, "imagen" to "im_rec_cardio", "categoria" to "Cardio", "descripcion" to "Mejora tu resistencia cardiovascular."),
             mapOf("nombre" to "Zumba", "coste" to 1, "imagen" to "im_rec_zumba", "categoria" to "Baile", "descripcion" to "Ejercicio divertido a ritmo de música latina."),
             mapOf("nombre" to "Musculación", "coste" to 1, "imagen" to "im_rec_musculacion", "categoria" to "Fuerza", "descripcion" to "Entrenamiento libre en sala de máquinas."),
-            mapOf("nombre" to "Yoga", "coste" to 5, "imagen" to "im_rec_yoga", "categoria" to "Cuerpo-Mente", "descripcion" to "Relajación y estiramientos profundos."),
+            mapOf("nombre" to "Yoga", "coste" to 3, "imagen" to "im_rec_yoga", "categoria" to "Cuerpo-Mente", "descripcion" to "Relajación y estiramientos profundos."),
             mapOf("nombre" to "Pilates", "coste" to 2, "imagen" to "im_rec_pilates", "categoria" to "Cuerpo-Mente", "descripcion" to "Fortalecimiento del core y postura."),
             mapOf("nombre" to "Crossfit", "coste" to 2, "imagen" to "im_rec_crossfit", "categoria" to "Fuerza", "descripcion" to "WODs de alta intensidad funcional."),
-            mapOf("nombre" to "Fitboxing", "coste" to 2, "imagen" to "im_rec_fitboxing", "categoria" to "Cardio", "descripcion" to "Golpeo al saco y ejercicios funcionales.")
+            mapOf("nombre" to "Fitboxing", "coste" to 5, "imagen" to "im_rec_fitboxing", "categoria" to "Cardio", "descripcion" to "Golpeo al saco y ejercicios funcionales.")
         )
 
         catalogoActividades.forEach { a ->
@@ -238,7 +238,7 @@ class GymViewModel(
                     "nombre_actividad" to nombreAct,
                     "nombre_profesor" to profesores[index % profesores.size]["nombre"],
                     "sala" to salas.random(),
-                    "capacidad_maxima" to 20,
+                    "capacidad_maxima" to 2,
                     "plazas_ocupadas" to 0,
                     "imagen_url" to actividad["imagen"],
                     "creditos_necesarios" to actividad["coste"],
