@@ -21,12 +21,10 @@ import com.example.aplicacion.viewmodels.GymViewModel
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.aplicacion.viewmodels.GymViewModelFactory
-import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     private lateinit var gymViewModel: GymViewModel
     private lateinit var binding: ActivityMainBinding
-    private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Aplicacion)
@@ -53,35 +51,22 @@ class MainActivity : AppCompatActivity() {
         // gymViewModel.resetTotalGimnasioPruebas()
         // ******************
 
-
         this.setSupportActionBar(binding.toolbar)
 
-
-        // Esto habilita el hueco para la flecha a la izquierda
+        // Habilita la flecha de atrás
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        // Por defecto ponemos la flecha naranja (se verá según el tema)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-
-        // --- NAVIGATION DRAWER A LA IZQUIERDA ---
-//        toggle = ActionBarDrawerToggle(
-//            this,
-//            binding.drawerLayout,
-//            binding.toolbar,
-//            R.string.navigation_drawer_open,
-//            R.string.navigation_drawer_close
-//        )
-//        binding.drawerLayout.addDrawerListener(toggle)
-//        toggle.syncState()
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Listener del Drawer (Menú lateral)
+        // --- LISTENER NAVIGATION DRAWER (MENÚ LATERAL) ---
         binding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.drawer_list -> navController.navigate(R.id.tabListReservasFragment) // Mantenemos el ID del navGraph por ahora
+                R.id.drawer_list -> navController.navigate(R.id.tabListReservasFragment)
                 R.id.drawer_contact -> navController.navigate(R.id.contactFragment)
                 R.id.drawer_preferences -> navController.navigate(R.id.preferencesFragment)
+                R.id.drawer_about -> mostrarAcercaDe()
                 R.id.drawer_logOut -> {
                     ServiceLocator.authRepository.logout()
                     navController.navigate(R.id.loginFragment)
@@ -91,30 +76,53 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        // --- GESTIÓN MENÚ SUPERIOR (LUIPA, ORDENAR Y HAMBURGUESA) ---
         this.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.toolbar, menu)
-            }
 
-            override fun onPrepareMenu(menu: Menu) {
-                // Obtenemos el ID de la pantalla actual
                 val currentDest = navController.currentDestination?.id
+                val esPantallaDeLista = currentDest == R.id.tabListReservasFragment
 
-                // Definimos dónde queremos ver Search y Sort (las dos pestañas de listas)
-                val esPantallaDeLista = currentDest == R.id.tabListReservasFragment ||
-                        currentDest == R.id.tabListReservasFragment
+                val searchItem = menu.findItem(R.id.action_search)
+                val sortItem = menu.findItem(R.id.action_sort)
+                val drawerItem = menu.findItem(R.id.action_open_drawer)
 
-                // Mostramos u ocultamos según corresponda
-                menu.findItem(R.id.action_search)?.isVisible = esPantallaDeLista
-                menu.findItem(R.id.action_sort)?.isVisible = esPantallaDeLista
+                // Visibilidad según fragmento
+                searchItem?.isVisible = esPantallaDeLista
+                sortItem?.isVisible = esPantallaDeLista
+                drawerItem?.isVisible = (currentDest != R.id.loginFragment && currentDest != R.id.registerFragment)
 
-                // La hamburguesa (action_open_drawer) siempre visible si no es login
-                menu.findItem(R.id.action_open_drawer)?.isVisible = (currentDest != R.id.loginFragment && currentDest != R.id.registerFragment)
+                // Configuración de la búsqueda (Lupa)
+                if (esPantallaDeLista && searchItem != null) {
+                    val searchView = searchItem.actionView as androidx.appcompat.widget.SearchView
+                    searchView.queryHint = "Buscar gimnasio..."
+                    searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean = false
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            gymViewModel.setFilter(newText) // Asegúrate de tener este método en tu ViewModel
+                            return true
+                        }
+                    })
+                }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // El manejo se hace en onOptionsItemSelected como ya tienes
-                return false
+                return when (menuItem.itemId) {
+                    R.id.action_sort -> {
+                        gymViewModel.toggleSort() // Asegúrate de tener este método en tu ViewModel
+                        true
+                    }
+                    R.id.action_open_drawer -> {
+                        binding.drawerLayout.openDrawer(GravityCompat.START)
+                        true
+                    }
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+                    else -> false
+                }
             }
         }, this, Lifecycle.State.STARTED)
 
@@ -128,11 +136,10 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-// --- CONTROL DE VISIBILIDAD DE INTERFAZ SEGÚN DESTINO ---
+        // --- CONTROL DE VISIBILIDAD DE INTERFAZ ---
         navController.addOnDestinationChangedListener { _, destination, _ ->
             actualizarHeaderNavigation()
 
-            // 1. Visibilidad General (Barras y Drawer)
             when (destination.id) {
                 R.id.loginFragment, R.id.registerFragment -> {
                     binding.appBarLayout.visibility = View.GONE
@@ -146,27 +153,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // 2. Lógica de la Flecha Atrás (Izquierda)
+            // Lógica de la Flecha Atrás (Solo en pantallas secundarias)
             val pantallasConFlecha = listOf(
                 R.id.contactFragment,
                 R.id.detalleActividadFragment,
                 R.id.preferencesFragment,
                 R.id.reservaFragment
             )
-
             supportActionBar?.setDisplayHomeAsUpEnabled(destination.id in pantallasConFlecha)
-            if (destination.id in pantallasConFlecha) {
-                supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-            }
 
-            // 3. Forzar actualización del menú (Search/Sort)
-            // Esto hace que se llame de nuevo a onPrepareMenu o onCreateMenu
-            invalidateOptionsMenu()
-
+            // Forzar refresco de los iconos de la Toolbar
+            invalidateMenu()
             binding.floatingActionButton.hide()
         }
 
-        // --- BOTÓN ATRÁS ---
+        // --- CONTROL DEL BOTÓN ATRÁS FÍSICO ---
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -196,38 +197,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            // --- 1. BOTÓN HAMBURGUESA (Extremo derecho) ---
-            R.id.action_open_drawer -> {
-                // Usamos el ID de tu NavigationView: navigation_view
-                // Y abrimos por GravityCompat.END (Derecha)
-                binding.drawerLayout.openDrawer(androidx.core.view.GravityCompat.END)
-                true
-            }
-
-            // --- 2. FLECHA DE ATRÁS (Extremo izquierdo) ---
-            android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed()
-                true
-            }
-
-            // --- Tus funciones actuales ---
-            R.id.menu_logout -> {
-                com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
-                val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as androidx.navigation.fragment.NavHostFragment
-                navHostFragment.navController.navigate(R.id.loginFragment)
-                true
-            }
-            R.id.menu_about -> {
-                androidx.appcompat.app.AlertDialog.Builder(this)
-                    .setTitle("PixelGym")
-                    .setMessage("(c) SyntaxTerror - 2026\nVersión 1.0 - Gestión de Sesiones")
-                    .setPositiveButton("OK", null)
-                    .show()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+    private fun mostrarAcercaDe() {
+        AlertDialog.Builder(this)
+            .setTitle("Acerca de PixelGym")
+            .setMessage("(c) SyntaxTerror - 2026\nVersión 2.0 - Material 3 Edition")
+            .setPositiveButton("Cerrar", null)
+            .show()
     }
 }

@@ -17,6 +17,11 @@
                     android:title="@string/preferencias"/>
 
             <item
+                    android:id="@+id/drawer_about"
+                    android:icon="@drawable/ic_info"
+                    android:title="@string/acerca_de"/>
+
+            <item
                     android:id="@+id/drawer_logOut"
                     android:icon="@drawable/ic_on_off"
                     android:title="@string/logout"/>
