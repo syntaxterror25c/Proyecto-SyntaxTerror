@@ -49,8 +49,7 @@ class MainActivity : AppCompatActivity() {
         )[GymViewModel::class.java]
 
         // PRUEBA MUCHO OJO
-        gymViewModel.vaciarBaseDeDatosPrueba()
-        gymViewModel.cargarDatosPruebaSiEstaVacia()
+        gymViewModel.resetTotalGimnasioPruebas()
 
 
         this.setSupportActionBar(binding.toolbar)
@@ -172,7 +171,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_about -> {
                 AlertDialog.Builder(this)
                     .setTitle("PixelGym")
-                    .setMessage("(c) Oloman - 2026\nVersión 1.0 - Gestión de Sesiones")
+                    .setMessage("(c) SyntaxTerror - 2026\nVersión 1.0 - Gestión de Sesiones")
                     .setPositiveButton("OK", null)
                     .show()
                 true

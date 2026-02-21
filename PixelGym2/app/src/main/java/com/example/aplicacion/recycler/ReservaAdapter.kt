@@ -20,15 +20,27 @@ class ReservaAdapter(
 
     override fun onBindViewHolder(holder: ReservaViewHolder, position: Int) {
         val reserva = listaReservas[position]
+        val context = holder.itemView.context
 
         holder.binding.apply {
-            // Ahora los IDs son claros y semánticos:
+            // IDs de texto (estos ya te funcionaban)
             tvReservaNombre.text = reserva.nombre_actividad
             tvReservaFecha.text = reserva.fecha_sesion
             tvReservaHora.text = reserva.hora_inicio
 
-            // Si añadiste el profesor a la data class Reserva:
-            // tvReservaProfesor.text = reserva.nombre_profesor
+            // --- LÓGICA PARA LA IMAGEN (Usando tu ID real: ivReservaImagen) ---
+            val imageResId = context.resources.getIdentifier(
+                reserva.imagen_url,
+                "drawable",
+                context.packageName
+            )
+
+            if (imageResId != 0) {
+                ivReservaImagen.setImageResource(imageResId)
+            } else {
+                // Imagen por defecto si reserva.imagen_url está vacío o no existe
+                ivReservaImagen.setImageResource(com.example.aplicacion.R.drawable.im_rec_cardio)
+            }
 
             btnAnular.setOnClickListener {
                 onAnularClick(reserva)

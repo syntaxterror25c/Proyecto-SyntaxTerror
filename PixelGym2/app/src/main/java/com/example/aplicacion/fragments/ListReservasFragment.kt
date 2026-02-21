@@ -36,7 +36,6 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
 
         // 1. SOLUCIÓN AL ERROR: Especificamos el tipo (reserva: Reserva)
         reservaAdapter = ReservaAdapter(emptyList()) { reserva: Reserva ->
-            // gymViewModel.anularReserva(reserva)
         }
 
         binding.recyclerViewDiscos.apply {
@@ -50,7 +49,7 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
                     // 2. Aquí también especificamos el tipo para evitar confusiones
                     reservaAdapter = ReservaAdapter(reservas) { reservaAnular: Reserva ->
                         // Acción de anular
-                        // gymViewModel.anularReserva(reservaAnular)
+                        gymViewModel.anularReserva(reservaAnular)
                     }
                     binding.recyclerViewDiscos.adapter = reservaAdapter
                 }

@@ -33,9 +33,6 @@ class ListSesionesFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentListDiscosBinding.bind(view)
 
-        // LÍNEA TEMPORAL PARA PRUEBAS
-        // gymViewModel.vaciarBaseDeDatos()
-        gymViewModel.crearDatosPrueba()
 
         // 1. Cargamos el catálogo inicial (Actividades)
         gymViewModel.cargarActividades()

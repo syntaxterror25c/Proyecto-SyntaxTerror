@@ -13,11 +13,15 @@ class SesionDataSource {
         db.collection("sesiones").get().await().toObjects(Sesion::class.java)
     } catch (e: Exception) { emptyList() }
 
+// En SesionDataSource.kt
+
     suspend fun getMisReservas(userId: String): List<Reserva> = try {
         db.collection("reservas")
-            .whereEqualTo("idUsuario", userId)
+            .whereEqualTo("uid", userId)
             .get().await().toObjects(Reserva::class.java)
-    } catch (e: Exception) { emptyList() }
+    } catch (e: Exception) {
+        emptyList()
+    }
 
     suspend fun realizarReserva(reserva: Reserva): Boolean = try {
         db.collection("reservas").add(reserva).await()
