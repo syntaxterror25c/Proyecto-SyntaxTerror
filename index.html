@@ -642,9 +642,67 @@ footer::before {
             background: rgba(15,23,42,.95);
         }
 
+    
+        /* =========================
+           VIDEO (AL PRINCIPIO) + BOTÓN IMPRIMIR/PDF
+           ========================= */
+        .video-half{
+            width: 50%;
+            max-width: 560px;
+            min-width: 320px;
+            margin: 0 auto;
+        }
+        @media (max-width: 900px){
+            .video-half{ width: 100%; min-width: 0; }
+        }
+
+        .print-btn{
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 9999;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,122,0,.35);
+            background: rgba(2,6,23,.68);
+            color: rgba(255,255,255,.92);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 18px 40px rgba(0,0,0,.25);
+        }
+        .print-btn:hover{
+            border-color: rgba(255,122,0,.65);
+            transform: translateY(-1px);
+        }
+        .print-btn svg{
+            width: 18px;
+            height: 18px;
+            opacity: .92;
+        }
+        @media print{
+            .print-btn{ display:none !important; }
+        }
+
     </style>
 </head>
 <body>
+
+<button class="print-btn" type="button" onclick="window.print()" aria-label="Imprimir o guardar como PDF">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M7 8V4h10v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7 17h10v3H7v-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M6 17H5a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3h-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17 13h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  Imprimir / PDF
+</button>
+
 <header>
     <img id="logo-syntaxterror" src="Multimedia/Imagenes/Logos/Proyecto/logo.png"
          alt="Logo SyntaxTerror">
@@ -671,6 +729,24 @@ footer::before {
 </header>
 
 <main>
+
+<section class="card reveal" id="video">
+  <div class="hd">
+    <h2>Vídeo demo <span class="badge">extra</span></h2>
+    <span class="small">Pantallazo rápido del proyecto</span>
+  </div>
+  <div class="bd">
+    <p class="small">
+      Aquí dejo un vídeo corto del funcionamiento para que se vea el flujo completo (registro/login → salas → reserva por día y hora).
+    </p>
+
+    <video controls style="width:100%; border-radius:14px; border:1px solid var(--border); background: rgba(0,0,0,.25);" class="video-half"
+           src="Multimedia/PYXELGYM.mp4">
+      Tu navegador no soporta vídeo HTML5.
+    </video>
+  </div>
+</section>
+
     <div class="grid">
         <!-- Columna izquierda -->
         <section class="card" id="resumen">
@@ -1208,8 +1284,8 @@ footer::before {
 
         <p class="section-title" style="margin-top:14px;">Tipografía</p>
         <p class="small">
-            Para la app se ha añadido una fuente personalizada en <span class="kbd">res/font</span> (ej: <code>bebasneue_regular.ttf</code>) y se aplica con
-            <code>android:fontFamily="@font/bebasneue_regular"</code>. Importante: nombres de archivo <b>en minúsculas y con _</b>.
+            Para la app se ha añadido una fuente personalizada en <span class="kbd">res/font</span> (ej: <code>fredoka_one.ttf</code>) y se aplica con
+            <code>android:fontFamily="@font/fredoka_one"</code>. Importante: nombres de archivo <b>en minúsculas y con _</b>.
         </p>
 
         <details>
@@ -1243,7 +1319,8 @@ footer::before {
         <details>
             <summary>Wireframe / notas de usuario (documento)</summary>
             <p class="small" style="margin-top:10px;">
-               
+                Documento interno del equipo con el frame del usuario: <code>Documentacion/WireframeUsuario.md</code>
+                (en GitHub Pages lo mantenemos como referencia).
             </p>
             <pre class="small" style="white-space:pre-wrap; margin-top:10px;">![TFG](https://github.com/user-attachments/assets/96d24d83-564a-439b-9d98-b92b69da2c45)</pre>
         </details>
@@ -1253,10 +1330,13 @@ footer::before {
     <section class="card" id="bbdd" style="margin-top:1.5rem;">
         <h2>Base de datos (BBDD): modelo, scripts y diagrama</h2>
         <p class="small">
-         Decisión de Base de Datos: inicialmente estuvimos bastante tiempo investigando y trabajando con PostgreSQL, diseñando tablas y analizando cómo estructurar correctamente las relaciones para el sistema de reservas. Sin embargo, tras evaluar la integración con Android y la complejidad del mantenimiento, decidimos cambiar el enfoque y optar por una base de datos NoSQL utilizando Firebase (Cloud Firestore). Esta decisión nos permitió simplificar la estructura de datos, adaptarla mejor al modelo de usuarios y reservas y aprovechar la integración directa con el ecosistema Android.
-
-Diseño de la base de datos para el módulo gym (usuarios, suscripciones, planes, salas, profesores, sesiones y reservas). Se adjunta el diagrama ER y scripts NoSQL.
-        </p>
+  <b>Decisión de Base de Datos:</b> inicialmente estuvimos bastante tiempo investigando y trabajando con <b>PostgreSQL</b>,
+  diseñando tablas y analizando cómo estructurar correctamente las relaciones para el sistema de reservas.
+  Sin embargo, tras evaluar la integración con Android y la complejidad del mantenimiento, decidimos cambiar el enfoque
+  y optar por una base de datos <b>NoSQL</b> utilizando <b>Firebase (Cloud Firestore)</b>.
+  Esta decisión nos permitió simplificar la estructura de datos, adaptarla mejor al modelo de usuarios y reservas
+  y aprovechar la integración directa con el ecosistema Android.
+</p>
 
         <p class="small">
             Diseño de la base de datos para el módulo <b>gym</b> (usuarios, suscripciones, planes, salas, profesores, sesiones y reservas).
@@ -1265,8 +1345,8 @@ Diseño de la base de datos para el módulo gym (usuarios, suscripciones, planes
 
         <p class="section-title">Diagrama Entidad-Relación (ER)</p>
         <p class="small">
-           
-            
+            Imagen guardada dentro del repo para que se vea en GitHub Pages.
+            Ruta recomendada: <code>BBDD/BBDD ER.png</code> (si el nombre tiene espacios, se recomienda renombrar a <code>bbdd_er.png</code>).
         </p>
 
         <div class="frame">
@@ -1280,7 +1360,7 @@ Diseño de la base de datos para el módulo gym (usuarios, suscripciones, planes
                 <code>BBDD/colecciones_firestoredemo.md</code> y <code>BBDD/colecciones_firestoredemo.md</code>.
             </p>
             <p class="small">
-               
+                Nota: si los ficheros están sin extensión, renómbralos con <code>.sql</code> para que GitHub los previsualice.
             </p>
         </details>
     </section>
@@ -1515,23 +1595,6 @@ Diseño de la base de datos para el módulo gym (usuarios, suscripciones, planes
 <footer>
     <span>SyntaxTerror · { code · learn · build } · <span class="app-version"></span></span>
 </footer>
-
-<section class="card reveal" id="video">
-  <div class="hd">
-    <h2>Vídeo demo <span class="badge">extra</span></h2>
-    <span class="small">Pantallazo rápido del proyecto</span>
-  </div>
-  <div class="bd">
-    <p class="small">
-      Aquí dejo un vídeo corto del funcionamiento para que se vea el flujo completo (registro/login → salas → reserva por día y hora).
-    </p>
-
-    <video controls
-       style="width:100%; border-radius:14px; border:1px solid var(--border);"
-       src="Multimedia/PYXELGYM.mp4">
-    </video>
-  </div>
-</section>
 
 <script>
     // Tema oscuro / claro con localStorage
