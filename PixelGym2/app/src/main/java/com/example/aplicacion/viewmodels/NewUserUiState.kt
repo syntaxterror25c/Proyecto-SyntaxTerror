@@ -1,4 +1,4 @@
-package com.example.aplicacion.firebase
+package com.example.aplicacion.viewmodels
 
 sealed class NewUserUiState {
     object Idle : NewUserUiState()

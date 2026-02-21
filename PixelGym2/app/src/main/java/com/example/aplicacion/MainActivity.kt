@@ -48,6 +48,11 @@ class MainActivity : AppCompatActivity() {
             GymViewModelFactory(ServiceLocator.gymRepository, ServiceLocator.authRepository)
         )[GymViewModel::class.java]
 
+        // PRUEBA MUCHO OJO
+        gymViewModel.vaciarBaseDeDatosPrueba()
+        gymViewModel.cargarDatosPruebaSiEstaVacia()
+
+
         this.setSupportActionBar(binding.toolbar)
 
         // --- NAVIGATION DRAWER ---

@@ -8,21 +8,33 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.aplicacion.databinding.FragmentReservaBinding
-import com.bumptech.glide.Glide
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.aplicacion.R
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.aplicacion.databinding.FragmentReservaBinding
+import com.example.aplicacion.viewmodels.GymViewModel
+import com.example.aplicacion.viewmodels.GymViewModelFactory
+import com.example.aplicacion.firebase.ServiceLocator
+import kotlinx.coroutines.launch
 import java.util.*
+import java.text.SimpleDateFormat
 
 class ReservaFragment : Fragment() {
+
     private var _binding: FragmentReservaBinding? = null
     private val binding get() = _binding!!
-    private val db = FirebaseFirestore.getInstance()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private val gymViewModel: GymViewModel by activityViewModels {
+        GymViewModelFactory(ServiceLocator.gymRepository, ServiceLocator.authRepository)
+    }
+
+    private var actividadId: String = ""
+    private var nombreActividad: String = ""
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentReservaBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -30,84 +42,76 @@ class ReservaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Recuperar datos que vienen de la Cartelera
-        val nombreAct = arguments?.getString("nombreActividad") ?: ""
-        val imgUrl = arguments?.getString("imagenUrl") ?: ""
+        actividadId = arguments?.getString("actividadId") ?: ""
+        nombreActividad = arguments?.getString("nombreActividad") ?: "Actividad"
 
-        binding.tvReservaTitulo.text = nombreAct
+        binding.tvNombreRecursoReserva.text = nombreActividad
 
-        // Cargar imagen
-        val resId = resources.getIdentifier(imgUrl, "drawable", requireContext().packageName)
-        Glide.with(this)
-            .load(if (resId != 0) resId else R.drawable.im_rec_cardio)
-            .centerCrop()
-            .into(binding.imgReservaActividad)
-
-        // 2. Configurar el botón para abrir el Calendario
-        binding.btnElegirFecha.setOnClickListener {
-            abrirCalendario(nombreAct)
+        binding.btnDetalles.setOnClickListener {
+            val bundle = Bundle().apply { putString("actividadId", actividadId) }
+            findNavController().navigate(R.id.action_reservaFragment_to_detalleActividadFragment, bundle)
         }
 
-        // 3. Botón de reserva (por ahora solo un mensaje)
-        binding.btnConfirmarReserva.setOnClickListener {
-            val hora = binding.spinnerHoras.selectedItem?.toString()
-            val fecha = binding.tvFechaSeleccionada.text.toString()
-            Toast.makeText(requireContext(), "Reservado $nombreAct a las $hora ($fecha)", Toast.LENGTH_LONG).show()
+        binding.etFechaReserva.setOnClickListener { showDatePickerDialog() }
+
+        binding.btnConfirmarReserva.setOnClickListener { confirmarReservaFinal() }
+
+        observeSesiones()
+    }
+
+    private fun observeSesiones() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                gymViewModel.listaSesiones.collect { sesiones ->
+                    // Si la lista está vacía, mostramos el aviso
+                    if (sesiones.isEmpty()) {
+                        val aviso = arrayOf("No hay disponibilidad este día")
+                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, aviso)
+                        binding.spinnerHoras.setAdapter(adapter)
+                        binding.spinnerHoras.setText("", false) // Limpiamos selección previa
+                        binding.btnConfirmarReserva.isEnabled = false
+                    } else {
+                        val horas = sesiones.map { it.hora_inicio }
+                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, horas)
+                        binding.spinnerHoras.setAdapter(adapter)
+                        binding.btnConfirmarReserva.isEnabled = true
+                    }
+                }
+            }
         }
     }
 
-    private fun abrirCalendario(actividad: String) {
-        val calendario = Calendar.getInstance()
+    private fun showDatePickerDialog() {
+        val c = Calendar.getInstance()
+        val dpd = DatePickerDialog(requireContext(), { _, y, m, d ->
+            val calendar = Calendar.getInstance().apply { set(y, m, d) }
 
-        // Creamos el selector de fecha
-        val dpd = DatePickerDialog(requireContext(), { _, year, month, day ->
-            // Formato: d/m/yyyy (igual que en tu script de carga)
-            val fechaSeleccionada = "$day/${month + 1}/$year"
-            binding.tvFechaSeleccionada.text = "Fecha: $fechaSeleccionada"
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val fechaFormateada = sdf.format(calendar.time)
 
-            // Cuando el usuario elige fecha, buscamos en Firebase
-            buscarHorasDisponibles(actividad, fechaSeleccionada)
+            binding.etFechaReserva.setText(fechaFormateada)
 
-        }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH))
+            // LLAMADA A LA NUEVA FUNCIÓN DEL VIEWMODEL
+            gymViewModel.cargarSesionesPorFecha(nombreActividad, fechaFormateada)
 
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
         dpd.show()
     }
 
-    private fun buscarHorasDisponibles(actividad: String, fecha: String) {
-        // Buscamos en la colección "sesiones"
-        db.collection("sesiones")
-            .whereEqualTo("nombre_actividad", actividad)
-            .whereEqualTo("fecha", fecha)
-            .get()
-            .addOnSuccessListener { documentos ->
-                val listaHoras = mutableListOf<String>()
+    private fun confirmarReservaFinal() {
+        val horaSeleccionada = binding.spinnerHoras.text.toString()
 
-                for (doc in documentos) {
-                    val hora = doc.getString("hora_inicio") ?: ""
-                    listaHoras.add(hora)
-                }
+        // Evitamos que intente reservar si el texto es el aviso de "No hay disponibilidad"
+        if (horaSeleccionada.isNotEmpty() && horaSeleccionada != "No hay disponibilidad este día") {
+            val sesionParaReservar = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSeleccionada }
 
-                if (listaHoras.isEmpty()) {
-                    Toast.makeText(requireContext(), "No hay clases para este día", Toast.LENGTH_SHORT).show()
-                    binding.btnConfirmarReserva.isEnabled = false
-                    // Limpiamos el spinner si no hay nada
-                    binding.spinnerHoras.adapter = null
-                } else {
-                    // Ordenamos las horas para que salgan bonitas
-                    listaHoras.sort()
-
-                    // Llenamos el Spinner con las horas encontradas
-                    val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, listaHoras)
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    binding.spinnerHoras.adapter = adapter
-
-                    // Activamos el botón de reserva
-                    binding.btnConfirmarReserva.isEnabled = true
-                }
+            sesionParaReservar?.let { sesion ->
+                gymViewModel.intentarReserva(sesion)
+                findNavController().popBackStack()
             }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
-            }
+        } else {
+            Toast.makeText(requireContext(), "Selecciona una hora válida", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {

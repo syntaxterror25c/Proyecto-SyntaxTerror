@@ -1,4 +1,4 @@
-package com.example.aplicacion.firebase
+package com.example.aplicacion.viewmodels
 
 import com.google.firebase.auth.FirebaseUser
 sealed interface UserUiState {

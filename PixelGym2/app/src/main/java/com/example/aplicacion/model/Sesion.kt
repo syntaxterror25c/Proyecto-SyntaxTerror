@@ -1,4 +1,4 @@
-package com.example.aplicacion.recycler
+package com.example.aplicacion.model
 
 data class Sesion(
     val id: String = "",

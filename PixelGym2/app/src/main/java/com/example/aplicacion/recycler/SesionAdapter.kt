@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aplicacion.R
 import com.example.aplicacion.databinding.ItemSesionBinding
 import com.bumptech.glide.Glide
+import com.example.aplicacion.model.Sesion
 
 class SesionAdapter(
     private var listaSesiones: MutableList<Sesion>,

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aplicacion.R
 import com.example.aplicacion.databinding.ItemActividadBinding
 import com.bumptech.glide.Glide
+import com.example.aplicacion.model.Actividad
 
 class ActividadAdapter(
     private var listaActividades: List<Actividad>,
@@ -25,10 +26,13 @@ class ActividadAdapter(
     override fun onBindViewHolder(holder: ActividadViewHolder, position: Int) {
         val actividad = listaActividades[position]
 
+        // Nombre de la actividad
         holder.binding.tvActividadNombre.text = actividad.nombre
-        // Si tienes un campo para el coste en el layout del catálogo:
-        // holder.binding.tvCoste.text = "${actividad.coste} créditos"
 
+        // Categoría (He añadido esto para que coincida con el XML de la tarjeta)
+        holder.binding.tvActividadCategoria.text = actividad.categoria.ifEmpty { "General" }
+
+        // Imagen
         val resourceId = context.resources.getIdentifier(
             actividad.imagen,
             "drawable",
@@ -40,10 +44,19 @@ class ActividadAdapter(
             .centerCrop()
             .into(holder.binding.ivActividadImagen)
 
+        // Navegación al Fragment de Reserva
         holder.itemView.setOnClickListener {
             onActividadClick(actividad)
         }
+
+        // El corazón se queda como está en el XML (gris por defecto)
     }
 
     override fun getItemCount(): Int = listaActividades.size
+
+    // Función útil para cuando cambies de pestaña entre Todas y Favoritos
+    fun updateData(nuevaLista: List<Actividad>) {
+        listaActividades = nuevaLista
+        notifyDataSetChanged()
+    }
 }

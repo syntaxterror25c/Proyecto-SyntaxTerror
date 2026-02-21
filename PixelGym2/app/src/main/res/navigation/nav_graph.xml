@@ -48,10 +48,23 @@
             android:label="Reservar Clase"
             tools:layout="@layout/fragment_reserva">
         <argument
-                android:name="nombreActividad"
+                android:name="actividadId"
                 app:argType="string" />
         <argument
-                android:name="imagenUrl"
+                android:name="nombreActividad"
+                app:argType="string" />
+        <action
+                android:id="@+id/action_reservaFragment_to_detalleActividadFragment"
+                app:destination="@id/detalleActividadFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/detalleActividadFragment"
+            android:name="com.example.aplicacion.fragments.DetalleActividadFragment"
+            android:label="Detalle de la Actividad"
+            tools:layout="@layout/fragment_detalle_actividad">
+        <argument
+                android:name="actividadId"
                 app:argType="string" />
     </fragment>
 

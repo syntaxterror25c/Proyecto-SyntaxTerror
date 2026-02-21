@@ -3,7 +3,6 @@ package com.example.aplicacion.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aplicacion.firebase.AuthRepository
-import com.example.aplicacion.firebase.UserUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

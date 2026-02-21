@@ -1,28 +1,23 @@
 package com.example.aplicacion.firebase
 
 import com.example.aplicacion.firebase.data.AuthDataSource
-import com.example.aplicacion.firebase.data.SesionDataSource // Cambio aquí
+import com.example.aplicacion.firebase.data.SesionDataSource
 import com.example.aplicacion.firebase.data.UserDataSource
 
 object ServiceLocator {
-    // Instancias base de Firebase
     private val auth = FirebaseProvider.provideAuth()
     private val firestore = FirebaseProvider.provideFirestore()
 
-    // DataSources que tocan Firebase
     val authDataSource by lazy { AuthDataSource(auth) }
     val userDataSource by lazy { UserDataSource(firestore) }
 
-    // Sustituimos discoDataSource por sesionDataSource
-    val sesionDataSource by lazy { SesionDataSource(firestore) }
+    // Limpio y sin parámetros
+    val sesionDataSource by lazy { SesionDataSource() }
 
-    // Repositories que organizan los datos para el ViewModel
     val authRepository by lazy {
-        AuthRepository(authDataSource, userDataSource) // Ahora le pasamos ambos
+        AuthRepository(authDataSource, userDataSource)
     }
 
-    // El nuevo repositorio del Gimnasio
+    // Usando el repositorio con el nombre correcto
     val gymRepository by lazy { GymRepository(sesionDataSource) }
-
-
 }

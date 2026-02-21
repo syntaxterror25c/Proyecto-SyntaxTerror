@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   xmlns:tools="http://schemas.android.com/tools"
                                    android:layout_width="match_parent"
                                    android:layout_height="wrap_content"
                                    android:layout_marginHorizontal="16dp"
@@ -15,54 +16,63 @@
             android:padding="12dp">
 
         <ImageView
-                android:id="@+id/ivActividadImagen"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:id="@+id/ivReservaImagen"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/im_rec_cardio"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/im_rec_cardio" />
 
         <LinearLayout
-                android:id="@+id/containerTextos"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="8dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/ivFavorito"
-                app:layout_constraintStart_toEndOf="@+id/ivActividadImagen"
+                app:layout_constraintEnd_toStartOf="@+id/btnAnular"
+                app:layout_constraintStart_toEndOf="@+id/ivReservaImagen"
                 app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                    android:id="@+id/tvActividadNombre"
+                    android:id="@+id/tvReservaNombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Cardio Express"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Crossfit" />
 
             <TextView
-                    android:id="@+id/tvActividadCategoria"
+                    android:id="@+id/tvReservaFecha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fitness"
                     android:textColor="#8A8A8E"
-                    android:textSize="14sp" />
+                    android:textSize="13sp"
+                    tools:text="23/02/2026" />
+
+            <TextView
+                    android:id="@+id/tvReservaHora"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF9800"
+                    android:textSize="13sp"
+                    tools:text="10:00" />
         </LinearLayout>
 
-        <ImageView
-                android:id="@+id/ivFavorito"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@android:drawable/btn_star"
+        <Button
+                android:id="@+id/btnAnular"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ANULAR"
+                android:textColor="#F44336"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="#8A8A8E" />
+                app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

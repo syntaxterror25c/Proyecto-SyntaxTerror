@@ -9,11 +9,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplicacion.databinding.FragmentListDiscosBinding
-import com.example.aplicacion.recycler.SesionAdapter
+// Eliminado el SesionAdapter ya que usamos ReservaAdapter
 import com.example.aplicacion.viewmodels.GymViewModel
 import com.example.aplicacion.viewmodels.GymViewModelFactory
 import com.example.aplicacion.firebase.ServiceLocator
 import kotlinx.coroutines.launch
+import com.example.aplicacion.recycler.ReservaAdapter
+import com.example.aplicacion.model.Reserva
 
 class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_list_discos) {
 
@@ -24,32 +26,33 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
         GymViewModelFactory(ServiceLocator.gymRepository, ServiceLocator.authRepository)
     }
 
-    private lateinit var sesionAdapter: SesionAdapter
+    private lateinit var reservaAdapter: ReservaAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentListDiscosBinding.bind(view)
 
-        // Cargamos las reservas privadas del usuario
         gymViewModel.cargarMisReservas()
 
-        sesionAdapter = SesionAdapter(
-            mutableListOf(),
-            { /* Acción al pulsar en reserva (ej: ver detalle o cancelar) */ },
-            requireContext()
-        )
+        // 1. SOLUCIÓN AL ERROR: Especificamos el tipo (reserva: Reserva)
+        reservaAdapter = ReservaAdapter(emptyList()) { reserva: Reserva ->
+            // gymViewModel.anularReserva(reserva)
+        }
 
         binding.recyclerViewDiscos.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = sesionAdapter
+            adapter = reservaAdapter
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 gymViewModel.listaMisReservas.collect { reservas ->
-                    // Convertimos objetos 'Reserva' a 'Sesion' para que el adapter los pinte
-                    val listaComoSesiones = reservas.map { it.toSesion() }
-                    sesionAdapter.updateData(listaComoSesiones)
+                    // 2. Aquí también especificamos el tipo para evitar confusiones
+                    reservaAdapter = ReservaAdapter(reservas) { reservaAnular: Reserva ->
+                        // Acción de anular
+                        // gymViewModel.anularReserva(reservaAnular)
+                    }
+                    binding.recyclerViewDiscos.adapter = reservaAdapter
                 }
             }
         }

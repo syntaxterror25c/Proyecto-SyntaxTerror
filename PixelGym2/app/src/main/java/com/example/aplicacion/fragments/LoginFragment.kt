@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import com.example.aplicacion.firebase.ServiceLocator
-import com.example.aplicacion.firebase.UserUiState
+import com.example.aplicacion.viewmodels.UserUiState
 import com.example.aplicacion.viewmodels.AuthViewModelFactory
 
 class LoginFragment : Fragment() {

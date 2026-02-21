@@ -15,7 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.aplicacion.R
 import com.example.aplicacion.databinding.FragmentRegisterBinding
-import com.example.aplicacion.firebase.NewUserUiState
+import com.example.aplicacion.viewmodels.NewUserUiState
 import com.example.aplicacion.firebase.ServiceLocator
 import com.example.aplicacion.viewmodels.NewUserViewModel
 import com.example.aplicacion.viewmodels.NewUserViewModelFactory
