@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         // Listener del Drawer (Menú lateral)
         binding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.drawer_list -> navController.navigate(R.id.tabListDiscosFragment) // Mantenemos el ID del navGraph por ahora
+                R.id.drawer_list -> navController.navigate(R.id.tabListReservasFragment) // Mantenemos el ID del navGraph por ahora
                 R.id.drawer_contact -> navController.navigate(R.id.contactFragment)
                 R.id.drawer_preferences -> navController.navigate(R.id.preferencesFragment)
                 R.id.drawer_logOut -> {
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         // --- BOTTOM NAVIGATION ---
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.bnm_list -> navController.navigate(R.id.tabListDiscosFragment)
+                R.id.bnm_list -> navController.navigate(R.id.tabListReservasFragment)
                 R.id.bnm_contact -> navController.navigate(R.id.contactFragment)
                 R.id.bnm_settings -> navController.navigate(R.id.preferencesFragment)
             }
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                     binding.appBarLayout.visibility = View.VISIBLE
                     binding.bottomNavigation.visibility = View.VISIBLE
                     binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-                    // El FAB lo ocultamos de momento porque servía para añadir discos
+                    // El FAB lo ocultamos de momento porque servía para añadir reservas
                     binding.floatingActionButton.hide()
                 }
             }
@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                 } else {
                     when (navController.currentDestination?.id) {
-                        R.id.tabListDiscosFragment -> Toast.makeText(applicationContext, "Cierra sesión para salir", Toast.LENGTH_SHORT).show()
+                        R.id.tabListReservasFragment -> Toast.makeText(applicationContext, "Cierra sesión para salir", Toast.LENGTH_SHORT).show()
                         R.id.loginFragment -> finish()
                         else -> {
                             isEnabled = false

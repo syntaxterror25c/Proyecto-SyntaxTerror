@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.aplicacion.databinding.FragmentListDiscosBinding
+import com.example.aplicacion.databinding.FragmentListReservasBinding
 import com.example.aplicacion.recycler.ActividadAdapter
 import com.example.aplicacion.viewmodels.GymViewModel
 import com.example.aplicacion.viewmodels.GymViewModelFactory
@@ -18,9 +18,9 @@ import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
 
 
-class ListSesionesFragment : Fragment(com.example.aplicacion.R.layout.fragment_list_discos) {
+class ListSesionesFragment : Fragment(com.example.aplicacion.R.layout.fragment_list_reservas) {
 
-    private var _binding: FragmentListDiscosBinding? = null
+    private var _binding: FragmentListReservasBinding? = null
     private val binding get() = _binding!!
 
     private val gymViewModel: GymViewModel by activityViewModels {
@@ -31,7 +31,7 @@ class ListSesionesFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentListDiscosBinding.bind(view)
+        _binding = FragmentListReservasBinding.bind(view)
 
 
         // 1. Cargamos el catálogo inicial (Actividades)
@@ -42,7 +42,7 @@ class ListSesionesFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
     }
 
     private fun setupRecyclerViews() {
-        binding.recyclerViewDiscos.layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewReservas.layoutManager = LinearLayoutManager(context)
         // Ya no necesitamos inicializar el sesionAdapter aquí,
         // porque las sesiones se verán en el Fragment de Reserva.
     }
@@ -66,7 +66,7 @@ class ListSesionesFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
                                 bundle
                             )
                         }
-                        binding.recyclerViewDiscos.adapter = actividadAdapter
+                        binding.recyclerViewReservas.adapter = actividadAdapter
                     }
                 }
 

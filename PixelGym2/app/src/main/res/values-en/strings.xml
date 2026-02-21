@@ -23,10 +23,10 @@
     <string name="text_artista">Artist</string>
     <string name="text_ano">Year</string>
     <string name="text_favorito">Favorite</string>
-    <string name="text_titulo_disco">Title</string>
+    <string name="text_titulo_reserva">Title</string>
     <string name="tab_todos">All disks</string>
     <string name="tab_favoritos">Favorites</string>
-    <string name="text_caratula_del_disco">Cover</string>
+    <string name="text_caratula_del_reserva">Cover</string>
     <string name="fav">FAV</string>
     <string name="user_image">User image</string>
     <string name="user">User</string>

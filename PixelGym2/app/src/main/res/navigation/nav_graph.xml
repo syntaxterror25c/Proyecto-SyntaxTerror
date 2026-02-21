@@ -14,8 +14,8 @@
                 android:id="@+id/action_loginFragment_to_registerFragment"
                 app:destination="@id/registerFragment" />
         <action
-                android:id="@+id/action_loginFragment_to_tabListDiscosFragment"
-                app:destination="@id/tabListDiscosFragment"
+                android:id="@+id/action_loginFragment_to_tabListReservasFragment"
+                app:destination="@id/tabListReservasFragment"
                 app:popUpTo="@id/loginFragment"
                 app:popUpToInclusive="true"/>
     </fragment>
@@ -33,10 +33,10 @@
     </fragment>
 
     <fragment
-            android:id="@+id/tabListDiscosFragment"
+            android:id="@+id/tabListReservasFragment"
             android:name="com.example.aplicacion.fragments.TabSesionesFragment"
             android:label="PixelGym"
-            tools:layout="@layout/fragment_tab_list_discos">
+            tools:layout="@layout/fragment_tab_list_reservas">
         <action
                 android:id="@+id/action_tabSesiones_to_reservaFragment"
                 app:destination="@id/reservaFragment" />

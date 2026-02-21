@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
                         is UserUiState.Authenticated -> {
                             binding.progressBar.visibility = View.GONE
                             Toast.makeText(requireContext(), getString(R.string.login_success), Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(R.id.action_loginFragment_to_tabListDiscosFragment)
+                            findNavController().navigate(R.id.action_loginFragment_to_tabListReservasFragment)
                         }
                         is UserUiState.Error -> {
                             binding.progressBar.visibility = View.GONE

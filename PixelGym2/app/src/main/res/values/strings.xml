@@ -24,10 +24,10 @@
     <string name="text_artista">Artista</string>
     <string name="text_ano">Año</string>
     <string name="text_favorito">Favorito</string>
-    <string name="text_titulo_disco">Título</string>
-    <string name="tab_todos">Todos los discos</string>
+    <string name="text_titulo_reserva">Título</string>
+    <string name="tab_todos">Todos los reservas</string>
     <string name="tab_favoritos">Favoritos</string>
-    <string name="text_caratula_del_disco">Carátula del Disco</string>
+    <string name="text_caratula_del_reserva">Carátula del Reserva</string>
     <string name="fav">FAV</string>
     <string name="user_image">Imagen usuario</string>
     <string name="user">Usuario</string>
@@ -49,7 +49,7 @@
     <string name="notificaciones">Notificaciones</string>
     <string name="modoOscuro">Modo oscuro</string>
     <string name="sincronizar">Sincronizar datos</string>
-    <string name="hintBuscar">Buscar disco...</string>
+    <string name="hintBuscar">Buscar reserva...</string>
     <string name="cierraSesion">Para salir cierra sesión</string>
     <string name="anonimo">Anónimo</string>
     <string name="error_unknown">Ha ocurrido un error inesperado</string>

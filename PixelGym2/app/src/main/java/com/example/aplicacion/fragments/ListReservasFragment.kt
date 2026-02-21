@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.aplicacion.databinding.FragmentListDiscosBinding
+import com.example.aplicacion.databinding.FragmentListReservasBinding
 // Eliminado el SesionAdapter ya que usamos ReservaAdapter
 import com.example.aplicacion.viewmodels.GymViewModel
 import com.example.aplicacion.viewmodels.GymViewModelFactory
@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
 import com.example.aplicacion.recycler.ReservaAdapter
 import com.example.aplicacion.model.Reserva
 
-class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_list_discos) {
+class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_list_reservas) {
 
-    private var _binding: FragmentListDiscosBinding? = null
+    private var _binding: FragmentListReservasBinding? = null
     private val binding get() = _binding!!
 
     private val gymViewModel: GymViewModel by activityViewModels {
@@ -30,7 +30,7 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentListDiscosBinding.bind(view)
+        _binding = FragmentListReservasBinding.bind(view)
 
         gymViewModel.cargarMisReservas()
 
@@ -38,7 +38,7 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
         reservaAdapter = ReservaAdapter(emptyList()) { reserva: Reserva ->
         }
 
-        binding.recyclerViewDiscos.apply {
+        binding.recyclerViewReservas.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = reservaAdapter
         }
@@ -51,7 +51,7 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
                         // Acción de anular
                         gymViewModel.anularReserva(reservaAnular)
                     }
-                    binding.recyclerViewDiscos.adapter = reservaAdapter
+                    binding.recyclerViewReservas.adapter = reservaAdapter
                 }
             }
         }
