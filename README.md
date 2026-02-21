@@ -1,4 +1,6 @@
-WEB BITÁCORA-------https://syntaxterror25c.github.io/Proyecto-SyntaxTerror/----------------
+WEB BITÁCORA-------
+| **WEB BITÁCORA** | [https://syntaxterror25c.github.io/Proyecto-SyntaxTerror](https://syntaxterror25c.github.io/Proyecto-SyntaxTerror) |
+| :--- | :--- |
 # 🏋️ PixelGym  
 Proyecto Intermodular – 2º DAM  
 Equipo: SyntaxTerror  
