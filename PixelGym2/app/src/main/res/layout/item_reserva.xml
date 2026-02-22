@@ -67,7 +67,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ANULAR"
+                android:text="@string/btn_anular"
                 android:textColor="#F44336"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"

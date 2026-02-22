@@ -86,7 +86,7 @@
                     android:id="@+id/tvCategoriaLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CATEGORÍA"
+                    android:text="@string/info_categoria"
                     android:textAppearance="?attr/textAppearanceLabelLarge"
                     android:textColor="?attr/colorSecondary" />
 
@@ -102,7 +102,7 @@
                     android:id="@+id/tvDescripcionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SOBRE LA ACTIVIDAD"
+                    android:text="@string/info_about"
                     android:textAppearance="?attr/textAppearanceLabelLarge"
                     android:textColor="?attr/colorSecondary" />
 
@@ -118,7 +118,7 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="HORARIOS DISPONIBLES"
+                    android:text="@string/horario_disponible"
                     android:textAppearance="?attr/textAppearanceLabelLarge"
                     android:textColor="?attr/colorSecondary" />
 
@@ -134,7 +134,7 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="EQUIPO DE INSTRUCTORES"
+                    android:text="@string/equipo_instructores"
                     android:textAppearance="?attr/textAppearanceLabelLarge"
                     android:textColor="?attr/colorSecondary" />
 

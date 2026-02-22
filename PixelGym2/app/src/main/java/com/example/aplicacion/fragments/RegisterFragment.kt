@@ -51,7 +51,7 @@ class RegisterFragment : Fragment() {
                     when (state) {
                         is NewUserUiState.Loading -> binding.btnCreateAccount.isEnabled = false
                         is NewUserUiState.Created -> {
-                            Toast.makeText(requireContext(), "¡Bienvenido a PixelGym!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), getString(R.string.welcome_pixelgym), Toast.LENGTH_SHORT).show()
                             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                         }
                         is NewUserUiState.Error -> {

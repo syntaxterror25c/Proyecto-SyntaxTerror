@@ -56,7 +56,7 @@
                         android:id="@+id/tvReservaTitulo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="NUEVA RESERVA"
+                        android:text="@string/nueva_reserva"
                         android:textColor="?attr/colorPrimary"
                         android:textStyle="bold"
                         app:layout_constraintTop_toTopOf="parent"
@@ -100,7 +100,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Selecciona fecha"
+                    android:hint="@string/seleccion_fecha"
                     app:startIconDrawable="@android:drawable/ic_menu_my_calendar">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -117,7 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="Horario disponible"
+                    android:hint="@string/horario_disponible"
                     app:startIconDrawable="@android:drawable/ic_menu_recent_history">
 
                 <AutoCompleteTextView
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="4dp"
-                    android:text="Selecciona una hora para ver disponibilidad"
+                    android:text="@string/selecciona_hora_disponibilidad"
                     android:textAppearance="?attr/textAppearanceLabelLarge"
                     android:textColor="?attr/colorSecondary"
                     tools:text="Quedan 5 plazas disponibles" />
@@ -145,7 +145,7 @@
                     android:layout_height="56dp"
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="16dp"
-                    android:text="CONFIRMAR RESERVA"
+                    android:text="@string/confirmar_reserva"
                     app:cornerRadius="100dp" />
         </LinearLayout>
 

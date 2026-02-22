@@ -17,8 +17,8 @@ class TabSesionesFragment : Fragment() {
 
     private val tabTitles: Array<String>
         get() = arrayOf(
-            "Actividades",
-            "Mis Reservas"
+            getString(R.string.actividades),
+            getString(R.string.mis_reservas)
         )
 
     override fun onCreateView(

@@ -24,7 +24,7 @@
             android:id="@+id/tv_empty_reservas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No tienes ninguna sala reservada todavía."
+            android:text="@string/empty_reservas"
             android:textSize="16sp"
             android:textColor="@android:color/white"
             android:alpha="0.85"

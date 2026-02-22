@@ -68,7 +68,7 @@ class ReservaFragment : Fragment() {
             val sesion = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSel }
             sesion?.let {
                 val libres = it.capacidad_maxima - it.plazas_ocupadas
-                binding.tvPlazasDisponibles.text = "Quedan $libres plazas de ${it.capacidad_maxima}"
+                binding.tvPlazasDisponibles.text = "${getString(R.string.quedan)} $libres ${getString(R.string.plazas_de)} ${it.capacidad_maxima}"
                 binding.tvPlazasDisponibles.setTextColor(resources.getColor(
                     if (libres <= 2) android.R.color.holo_red_dark else android.R.color.secondary_text_dark, null
                 ))
@@ -85,8 +85,8 @@ class ReservaFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 gymViewModel.reservaStatus.collect { exito ->
                     exito?.let {
-                        val msg = if (it) "¡Reserva confirmada con éxito!"
-                        else "No hay plazas disponibles o error en la reserva"
+                        val msg = if (it) getString(R.string.reserva_ok)
+                        else getString(R.string.reserva_error)
 
                         val snackbar = com.google.android.material.snackbar.Snackbar.make(
                             binding.root,
@@ -131,7 +131,7 @@ class ReservaFragment : Fragment() {
 
         println("DEBUG_FRAGMENT: Botón pulsado. Fecha: $fechaSel, Hora: $horaSel")
 
-        if (horaSel.isNotEmpty() && horaSel != "No hay disponibilidad" && horaSel != "Selecciona hora") {
+        if (horaSel.isNotEmpty() && horaSel != getString(R.string.error_no_disponibilidad) && horaSel != getString(R.string.prompt_selecciona_hora)) {
             val sesion = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSel }
 
             sesion?.let {
@@ -145,7 +145,7 @@ class ReservaFragment : Fragment() {
                 }
                 if (yaTiene) {
                     println("DEBUG_FRAGMENT: BLOQUEADO: Ya existe una reserva igual")
-                    com.google.android.material.snackbar.Snackbar.make(binding.root, "Ya tienes reserva a esa hora", com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+                    com.google.android.material.snackbar.Snackbar.make(binding.root, getString(R.string.error_reserva_duplicada), com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
                         .setBackgroundTint(resources.getColor(android.R.color.holo_orange_dark, null)).show()
                 } else {
                     println("DEBUG_FRAGMENT: Todo OK. Llamando a intentarReserva...")
@@ -170,7 +170,7 @@ class ReservaFragment : Fragment() {
                     } else {
                         val horas = disponibles.map { it.hora_inicio }
                         binding.spinnerHoras.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, horas))
-                        binding.spinnerHoras.setText("Selecciona hora", false)
+                        binding.spinnerHoras.setText(getString(R.string.prompt_selecciona_hora), false)
                         binding.btnConfirmarReserva.isEnabled = true
                     }
                 }

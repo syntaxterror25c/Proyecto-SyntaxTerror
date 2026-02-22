@@ -3,6 +3,7 @@ package com.example.aplicacion.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aplicacion.R
 import com.example.aplicacion.firebase.AuthRepository
 import com.example.aplicacion.firebase.GymRepository
 import com.example.aplicacion.model.Sesion
@@ -195,14 +196,14 @@ class GymViewModel(
 
         // --- 1. ACTIVIDADES ---
         val catalogoActividades = listOf(
-            mapOf("nombre" to "Spinning", "coste" to 1, "imagen" to "im_rec_spinning", "categoria" to "Cardio", "descripcion" to "Clase de ciclismo indoor de alta intensidad."),
-            mapOf("nombre" to "Cardio", "coste" to 1, "imagen" to "im_rec_cardio", "categoria" to "Cardio", "descripcion" to "Mejora tu resistencia cardiovascular."),
-            mapOf("nombre" to "Zumba", "coste" to 1, "imagen" to "im_rec_zumba", "categoria" to "Baile", "descripcion" to "Ejercicio divertido a ritmo de música latina."),
-            mapOf("nombre" to "Musculación", "coste" to 1, "imagen" to "im_rec_musculacion", "categoria" to "Fuerza", "descripcion" to "Entrenamiento libre en sala de máquinas."),
-            mapOf("nombre" to "Yoga", "coste" to 5, "imagen" to "im_rec_yoga", "categoria" to "Cuerpo-Mente", "descripcion" to "Relajación y estiramientos profundos."),
-            mapOf("nombre" to "Pilates", "coste" to 2, "imagen" to "im_rec_pilates", "categoria" to "Cuerpo-Mente", "descripcion" to "Fortalecimiento del core y postura."),
-            mapOf("nombre" to "Crossfit", "coste" to 2, "imagen" to "im_rec_crossfit", "categoria" to "Fuerza", "descripcion" to "WODs de alta intensidad funcional."),
-            mapOf("nombre" to "Fitboxing", "coste" to 5, "imagen" to "im_rec_fitboxing", "categoria" to "Cardio", "descripcion" to "Golpeo al saco y ejercicios funcionales.")
+            mapOf("nombre" to "Spinning", "coste" to 1, "imagen" to "im_rec_spinning", "categoria" to R.string.info_categoria, "descripcion" to R.string.spinning_about),
+            mapOf("nombre" to "Cardio", "coste" to 1, "imagen" to "im_rec_cardio", "categoria" to R.string.info_categoria, "descripcion" to R.string.cardio_about),
+            mapOf("nombre" to "Zumba", "coste" to 1, "imagen" to "im_rec_zumba", "categoria" to R.string.baile, "descripcion" to R.string.zumba_about),
+            mapOf("nombre" to R.string.acti_musculacion, "coste" to 1, "imagen" to "im_rec_musculacion", "categoria" to R.string.fuerza, "descripcion" to R.string.musculacion_about),
+            mapOf("nombre" to "Yoga", "coste" to 5, "imagen" to "im_rec_yoga", "categoria" to R.string.cuerpo_mente, "descripcion" to R.string.yoga_about),
+            mapOf("nombre" to R.string.acti_pilates, "coste" to 2, "imagen" to "im_rec_pilates", "categoria" to R.string.cuerpo_mente, "descripcion" to R.string.pilates_about),
+            mapOf("nombre" to "Crossfit", "coste" to 2, "imagen" to "im_rec_crossfit", "categoria" to R.string.fuerza, "descripcion" to R.string.crossfit_about),
+            mapOf("nombre" to "Fitboxing", "coste" to 5, "imagen" to "im_rec_fitboxing", "categoria" to R.string.info_categoria, "descripcion" to R.string.fitboxing_about)
         )
 
         catalogoActividades.forEach { a ->
