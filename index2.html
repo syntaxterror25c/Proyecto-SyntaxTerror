@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bitácora del Proyecto - SyntaxTerror</title>
+
+  <style>
+    /* =========================
+       ESTILO GENERAL (simple + limpio)
+       ========================= */
+
+    :root{
+      --bg: #020617;
+      --bg2:#0b1224;
+      --card: rgba(17,24,39,.88);
+      --border: rgba(148,163,184,.18);
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --muted2:#cbd5e1;
+
+      /* NARANJA PXG (el que estamos usando) */
+      --accent:#FF7A00;
+      --accentSoft: rgba(255,122,0,.14);
+
+      --shadow: 0 18px 40px rgba(0,0,0,.45);
+      --r: 16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body.light{
+      --bg:#f4f4f6;
+      --bg2:#ffffff;
+      --card: rgba(255,255,255,.95);
+      --border: rgba(15,23,42,.12);
+      --text:#0b1020;
+      --muted:#4b5563;
+      --muted2:#0f172a;
+      background: radial-gradient(circle at top, #e5e7eb, #ffffff);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background: radial-gradient(circle at top, #1f2937, var(--bg));
+      transition: background .2s ease, color .2s ease;
+    }
+
+    /* =========================
+       HEADER PEGADO ARRIBA
+       ========================= */
+    header{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(to right,
+        rgba(255,122,0,.95),
+        rgba(255,122,0,.25),
+        rgba(2,6,23,.35)
+      );
+    }
+
+    .topbar{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      min-width:0;
+    }
+
+    #logo{
+      height:78px;
+      width:auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.35);
+      filter: drop-shadow(0 0 10px rgba(255,122,0,.35));
+      transition: transform .2s ease, filter .2s ease;
+    }
+    #logo:hover{
+      transform: translateY(-1px) scale(1.03);
+      filter: drop-shadow(0 0 14px rgba(255,122,0,.55));
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:1.18rem;
+      line-height:1.2;
+      letter-spacing:.2px;
+    }
+    .brand p{
+      margin:4px 0 0;
+      font-size:.85rem;
+      font-weight:600;
+    }
+    body.light .brand p{color: rgba(15,23,42,.70)}
+    body:not(.light) .brand p{color: rgba(229,231,235,.85)}
+
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(255,255,255,.25);
+      background: rgba(2,6,23,.25);
+      color: rgba(255,255,255,.92);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:.82rem;
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+      white-space:nowrap;
+    }
+    body.light .chip{
+      border-color: rgba(15,23,42,.12);
+      background: rgba(255,255,255,.65);
+      color: rgba(15,23,42,.9);
+    }
+
+    .btn{
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.25);
+      background: rgba(2,6,23,.25);
+      color: rgba(255,255,255,.92);
+      padding:8px 12px;
+      font-size:.82rem;
+      cursor:pointer;
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .btn:hover{
+      border-color: rgba(255,122,0,.9);
+      transform: translateY(-1px);
+    }
+    body.light .btn{
+      border-color: rgba(15,23,42,.12);
+      background: rgba(255,255,255,.65);
+      color: rgba(15,23,42,.9);
+    }
+
+    .ver{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.12rem .55rem;
+      margin-left:.4rem;
+      border-radius:999px;
+      background: rgba(255,255,255,.22);
+      border:1px solid rgba(255,255,255,.25);
+      font-size:.72rem;
+      font-weight:800;
+      color: rgba(255,255,255,.95);
+    }
+    body.light .ver{
+      background: rgba(15,23,42,.06);
+      border-color: rgba(15,23,42,.12);
+      color: rgba(15,23,42,.92);
+    }
+
+    /* =========================
+       LAYOUT (sidebar + contenido)
+       ========================= */
+    .shell{
+      max-width:1180px;
+      margin:0 auto;
+      padding: 0 14px 28px;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+      align-items:start;
+      margin-top:14px;
+    }
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+      .side{position:static!important}
+    }
+
+    .side{
+      position: sticky;
+      top:108px;
+      padding: 14px;
+      border:1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .side h2{
+      margin:0 0 8px;
+      font-size:.95rem;
+      letter-spacing:.2px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .small{
+      color: var(--muted);
+      font-size:.86rem;
+      line-height:1.55;
+      margin:0;
+    }
+
+    .toc{
+      display:grid;
+      gap:6px;
+      margin-top:10px;
+    }
+    .toc a{
+      text-decoration:none;
+      color: var(--muted2);
+      border: 1px solid transparent;
+      padding:8px 10px;
+      border-radius: 12px;
+      font-size:.86rem;
+      transition: background .15s ease, border-color .15s ease, color .15s ease;
+    }
+    .toc a:hover{
+      background: var(--accentSoft);
+      border-color: rgba(255,122,0,.25);
+      color: var(--text);
+    }
+
+    .quick{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      align-items:center;
+    }
+    .kbd{
+      border:1px solid var(--border);
+      border-bottom-width:3px;
+      border-radius:10px;
+      padding:.12rem .48rem;
+      background: rgba(255,255,255,.03);
+      font-family: var(--mono);
+      font-size:12px;
+      color: var(--muted2);
+    }
+
+    .content{
+      display:grid;
+      gap:16px;
+    }
+
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .hd{
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      gap:12px;
+      align-items:baseline;
+      justify-content:space-between;
+    }
+    .hd h2{
+      margin:0;
+      font-size:1.04rem;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:.22rem .65rem;
+      border-radius:999px;
+      background: var(--accentSoft);
+      color: var(--accent);
+      font-size:.74rem;
+      font-weight:800;
+      border:1px solid rgba(255,122,0,.25);
+    }
+    .bd{ padding: 14px 16px 16px; }
+
+    .section-title{
+      margin: 14px 0 8px;
+      font-weight:800;
+      font-size:.92rem;
+      letter-spacing:.2px;
+      color: var(--muted2);
+    }
+
+    /* =========================
+       TIMELINE (bonita y simple)
+       ========================= */
+    .timeline{
+      list-style:none;
+      padding-left:0;
+      margin:10px 0 0;
+      border-left:2px solid rgba(148,163,184,.25);
+    }
+    .timeline li{
+      margin:12px 0 12px 12px;
+      padding-left:12px;
+      position:relative;
+    }
+    .timeline li::before{
+      content:"";
+      position:absolute;
+      left:-18px;
+      top:6px;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(255,122,0,.12);
+    }
+    .t-title{ font-weight:800; font-size:.92rem; }
+    .t-desc{ color: var(--muted); font-size:.86rem; line-height:1.45; }
+
+    /* =========================
+       GANTT INTERACTIVO
+       ========================= */
+    .gantt-tools{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      margin-top:10px;
+      margin-bottom:10px;
+    }
+    .field{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+    .field label{ font-size:.84rem; color: var(--muted2); font-weight:800; }
+    .field select, .field input[type="range"]{ accent-color: var(--accent); }
+
+    .field select{
+      border:1px solid var(--border);
+      background: rgba(2,6,23,.35);
+      color: var(--text);
+      border-radius:10px;
+      padding:6px 8px;
+      font-family:var(--sans);
+    }
+    body.light .field select{
+      background: rgba(15,23,42,.05);
+      color: var(--text);
+    }
+
+    .gantt-wrap{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      background: rgba(255,255,255,.02);
+    }
+    .gantt-head{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-bottom:1px solid var(--border);
+      align-items:center;
+    }
+    .hint{ font-size:.82rem; color: var(--muted); }
+    .gantt-canvas{ width:100%; overflow:auto; }
+    #ganttSvg{ display:block; }
+
+    .tip{
+      position: fixed;
+      pointer-events:none;
+      z-index:999;
+      background: rgba(2,6,23,.92);
+      color:#fff;
+      border:1px solid rgba(255,122,0,.35);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:.84rem;
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      max-width: 320px;
+      display:none;
+    }
+    body.light .tip{ background: rgba(15,23,42,.95); }
+
+    /* =========================
+       FOOTER + BOTÓN ARRIBA
+       ========================= */
+    footer{
+      text-align:center;
+      color: var(--muted);
+      font-size:.78rem;
+      padding:24px 10px 18px;
+      margin-top:16px;
+      font-family: var(--mono);
+      letter-spacing:.12em;
+      text-transform: uppercase;
+      border-top:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,122,0,.05), transparent);
+    }
+
+    .toTop{
+      position:fixed;
+      right:14px;
+      bottom:14px;
+      border-radius:999px;
+      border:1px solid rgba(255,122,0,.35);
+      background: rgba(2,6,23,.70);
+      color:#fff;
+      padding:10px 12px;
+      cursor:pointer;
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      display:none;
+    }
+    .toTop:hover{ transform: translateY(-1px); }
+    body.light .toTop{ background: rgba(15,23,42,.85); }
+
+    /* =========================
+       ANIMACIÓN SUAVE (para que no sea un ladrillo)
+       ========================= */
+    .reveal{ opacity:0; transform: translateY(8px); }
+    .reveal.on{ opacity:1; transform: translateY(0); transition: opacity .6s ease, transform .6s ease; }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <img id="logo" src="Multimedia/Imagenes/Logos/Proyecto/logo.png" alt="Logo SyntaxTerror" />
+      <div style="min-width:0">
+        <h1>
+          Bitácora del Proyecto · Equipo “SyntaxTerror”
+          <span class="ver" id="ver"></span>
+        </h1>
+        <p>Seguimiento del desarrollo · 2º DAM</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <span class="chip">📅 Hoy: <b id="todayLabel">21/02/2026</b></span>
+      <button class="btn" id="themeToggle" title="Cambiar tema">🌙 Tema</button>
+      <button class="btn" id="btnPrint" title="Imprimir / guardar en PDF">🖨️ PDF</button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <div class="layout">
+
+    <aside class="side reveal">
+      <h2>🧭 Navegación rápida</h2>
+      <p class="small">Lo dejo aquí para ir directo a lo importante sin estar bajando todo el rato.</p>
+
+      <div class="toc">
+        <a href="#resumen">Resumen</a>
+        <a href="#cronograma">Cronograma (Gantt)</a>
+        <a href="#bitacora">Bitácora</a>
+        <a href="#equipo">Equipo</a>
+      </div>
+
+      <div class="quick">
+        <span class="kbd">Ctrl</span><span class="kbd">F</span>
+        <span class="small">para buscar</span>
+      </div>
+    </aside>
+
+    <main class="content">
+
+      <section class="card reveal" id="resumen">
+        <div class="hd">
+          <h2>Resumen del proyecto <span class="badge">100%</span></h2>
+          <span class="small">Versión: <b id="ver2"></b></span>
+        </div>
+        <div class="bd">
+          <p class="small">
+            Proyecto de gimnasio: el usuario se registra o inicia sesión, ve las salas disponibles y realiza una reserva eligiendo
+            día y hora. El sistema controla las plazas para que no se puedan hacer reservas por encima del aforo.
+          </p>
+
+          <p class="section-title">Fases principales</p>
+          <ul class="timeline">
+            <li>
+              <div class="t-title">Análisis y planificación</div>
+              <div class="t-desc">Alcance, objetivo y organización del trabajo.</div>
+            </li>
+            <li>
+              <div class="t-title">Diseño</div>
+              <div class="t-desc">BBDD + pantallas (frames / wireframes) + navegación.</div>
+            </li>
+            <li>
+              <div class="t-title">Desarrollo</div>
+              <div class="t-desc">Funcionalidades y mejoras visuales.</div>
+            </li>
+            <li>
+              <div class="t-title">Documentación</div>
+              <div class="t-desc">Bitácora, cronograma y evidencias para entrega.</div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card reveal" id="cronograma">
+        <div class="hd">
+          <h2>Cronograma (Gantt interactivo) <span class="badge">interactivo</span></h2>
+          <span class="small">Filtro + zoom + tooltip</span>
+        </div>
+        <div class="bd">
+          <p class="small">
+            Este cronograma es interactivo: puedo filtrar por fase, hacer zoom y ver detalles pasando el ratón por cada barra.
+            La línea naranja marca el día de hoy para ubicarme rápido.
+          </p>
+
+          <div class="gantt-tools">
+            <div class="field">
+              <label for="phaseFilter">Fase</label>
+              <select id="phaseFilter">
+                <option value="all">Todas</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="zoomRange">Zoom</label>
+              <input id="zoomRange" type="range" min="1" max="4" step="1" value="2" />
+              <span class="small" id="zoomLabel">medio</span>
+            </div>
+
+            <div class="field">
+              <label for="onlyDone">Solo hecho</label>
+              <input id="onlyDone" type="checkbox" />
+            </div>
+          </div>
+
+          <div class="gantt-wrap">
+            <div class="gantt-head">
+              <div class="hint">🖱️ Pasa por encima de las barras para ver detalle · 📅 Línea naranja = HOY</div>
+              <div class="hint"><span class="kbd">Ctrl</span> + rueda (si tu ratón lo permite)</div>
+            </div>
+            <div class="gantt-canvas" id="ganttCanvas"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card reveal" id="bitacora">
+        <div class="hd">
+          <h2>Bitácora <span class="badge">hasta hoy</span></h2>
+          <span class="small">Registro resumido</span>
+        </div>
+        <div class="bd">
+          <ul class="timeline">
+            <li>
+              <div class="t-title">16/02/2026</div>
+              <div class="t-desc">Revisión del flujo de login/registro y navegación principal.</div>
+            </li>
+            <li>
+              <div class="t-title">19/02/2026</div>
+              <div class="t-desc">Modelo BBDD: validación del ER y scripts para pruebas.</div>
+            </li>
+            <li>
+              <div class="t-title">21/02/2026 (hoy)</div>
+              <div class="t-desc">Pulido visual, consistencia de tema y Gantt interactivo en la web.</div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card reveal" id="equipo">
+        <div class="hd">
+          <h2>Equipo <span class="badge">SyntaxTerror</span></h2>
+          <span class="small">Roles</span>
+        </div>
+        <div class="bd">
+          <ul class="timeline">
+            <li>
+              <div class="t-title">Pedro Torres</div>
+              <div class="t-desc">Coordinación técnica · Git/GitHub · Documentación</div>
+            </li>
+            <li>
+              <div class="t-title">Manuel Sánchez</div>
+              <div class="t-desc">Desarrollo · Apoyo en revisión y documentación</div>
+            </li>
+            <li>
+              <div class="t-title">Adrián Romera</div>
+              <div class="t-desc">Desarrollo · Apoyo en revisión y documentación</div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="reveal">
+        SyntaxTerror · { code · learn · build } · <span id="ver3"></span>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<button class="toTop" id="toTop" title="Subir arriba">⬆️</button>
+<div class="tip" id="tip"></div>
+
+<script>
+  /* =========================
+     CONFIG BÁSICA (lo dejo arriba para encontrarlo rápido)
+     ========================= */
+
+  // Versión de la web (la actualizo yo cuando toque)
+  const APP_VERSION = "v0.1.0";
+
+  // Hoy (si quieres cambiarlo, cambia esta fecha y ya)
+  const TODAY = "2026-02-21"; // formato YYYY-MM-DD
+
+  document.getElementById("ver").textContent  = APP_VERSION;
+  document.getElementById("ver2").textContent = APP_VERSION;
+  document.getElementById("ver3").textContent = APP_VERSION;
+
+  // Pongo la fecha en formato dd/mm/yyyy para el chip de arriba
+  (function setTodayLabel(){
+    const d = new Date(TODAY + "T00:00:00");
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const yy = d.getFullYear();
+    document.getElementById("todayLabel").textContent = dd + "/" + mm + "/" + yy;
+  })();
+
+  /* =========================
+     BOTÓN TEMA (oscuro / claro)
+     ========================= */
+  const body = document.body;
+  const themeToggle = document.getElementById("themeToggle");
+
+  function applyTheme(){
+    const t = localStorage.getItem("st-theme");
+    if(t === "light"){
+      body.classList.add("light");
+      themeToggle.textContent = "🌙 Tema";
+    }else{
+      body.classList.remove("light");
+      themeToggle.textContent = "☀️ Tema";
+    }
+  }
+
+  themeToggle.addEventListener("click", () => {
+    body.classList.toggle("light");
+    localStorage.setItem("st-theme", body.classList.contains("light") ? "light" : "dark");
+    applyTheme();
+  });
+
+  applyTheme();
+
+  /* =========================
+     IMPRIMIR / PDF
+     ========================= */
+  document.getElementById("btnPrint").addEventListener("click", () => window.print());
+
+  /* =========================
+     ANIMACIÓN DE ENTRADA (muy suave)
+     ========================= */
+  const reveals = Array.from(document.querySelectorAll(".reveal"));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) e.target.classList.add("on");
+    });
+  }, { threshold: 0.08 });
+
+  reveals.forEach(el => io.observe(el));
+
+  /* =========================
+     BOTÓN SUBIR ARRIBA
+     ========================= */
+  const toTop = document.getElementById("toTop");
+
+  window.addEventListener("scroll", () => {
+    toTop.style.display = window.scrollY > 700 ? "block" : "none";
+  });
+
+  toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+  /* =========================
+     GANTT INTERACTIVO (SVG SIN LIBRERÍAS)
+     ========================= */
+
+  // Datos del cronograma (si quieres añadir más tareas, copias una línea y cambias texto/fechas)
+  const ganttData = [
+    { phase: "1.0 Inicio", task: "Alcance y objetivos", start: "2025-12-08", end: "2025-12-10", status: "done" },
+    { phase: "1.0 Inicio", task: "Acta de constitución", start: "2025-12-10", end: "2025-12-12", status: "done" },
+
+    { phase: "2.0 Planificación", task: "WBS y reparto de tareas", start: "2025-12-13", end: "2025-12-15", status: "done" },
+    { phase: "2.0 Planificación", task: "Roadmap + cronograma base", start: "2025-12-15", end: "2025-12-19", status: "done" },
+    { phase: "2.0 Planificación", task: "Análisis de riesgos", start: "2025-12-17", end: "2025-12-19", status: "done" },
+
+    { phase: "3.0 Análisis y Diseño", task: "Diagramas UML", start: "2025-12-20", end: "2025-12-27", status: "done" },
+    { phase: "3.0 Análisis y Diseño", task: "Diseño de BBDD (ER)", start: "2025-12-23", end: "2026-01-04", status: "done" },
+    { phase: "3.0 Análisis y Diseño", task: "Frames/Wireframes (UI)", start: "2025-12-27", end: "2026-01-08", status: "done" },
+
+    { phase: "4.0 Desarrollo", task: "Base del proyecto + navegación", start: "2026-01-05", end: "2026-01-12", status: "done" },
+    { phase: "4.0 Desarrollo", task: "Pantallas Login/Register", start: "2026-01-10", end: "2026-01-18", status: "done" },
+    { phase: "4.0 Desarrollo", task: "Ajustes visuales (paleta/tipografía)", start: "2026-01-20", end: "2026-02-02", status: "done" },
+
+    { phase: "5.0 Pruebas", task: "Pruebas unitarias y validaciones", start: "2026-02-03", end: "2026-02-12", status: "done" },
+    { phase: "5.0 Pruebas", task: "Revisión UX y correcciones", start: "2026-02-14", end: "2026-02-18", status: "done" },
+
+    { phase: "6.0 Documentación", task: "Web (Pages) + evidencias", start: "2026-02-16", end: "2026-02-20", status: "done" },
+    { phase: "6.0 Documentación", task: "Memoria final (capturas y texto)", start: "2026-02-18", end: "2026-02-21", status: "doing" },
+
+    { phase: "7.0 Cierre", task: "Checklist final", start: "2026-02-21", end: "2026-02-21", status: "doing" }
+  ];
+
+  const phaseFilter = document.getElementById("phaseFilter");
+  const zoomRange   = document.getElementById("zoomRange");
+  const zoomLabel   = document.getElementById("zoomLabel");
+  const onlyDone    = document.getElementById("onlyDone");
+  const canvas      = document.getElementById("ganttCanvas");
+  const tip         = document.getElementById("tip");
+
+  const zoomMap = {
+    1: { pxPerDay: 8,  label: "compacto" },
+    2: { pxPerDay: 12, label: "medio" },
+    3: { pxPerDay: 18, label: "zoom" },
+    4: { pxPerDay: 26, label: "máximo" }
+  };
+
+  function toDate(s){
+    const [y,m,d] = s.split("-").map(Number);
+    return new Date(y, m-1, d);
+  }
+
+  function daysBetween(a,b){
+    const ms = 24*60*60*1000;
+    return Math.round((b - a)/ms);
+  }
+
+  function fmt(d){
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const yy = d.getFullYear();
+    return `${dd}/${mm}/${yy}`;
+  }
+
+  // Cargo las fases al desplegable (así no tengo que escribirlas a mano)
+  (function initPhases(){
+    const phases = [...new Set(ganttData.map(x => x.phase))];
+    phases.forEach(p => {
+      const opt = document.createElement("option");
+      opt.value = p;
+      opt.textContent = p;
+      phaseFilter.appendChild(opt);
+    });
+  })();
+
+  function renderGantt(){
+    const z = zoomMap[Number(zoomRange.value)];
+    zoomLabel.textContent = z.label;
+
+    let data = ganttData.slice();
+
+    if(phaseFilter.value !== "all"){
+      data = data.filter(x => x.phase === phaseFilter.value);
+    }
+    if(onlyDone.checked){
+      data = data.filter(x => x.status === "done");
+    }
+
+    // Rango de fechas (para saber cuánto ocupa el calendario)
+    const starts = data.map(d => toDate(d.start));
+    const ends   = data.map(d => toDate(d.end));
+    const minD   = new Date(Math.min(...starts));
+    const maxD   = new Date(Math.max(...ends));
+
+    // Un poco de margen para que no quede pegado
+    const min = new Date(minD); min.setDate(min.getDate()-1);
+    const max = new Date(maxD); max.setDate(max.getDate()+1);
+
+    const totalDays = daysBetween(min, max) + 1;
+
+    // Columna izquierda para los nombres
+    const leftCol = 270;
+    const rowH = 28;
+    const headH = 44;
+
+    const w = leftCol + totalDays * z.pxPerDay + 40;
+    const h = headH + data.length * rowH + 22;
+
+    const today = toDate(TODAY);
+    const todayX = leftCol + (daysBetween(min, today)) * z.pxPerDay;
+
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("id","ganttSvg");
+    svg.setAttribute("width", w);
+    svg.setAttribute("height", h);
+
+    // Fondo de filas (para que se lea mejor)
+    for(let i=0;i<data.length;i++){
+      const y = headH + i*rowH;
+      const rect = document.createElementNS(ns,"rect");
+      rect.setAttribute("x", 0);
+      rect.setAttribute("y", y);
+      rect.setAttribute("width", w);
+      rect.setAttribute("height", rowH);
+      rect.setAttribute("fill", i%2===0 ? "rgba(255,255,255,.02)" : "rgba(255,255,255,0)");
+      svg.appendChild(rect);
+    }
+
+    // Líneas verticales del calendario (marco más fuerte cada lunes)
+    for(let d=0; d<totalDays; d++){
+      const cur = new Date(min); cur.setDate(min.getDate()+d);
+      const x = leftCol + d*z.pxPerDay;
+      const isMon = cur.getDay() === 1;
+
+      const line = document.createElementNS(ns,"line");
+      line.setAttribute("x1", x);
+      line.setAttribute("y1", 0);
+      line.setAttribute("x2", x);
+      line.setAttribute("y2", h);
+      line.setAttribute("stroke", isMon ? "rgba(255,122,0,.15)" : "rgba(148,163,184,.08)");
+      line.setAttribute("stroke-width", isMon ? "1.2" : "1");
+      svg.appendChild(line);
+
+      // Etiqueta de fecha (lunes) para orientarse
+      if(isMon){
+        const t = document.createElementNS(ns,"text");
+        t.setAttribute("x", x+2);
+        t.setAttribute("y", 28);
+        t.setAttribute("fill", "rgba(229,231,235,.85)");
+        t.setAttribute("font-size","11");
+        t.textContent = cur.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"});
+        svg.appendChild(t);
+      }
+    }
+
+    // Separador de la columna de nombres
+    const sep = document.createElementNS(ns,"line");
+    sep.setAttribute("x1", leftCol);
+    sep.setAttribute("y1", 0);
+    sep.setAttribute("x2", leftCol);
+    sep.setAttribute("y2", h);
+    sep.setAttribute("stroke", "rgba(148,163,184,.18)");
+    svg.appendChild(sep);
+
+    // Línea de HOY (naranja)
+    const todayLine = document.createElementNS(ns,"line");
+    todayLine.setAttribute("x1", todayX);
+    todayLine.setAttribute("y1", 0);
+    todayLine.setAttribute("x2", todayX);
+    todayLine.setAttribute("y2", h);
+    todayLine.setAttribute("stroke", "rgba(255,122,0,.95)");
+    todayLine.setAttribute("stroke-width","2");
+    svg.appendChild(todayLine);
+
+    const todayTag = document.createElementNS(ns,"text");
+    todayTag.setAttribute("x", todayX + 6);
+    todayTag.setAttribute("y", 16);
+    todayTag.setAttribute("fill","rgba(255,122,0,.95)");
+    todayTag.setAttribute("font-size","12");
+    todayTag.setAttribute("font-weight","800");
+    todayTag.textContent = "HOY";
+    svg.appendChild(todayTag);
+
+    // Dibujo las tareas
+    data.forEach((t, i) => {
+      const y = headH + i*rowH + 6;
+
+      // Nombre a la izquierda
+      const name = document.createElementNS(ns,"text");
+      name.setAttribute("x", 12);
+      name.setAttribute("y", headH + i*rowH + 18);
+      name.setAttribute("fill", "rgba(229,231,235,.92)");
+      name.setAttribute("font-size","12");
+      name.textContent = `${t.phase} — ${t.task}`;
+      svg.appendChild(name);
+
+      // Barra horizontal
+      const s = toDate(t.start);
+      const e = toDate(t.end);
+      const x = leftCol + daysBetween(min, s) * z.pxPerDay;
+      const dur = Math.max(1, (daysBetween(s,e) + 1)) * z.pxPerDay;
+
+      const bar = document.createElementNS(ns,"rect");
+      bar.setAttribute("x", x);
+      bar.setAttribute("y", y);
+      bar.setAttribute("width", dur);
+      bar.setAttribute("height", 16);
+      bar.setAttribute("rx", 8);
+
+      // Si está “done” la dejo más neutra, si está en curso la dejo naranja
+      bar.setAttribute("fill", t.status === "done" ? "rgba(148,163,184,.35)" : "rgba(255,122,0,.65)");
+      bar.setAttribute("stroke", t.status === "done" ? "rgba(148,163,184,.35)" : "rgba(255,122,0,.95)");
+      bar.setAttribute("stroke-width","1");
+      bar.style.cursor = "help";
+
+      // Tooltip (detalle al pasar el ratón)
+      bar.addEventListener("mousemove", (ev) => {
+        tip.style.display = "block";
+        tip.style.left = (ev.clientX + 14) + "px";
+        tip.style.top  = (ev.clientY + 14) + "px";
+        tip.innerHTML = `
+          <b>${t.task}</b><br>
+          <span style="opacity:.9">${t.phase}</span><br>
+          <span style="opacity:.85">📅 ${fmt(s)} → ${fmt(e)}</span><br>
+          <span style="opacity:.85">✅ Estado: ${t.status === "done" ? "Hecho" : "En curso"}</span>
+        `;
+      });
+      bar.addEventListener("mouseleave", () => {
+        tip.style.display = "none";
+      });
+
+      svg.appendChild(bar);
+    });
+
+    canvas.innerHTML = "";
+    canvas.appendChild(svg);
+  }
+
+  // Cada vez que toco los controles, repinto el Gantt
+  phaseFilter.addEventListener("change", renderGantt);
+  zoomRange.addEventListener("input", renderGantt);
+  onlyDone.addEventListener("change", renderGantt);
+
+  renderGantt();
+</script>
+</body>
+</html>

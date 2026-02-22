@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logotipos de Actividades · PixelGym</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --panel:#111827;
+      --border:#1f2937;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#ff7a00;
+      --accentSoft: rgba(255,122,0,.12);
+      --shadow: 0 18px 40px rgba(0,0,0,.45);
+    }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      color: var(--text);
+    }
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(to right, rgba(255,122,0,.85), rgba(255,122,0,.25), rgba(2,6,23,.35));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .headwrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .brand img{
+      height: 56px;
+      width:auto;
+      filter: drop-shadow(0 0 10px rgba(255,122,0,.22));
+    }
+    .brand h1{
+      margin:0;
+      font-size: 1.05rem;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .brand p{
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      padding: .25rem .6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(2,6,23,.35);
+      font-weight: 700;
+      font-size: .8rem;
+      color: rgba(255,255,255,.92);
+    }
+    main{
+      max-width: 1100px;
+      margin: 18px auto 30px;
+      padding: 0 16px;
+    }
+    .intro{
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(17,24,39,.75);
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+    }
+    .intro h2{
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      padding: .16rem .55rem;
+      border-radius: 999px;
+      background: var(--accentSoft);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: .78rem;
+    }
+    .intro p{
+      margin: 0;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+
+    .grid{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+      .brand h1{ font-size: 1rem; }
+    }
+
+    .card{
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(17,24,39,.78);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position: relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background: radial-gradient(700px 220px at 25% 0%, rgba(255,122,0,.14), transparent 60%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .card-inner{
+      position:relative;
+      display:grid;
+      grid-template-columns: 170px minmax(0,1fr);
+      gap: 10px;
+      padding: 14px 14px;
+      align-items:center;
+    }
+    @media (max-width: 520px){
+      .card-inner{ grid-template-columns: 1fr; }
+    }
+    .logoBox{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(2,6,23,.30);
+      border-radius: 16px;
+      padding: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height: 140px;
+    }
+    .logoBox img{
+      max-width: 140px;
+      max-height: 140px;
+      width:auto;
+      height:auto;
+      image-rendering: auto;
+      filter: drop-shadow(0 14px 18px rgba(0,0,0,.35));
+    }
+    .content h3{
+      margin: 0;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-size: 1rem;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      padding: .16rem .55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,122,0,.35);
+      background: rgba(255,122,0,.10);
+      color: rgba(255,255,255,.92);
+      font-weight: 800;
+      font-size: .78rem;
+    }
+    .content p{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+    .content ul{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: rgba(229,231,235,.92);
+      font-size: .88rem;
+      line-height: 1.6;
+    }
+    .content li{
+      margin: 2px 0;
+    }
+    footer{
+      text-align:center;
+      color: var(--muted);
+      font-size: .8rem;
+      padding: 22px 16px 26px;
+    }
+    a.back{
+      color: rgba(255,255,255,.92);
+      text-decoration:none;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(2,6,23,.35);
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: .85rem;
+    }
+    a.back:hover{ border-color: rgba(255,122,0,.65); color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="headwrap">
+      <div class="brand">
+        <img src="Multimedia/Imagenes/Logos/APP/logopixelgym.png" alt="Logo PixelGym" />
+        <div style="min-width:0;">
+          <h1>Logotipos de Actividades · PixelGym</h1>
+          <p>Explicación de cada icono usado en la web/app (qué representa y por qué está ahí).</p>
+        </div>
+      </div>
+      <span class="pill">🧩 Recursos / Assets</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Guía de iconos <span class="badge">actividades</span></h2>
+      <p>
+        Esta página documenta los <b>logotipos</b> que usamos para representar cada actividad del gimnasio.
+        La idea es que, al ver un icono, el usuario entienda rápido la categoría: cardio, fuerza, combate, etc.
+      </p>
+      <p style="margin-top:10px;">
+        <a class="back" href="index.html">⬅ Volver a la web</a>
+      </p>
+    </section>
+
+    <section class="grid">
+      <!-- CARDIO -->
+      <article class="card" id="cardio">
+        <div class="card-inner">
+          <div class="logoBox">
+            <img src="Multimedia/Imagenes/Logos/APP/logocardio.png" alt="Icono actividad Cardio (cinta de correr)" />
+          </div>
+          <div class="content">
+            <h3>Cardio <span class="tag">logocardio.png</span></h3>
+            <p>
+              Este icono muestra una <b>cinta de correr</b>. Representa todo lo relacionado con trabajo cardiovascular:
+              mejora de resistencia, quema de calorías y salud del corazón.
+            </p>
+            <ul>
+              <li><b>Qué significa:</b> entrenamiento aeróbico (correr, caminar rápido, elíptica, etc.).</li>
+              <li><b>Por qué se usa:</b> es el símbolo más reconocible del “cardio” en un gimnasio.</li>
+              <li><b>En la app/web:</b> categoría para salas o clases enfocadas en resistencia.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- CROSSFIT -->
+      <article class="card" id="crossfit">
+        <div class="card-inner">
+          <div class="logoBox">
+            <img src="Multimedia/Imagenes/Logos/APP/logocrossfit.png" alt="Icono actividad CrossFit (cajón, kettlebells y cuerda)" />
+          </div>
+          <div class="content">
+            <h3>CrossFit <span class="tag">logocrossfit.png</span></h3>
+            <p>
+              El cajón “PXG”, dos <b>kettlebells</b> y la cuerda representan un entrenamiento funcional intenso:
+              fuerza + cardio + explosividad.
+            </p>
+            <ul>
+              <li><b>Qué significa:</b> WODs, circuitos, levantamientos y trabajo metabólico.</li>
+              <li><b>Por qué se usa:</b> junta varios elementos típicos del box y se entiende al instante.</li>
+              <li><b>En la app/web:</b> identifica clases exigentes y de alta intensidad.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- FITBOXING -->
+      <article class="card" id="fitboxing">
+        <div class="card-inner">
+          <div class="logoBox">
+            <img src="Multimedia/Imagenes/Logos/APP/logofitboxing.png" alt="Icono actividad Fitboxing (saco y guantes)" />
+          </div>
+          <div class="content">
+            <h3>Fitboxing <span class="tag">logofitboxing.png</span></h3>
+            <p>
+              Un <b>saco de boxeo</b> con <b>guantes</b>. Indica sesiones de golpes, coordinación y cardio
+              en formato fitness (no combate real).
+            </p>
+            <ul>
+              <li><b>Qué significa:</b> entrenamiento por rounds, técnica básica y ritmo.</li>
+              <li><b>Por qué se usa:</b> saco + guantes = boxeo de forma universal.</li>
+              <li><b>En la app/web:</b> salas de combate o clases guiadas de boxeo fitness.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- MUSCULACIÓN -->
+      <article class="card" id="musculacion">
+        <div class="card-inner">
+          <div class="logoBox">
+            <img src="Multimedia/Imagenes/Logos/APP/logomusculacion.png" alt="Icono actividad Musculación (brazo, barra y máquina)" />
+          </div>
+          <div class="content">
+            <h3>Musculación / Fuerza <span class="tag">logomusculacion.png</span></h3>
+            <p>
+              Un brazo flexionando con una <b>barra</b> y una <b>máquina</b>. Representa la zona de pesas:
+              hipertrofia, fuerza y entrenamiento con cargas.
+            </p>
+            <ul>
+              <li><b>Qué significa:</b> ejercicios con mancuernas, barras y máquinas.</li>
+              <li><b>Por qué se usa:</b> comunica “fuerza” de forma muy directa.</li>
+              <li><b>En la app/web:</b> salas de musculación y reservas de equipamiento.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- PILATES -->
+      <article class="card" id="pilates">
+        <div class="card-inner">
+          <div class="logoBox">
+            <img src="Multimedia/Imagenes/Logos/APP/logopilates.png" alt="Icono actividad Pilates (pelota, banda y esterilla)" />
+          </div>
+          <div class="content">
+            <h3>Pilates <span class="tag">logopilates.png</span></h3>
+            <p>
+              Esterilla + pelota + banda elástica. Representa trabajo de <b>core</b>, control, estabilidad y
+              postura.
+            </p>
+            <ul>
+              <li><b>Qué significa:</b> ejercicios de control corporal, respiración y precisión.</li>
+              <li><b>Por qué se usa:</b> son elementos típicos de pilates en suelo.</li>
+              <li><b>En la app/web:</b> clases de tonificación suave y movilidad.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- SPINNING -->
+      <article class="card" id="spinning">
+        <div class="card-inner">
+          <div class="logoBox">
+            <img src="Multimedia/Imagenes/Logos/APP/logospinning.png" alt="Icono actividad Spinning (bicicleta estática)" />
+          </div>
+          <div class="content">
+            <h3>Spinning <span class="tag">logospinning.png</span></h3>
+            <p>
+              Una <b>bici estática</b>. Simboliza las sesiones de cycling indoor con intensidad por bloques,
+              música y resistencia.
+            </p>
+            <ul>
+              <li><b>Qué significa:</b> cardio por intervalos y trabajo de piernas.</li>
+              <li><b>Por qué se usa:</b> el icono de bicicleta es inmediato y universal.</li>
+              <li><b>En la app/web:</b> reserva de clases dirigidas de cycling.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- YOGA -->
+      <article class="card" id="yoga">
+        <div class="card-inner">
+          <div class="logoBox">
+            <img src="Multimedia/Imagenes/Logos/APP/logoyoga.png" alt="Icono actividad Yoga (esterilla con flor)" />
+          </div>
+          <div class="content">
+            <h3>Yoga <span class="tag">logoyoga.png</span></h3>
+            <p>
+              Esterilla con flor tipo loto. Representa <b>calma</b>, movilidad, respiración y equilibrio.
+              Es el “contraste” perfecto frente a actividades intensas.
+            </p>
+            <ul>
+              <li><b>Qué significa:</b> flexibilidad, control del estrés y bienestar.</li>
+              <li><b>Por qué se usa:</b> el loto se asocia directamente con yoga/meditación.</li>
+              <li><b>En la app/web:</b> clases de movilidad, estiramientos y relax.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- ZUMBA -->
+      <article class="card" id="zumba">
+        <div class="card-inner">
+          <div class="logoBox">
+            <img src="Multimedia/Imagenes/Logos/APP/logozumba.png" alt="Icono actividad Zumba (personaje bailando)" />
+          </div>
+          <div class="content">
+            <h3>Zumba / Baile <span class="tag">logozumba.png</span></h3>
+            <p>
+              Un personaje bailando con fondo dinámico. Representa clases de <b>baile fitness</b> con música
+              y coreografías sencillas (divertido + cardio).
+            </p>
+            <ul>
+              <li><b>Qué significa:</b> cardio con ritmo, coordinación y ambiente social.</li>
+              <li><b>Por qué se usa:</b> la silueta bailando comunica “baile” en 1 segundo.</li>
+              <li><b>En la app/web:</b> clases grupales de zumba/ritmos latinos.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      PixelGym · Documentación de iconos (assets) · Si cambias rutas, actualiza el <b>src</b> de las imágenes.
+    </footer>
+  </main>
+</body>
+</html>
