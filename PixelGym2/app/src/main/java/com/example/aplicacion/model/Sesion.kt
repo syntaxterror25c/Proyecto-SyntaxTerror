@@ -10,6 +10,6 @@ data class Sesion(
     val imagen_url: String = "",
     val capacidad_maxima: Int = 0, // Nombre corto para Firebase
     val plazas_ocupadas: Int = 0,
-    val creditos_necesarios: Int = 0,
+    val coste: Int = 0,
     val estado_sesion: String = "ACTIVA"
 )

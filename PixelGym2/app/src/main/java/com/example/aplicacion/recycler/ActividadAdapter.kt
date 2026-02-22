@@ -8,6 +8,7 @@ import com.example.aplicacion.R
 import com.example.aplicacion.databinding.ItemActividadBinding
 import com.bumptech.glide.Glide
 import com.example.aplicacion.model.Actividad
+import com.example.aplicacion.utils.ImageMapper
 
 class ActividadAdapter(
     private var listaActividades: List<Actividad>,
@@ -32,17 +33,15 @@ class ActividadAdapter(
         // Categoría (He añadido esto para que coincida con el XML de la tarjeta)
         holder.binding.tvActividadCategoria.text = actividad.categoria.ifEmpty { "General" }
 
-        // Imagen
-        val resourceId = context.resources.getIdentifier(
-            actividad.imagen,
-            "drawable",
-            context.packageName
-        )
+        // --- CARGA DE IMAGEN CENTRALIZADA ---
+        val resourceId = ImageMapper.getDrawableId(actividad.imagen)
 
         Glide.with(context)
-            .load(if (resourceId != 0) resourceId else R.drawable.im_rec_cardio)
+            .load(resourceId)
+            .placeholder(R.drawable.im_rec_0default)
             .centerCrop()
             .into(holder.binding.ivActividadImagen)
+        // ------------------------------------
 
         // Navegación al Fragment de Reserva
         holder.itemView.setOnClickListener {

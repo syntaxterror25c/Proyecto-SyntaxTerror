@@ -13,5 +13,6 @@ data class Reserva(
     val mes_anio: String = "",
     val estado_reserva: String = "ACTIVA",
     val fecha_creacion_reserva: Timestamp? = null,
-    val imagen_url: String = ""
+    val imagen_url: String = "",
+    val coste: Int = 0
 )

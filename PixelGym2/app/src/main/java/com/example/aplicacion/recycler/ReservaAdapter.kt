@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplicacion.databinding.ItemReservaBinding
+import com.example.aplicacion.utils.ImageMapper
 
 class ReservaAdapter(
     private val listaReservas: List<Reserva>,
@@ -28,19 +29,9 @@ class ReservaAdapter(
             tvReservaFecha.text = reserva.fecha_sesion
             tvReservaHora.text = reserva.hora_inicio
 
-            // --- LÓGICA PARA LA IMAGEN (Usando tu ID real: ivReservaImagen) ---
-            val imageResId = context.resources.getIdentifier(
-                reserva.imagen_url,
-                "drawable",
-                context.packageName
-            )
-
-            if (imageResId != 0) {
-                ivReservaImagen.setImageResource(imageResId)
-            } else {
-                // Imagen por defecto si reserva.imagen_url está vacío o no existe
-                ivReservaImagen.setImageResource(com.example.aplicacion.R.drawable.im_rec_cardio)
-            }
+            // Imagen
+            val imageResId = ImageMapper.getDrawableId(reserva.imagen_url)
+            ivReservaImagen.setImageResource(imageResId)
 
             btnAnular.setOnClickListener {
                 onAnularClick(reserva)

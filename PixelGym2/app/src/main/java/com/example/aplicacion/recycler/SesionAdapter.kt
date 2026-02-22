@@ -11,6 +11,7 @@ import com.example.aplicacion.R
 import com.example.aplicacion.databinding.ItemSesionBinding
 import com.bumptech.glide.Glide
 import com.example.aplicacion.model.Sesion
+import com.example.aplicacion.utils.ImageMapper
 
 class SesionAdapter(
     private var listaSesiones: MutableList<Sesion>,
@@ -50,19 +51,12 @@ class SesionAdapter(
                 binding.tvPlazasLibres.visibility = View.GONE
             }
 
-            // --- MEJORA DE CARGA DE IMAGEN ---
-            val resourceId = if (sesion.imagen_url.isNotEmpty()) {
-                context.resources.getIdentifier(
-                    sesion.imagen_url,
-                    "drawable",
-                    context.packageName
-                )
-            } else 0
+            // --- MEJORA DE CARGA DE IMAGEN (Centralizada) ---
+            val resourceId = ImageMapper.getDrawableId(sesion.imagen_url)
 
             Glide.with(context)
-                .load(if (resourceId != 0) resourceId else R.drawable.im_rec_cardio)
-                .placeholder(R.drawable.im_rec_cardio) // Imagen mientras carga
-                .error(R.drawable.im_rec_cardio)       // Imagen si falla el ID
+                .load(resourceId)
+                .placeholder(R.drawable.im_rec_0default)
                 .centerCrop()
                 .into(binding.ivSesionImagen)
             // ---------------------------------

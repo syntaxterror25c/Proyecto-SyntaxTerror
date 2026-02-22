@@ -187,13 +187,38 @@ class MainActivity : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(this, callback)
     }
+    // email en el drawer
+//    private fun actualizarHeaderNavigation() {
+//        val user = ServiceLocator.authRepository.getCurrentUser()
+//        if (binding.navigationView.headerCount > 0) {
+//            val headerView = binding.navigationView.getHeaderView(0)
+//            val tvEmail = headerView.findViewById<android.widget.TextView>(R.id.textViewName)
+//            tvEmail?.text = user?.email ?: "Usuario Anónimo"
+//        }
+//    }
 
+    // nombre/nick en el drawer
     private fun actualizarHeaderNavigation() {
         val user = ServiceLocator.authRepository.getCurrentUser()
-        if (binding.navigationView.headerCount > 0) {
+        if (user != null && binding.navigationView.headerCount > 0) {
             val headerView = binding.navigationView.getHeaderView(0)
-            val tvEmail = headerView.findViewById<android.widget.TextView>(R.id.textViewName)
-            tvEmail?.text = user?.email ?: "Usuario Anónimo"
+            val tvName = headerView.findViewById<android.widget.TextView>(R.id.textViewName)
+
+            // Buscamos el documento del usuario por su UID
+            val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            db.collection("usuarios").document(user.uid).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        // Extraemos el campo 'nombre_usuario' (o como se llame en tu BD)
+                        val nick = document.getString("nombre_usuario") ?: user.email
+                        tvName?.text = nick
+                    } else {
+                        tvName?.text = user.email
+                    }
+                }
+                .addOnFailureListener {
+                    tvName?.text = user.email ?: "Usuario"
+                }
         }
     }
 

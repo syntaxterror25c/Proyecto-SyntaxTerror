@@ -41,56 +41,7 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
      * 2. Suma 1 al aforo de la sesión
      * 3. Crea el documento de reserva
      */
-//    suspend fun addReserva(userId: String, sesion: Sesion): Boolean {
-//        val userRef = db.collection("usuarios").document(userId)
-//        val sesionRef = db.collection("sesiones").document(sesion.id)
-//        val docReservaRef = db.collection("reservas").document()
-//
-//        return try {
-//            db.runTransaction { transaction ->
-//                val userSnap = transaction.get(userRef)
-//                val sesionSnap = transaction.get(sesionRef)
-//
-//                val creditosActuales = userSnap.getLong("creditos") ?: 0
-//                val plazasOcupadas = sesionSnap.getLong("plazas_ocupadas") ?: 0
-//                val capacidadMax = sesionSnap.getLong("capacidad_maxima") ?: 20
-//
-//                // Validaciones dentro de la transacción
-//                if (creditosActuales < sesion.creditos_necesarios) throw Exception("Créditos insuficientes")
-//                if (plazasOcupadas >= capacidadMax) throw Exception("Sesión completa")
-//
-//                // A. Descontar créditos
-//                transaction.update(userRef, "creditos", creditosActuales - sesion.creditos_necesarios)
-//
-//                // B. Actualizar aforo
-//                transaction.update(sesionRef, "plazas_ocupadas", plazasOcupadas + 1)
-//
-//                // C. Crear objeto Reserva
-//                val nuevaReserva = Reserva(
-//                    id_reserva = docReservaRef.id,
-//                    id_sesion_reservada = sesion.id,
-//                    uid = userId,
-//                    nombre_actividad = sesion.nombre_actividad,
-//                    nombre_profesor = sesion.nombre_profesor,
-//                    fecha_sesion = sesion.fecha,
-//                    hora_inicio = sesion.hora_inicio,
-//                    mes_anio = sesion.fecha.substringAfter("/"),
-//                    estado_reserva = "ACTIVA",
-//                    fecha_creacion_reserva = com.google.firebase.Timestamp.now(),
-//                    imagen_url = sesion.imagen_url
-//                )
-//
-//                // D. Guardar reserva
-//                transaction.set(docReservaRef, nuevaReserva)
-//            }.await()
-//            true
-//        } catch (e: Exception) {
-//            println("DEBUG_APP: Error en reserva -> ${e.message}")
-//            false
-//        }
-//    }
 
-    // En GymRepository.kt
     suspend fun addReserva(userId: String, sesion: Sesion): Boolean {
         val userRef = db.collection("usuarios").document(userId)
         val sesionRef = db.collection("sesiones").document(sesion.id)
@@ -113,10 +64,10 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
                 // LOGS DE CONTROL
                 println("DEBUG_RESERVA: Usuario ID: ${userId}")
                 println("DEBUG_RESERVA: Créditos actuales en mapa: $creditosActuales")
-                println("DEBUG_RESERVA: Créditos que pide la sesión: ${sesion.creditos_necesarios}")
+                println("DEBUG_RESERVA: Créditos que pide la sesión: ${sesion.coste}")
 
                 // 3. VALIDACIONES
-                if (creditosActuales < sesion.creditos_necesarios) {
+                if (creditosActuales < sesion.coste) {
                     throw Exception("CRÉDITOS INSUFICIENTES")
                 }
                 if (plazasOcupadas >= capacidadMax) {
@@ -124,7 +75,7 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
                 }
 
                 // 4. ACTUALIZACIONES (IMPORTANTE: usamos la ruta con punto para el mapa)
-                transaction.update(userRef, "suscripcion_actual.creditos", creditosActuales - sesion.creditos_necesarios)
+                transaction.update(userRef, "suscripcion_actual.creditos", creditosActuales - sesion.coste)
                 transaction.update(sesionRef, "plazas_ocupadas", plazasOcupadas + 1)
 
                 // 5. CREAR OBJETO RESERVA
@@ -139,7 +90,8 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
                     mes_anio = sesion.fecha.substringAfter("/"),
                     estado_reserva = "ACTIVA",
                     fecha_creacion_reserva = com.google.firebase.Timestamp.now(),
-                    imagen_url = sesion.imagen_url
+                    imagen_url = sesion.imagen_url,
+                    coste = sesion.coste
                 )
 
                 transaction.set(docReservaRef, nuevaReserva)
@@ -162,14 +114,19 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
 
         return try {
             db.runTransaction { transaction ->
-                // NOTA: Para devolver créditos exactos, deberías tener guardado
-                // cuántos costó en el objeto Reserva. Aquí devolvemos 1 por defecto.
-                transaction.update(userRef, "creditos", FieldValue.increment(1))
+                // Usamos el coste que guardamos en la reserva convertido a Long por Firestore
+                val costeADevolver = reserva.coste.toLong()
+                // ACTUALIZACIÓN DE CRÉDITOS
+                // Usamos FieldValue.increment con el coste real,
+                transaction.update(userRef, "suscripcion_actual.creditos", FieldValue.increment(costeADevolver))
+                // CTUALIZACIÓN DE SESIÓN: Restamos 1 a las plazas ocupadas
                 transaction.update(sesionRef, "plazas_ocupadas", FieldValue.increment(-1))
+                // ELIMINACIÓN: Borramos el ticket de reserva
                 transaction.delete(reservaRef)
             }.await()
             true
         } catch (e: Exception) {
+            println("DEBUG_ELIMINAR: Error al anular -> ${e.message}")
             false
         }
     }

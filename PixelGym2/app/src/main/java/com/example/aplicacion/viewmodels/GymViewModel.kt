@@ -241,7 +241,7 @@ class GymViewModel(
                     "capacidad_maxima" to 2,
                     "plazas_ocupadas" to 0,
                     "imagen_url" to actividad["imagen"],
-                    "creditos_necesarios" to actividad["coste"],
+                    "coste" to actividad["coste"],
                     "estado_sesion" to "ACTIVA"
                 )
 
