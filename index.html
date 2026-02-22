@@ -35,13 +35,13 @@
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: radial-gradient(circle at top, #1f2937, #020617);
             color: var(--text);
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: cubic-bezier() 0.3s ease, color 0.3s ease;
         }
 
         header {
             background: linear-gradient(to right, #ff7a00, #ff7a0055, transparent);
             border-bottom: 1px solid var(--border);
-            padding: 1.2rem 1.8rem;
+            padding: 0.8rem 1.2rem;
             display: flex;
             justify-content: space-between;
             gap: 1rem;
@@ -52,19 +52,13 @@
             backdrop-filter: blur(10px);
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 1.4rem;
-        }
+        header h1 { margin: 0; font-size: 1.15rem; }
 
-        header p {
-            margin: 0;
-            font-size: 0.85rem;
+        header p { margin: 0; font-size: 0.78rem;
             color: var(--text-soft);
         }
 
-        #logo-syntaxterror {
-            height: 90px;
+        #logo-syntaxterror { height: 72px;
             margin-right: 20px;
             filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.6));
             transition: transform 0.3s ease, filter 0.3s ease;
@@ -82,11 +76,7 @@
             flex-wrap: wrap;
         }
 
-        nav a {
-            color: var(--text-soft);
-            text-decoration: none;
-            margin-left: 0.5rem;
-            font-size: 0.9rem;
+        nav a { color: var(--text-soft); text-decoration: none; margin-left: 0.5rem; font-size: 0.82rem;
         }
 
         nav a:hover {
@@ -557,79 +547,406 @@ footer::before {
         .frame img{width:100%;display:block;border-radius:12px}
 
     
-/* === Gantt local + línea de HOY === */
-.gantt-wrap{
-  position:relative;
-  border:1px solid var(--border);
-  border-radius:12px;
-  overflow:hidden;
-  margin-top:8px;
-  background:rgba(255,255,255,0.02);
-}
-.gantt-wrap img{
-  width:100%;
-  display:block;
-}
-.gantt-today{
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:3px;
-  background:var(--accent);
-  box-shadow:0 0 0 1px rgba(0,0,0,0.25);
-  pointer-events:none;
-}
-.gantt-today span{
-  position:absolute;
-  top:10px;
-  left:8px;
-  transform:translateX(-50%);
-  background:var(--accent);
-  color:#0a0a0a;
-  font-weight:800;
-  font-size:12px;
-  padding:4px 8px;
-  border-radius:999px;
-  letter-spacing:0.08em;
-}
-.gantt-note{
-  margin-top:10px;
-  color:var(--muted);
-  font-size:0.95rem;
-}
-.gantt-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:12px;
-}
-.gantt-table th, .gantt-table td{
-  border-bottom:1px solid var(--border);
-  padding:10px 12px;
-  vertical-align:top;
-}
-.gantt-table th{
-  text-align:left;
-  color:rgba(255,255,255,0.86);
-  font-weight:700;
-}
-@media (max-width: 820px){
-  .gantt-today span{ left:12px; }
-  .gantt-table th:nth-child(1), .gantt-table td:nth-child(1){ min-width:120px; }
-}
 
-</style>
+        /* =========================
+           GANTT INTERACTIVO (AÑADIDO)
+           - No toca lo que ya hay
+           - Solo añade estilos para el cronograma interactivo
+           ========================= */
+        .gantt-tools{
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            align-items:center;
+            margin-top:10px;
+            margin-bottom:10px;
+        }
+        .gantt-field{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 10px;
+            border-radius:12px;
+            border:1px solid var(--border);
+            background: rgba(255,255,255,.02);
+        }
+        .gantt-field label{
+            font-size:0.82rem;
+            color: var(--text-soft);
+            font-weight:600;
+        }
+        .gantt-field select,
+        .gantt-field input[type="range"]{
+            accent-color: var(--accent);
+        }
+        .gantt-field select{
+            border:1px solid var(--border);
+            background: var(--bg-light);
+            color: var(--text);
+            border-radius:10px;
+            padding:6px 8px;
+            font-family: inherit;
+            font-size:0.85rem;
+        }
+        .gantt-wrap{
+            border:1px solid var(--border);
+            border-radius:12px;
+            overflow:hidden;
+            background: rgba(255,255,255,.02);
+            margin-top:8px;
+        }
+        .gantt-head{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:10px 12px;
+            border-bottom:1px solid var(--border);
+            align-items:center;
+        }
+        .gantt-hint{
+            font-size:0.78rem;
+            color: var(--text-soft);
+        }
+        .gantt-canvas{
+            width:100%;
+            overflow:auto;
+        }
+        #ganttSvg{
+            display:block;
+        }
+        .gantt-tip{
+            position: fixed;
+            pointer-events:none;
+            z-index: 9999;
+            background: rgba(2,6,23,.92);
+            color: #fff;
+            border: 1px solid rgba(255,122,0,.35);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.84rem;
+            box-shadow: 0 18px 40px rgba(0,0,0,.35);
+            max-width: 340px;
+            display:none;
+        }
+        body.light-theme .gantt-tip{
+            background: rgba(15,23,42,.95);
+        }
+
+    
+        /* =========================
+           VIDEO (AL PRINCIPIO) + BOTÓN IMPRIMIR/PDF
+           ========================= */
+        .video-half{
+            width: 50%;
+            max-width: 560px;
+            min-width: 320px;
+            margin: 0 auto;
+        }
+        @media (max-width: 900px){
+            .video-half{ width: 100%; min-width: 0; }
+        }
+
+    
+
+    
+
+        /* =========================
+       GANTT INTERACTIVO
+       ========================= */
+    .gantt-tools{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      margin-top:10px;
+      margin-bottom:10px;
+    }
+    .field{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+    .field label{ font-size:.84rem; color: var(--muted2); font-weight:800; }
+    .field select, .field input[type="range"]{ accent-color: var(--accent); }
+
+    .field select{
+      border:1px solid var(--border);
+      background: rgba(2,6,23,.35);
+      color: var(--text);
+      border-radius:10px;
+      padding:6px 8px;
+      font-family:var(--sans);
+    }
+    body.light-theme .field select{
+      background: rgba(15,23,42,.05);
+      color: var(--text);
+    }
+
+    .gantt-wrap{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      background: rgba(255,255,255,.02);
+    }
+    .gantt-head{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-bottom:1px solid var(--border);
+      align-items:center;
+    }
+    .hint{ font-size:.82rem; color: var(--muted); }
+    .gantt-canvas{ width:100%; overflow:auto; }
+    #ganttSvg{ display:block; }
+
+    .tip{
+      position: fixed;
+      pointer-events:none;
+      z-index:999;
+      background: rgba(2,6,23,.92);
+      color:#fff;
+      border:1px solid rgba(255,122,0,.35);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:.84rem;
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      max-width: 320px;
+      display:none;
+    }
+    body.light-theme .tip{ background: rgba(15,23,42,.95); }
+
+    
+        /* =========================
+           BOTONES EXTRA (Actividades + Cronograma)
+           ========================= */
+        .nav-btn{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:7px 14px;
+            margin-left: 0.55rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255,122,0,0.45);
+            background: linear-gradient(135deg, rgba(255,122,0,0.16), rgba(255,122,0,0.06));
+            color: var(--accent);
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-decoration:none;
+            transition: transform .22s ease, box-shadow .22s ease, background .22s ease, color .22s ease, border-color .22s ease;
+            white-space: nowrap;
+        }
+        .nav-btn:hover{
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(255,122,0,0.45);
+            border-color: rgba(255,122,0,0.65);
+        }
+        .nav-btn.strong{
+            background: linear-gradient(135deg, rgba(255,122,0,0.26), rgba(255,122,0,0.10));
+            border-color: rgba(255,122,0,0.65);
+        }
+
+        /* Botón grande para "Ver cronograma completo" */
+        .crono-btn, .btn{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            margin-top: 12px;
+            padding: 10px 18px;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 0.92rem;
+            text-decoration:none;
+            border: 1px solid rgba(255,122,0,0.55);
+            background: linear-gradient(135deg, #ff7a00, #ff9a2a);
+            color: #fff;
+            transition: transform .25s ease, box-shadow .25s ease;
+            box-shadow: 0 12px 30px rgba(255,122,0,0.32);
+            width: fit-content;
+        }
+        .crono-btn:hover, .btn:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 18px 44px rgba(255,122,0,0.55);
+        }
+
+    
+        /* =========================
+           BOTÓN PDF EN CABECERA
+           ========================= */
+        .pdf-btn svg{
+            width: 18px;
+            height: 18px;
+            opacity: .95;
+        }
+        .pdf-btn span{
+            line-height: 1;
+        }
+        @media print{
+            header, nav, .pdf-btn, .theme-toggle, .nav-btn{ display:none !important; }
+        }
+
+    
+        /* =========================
+           GALERÍA TIPO NETFLIX (Vídeos)
+           ========================= */
+        .media-grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+        .media-card{
+            text-align:left;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(255,255,255,.02);
+            padding: 0;
+            overflow:hidden;
+            cursor:pointer;
+            transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+            box-shadow: 0 16px 34px rgba(0,0,0,.25);
+        }
+        .media-card:hover{
+            transform: translateY(-3px) scale(1.02);
+            border-color: rgba(255,122,0,.55);
+            box-shadow: 0 22px 52px rgba(0,0,0,.35);
+        }
+        .media-thumb{
+            position:relative;
+            height: 118px;
+            background:
+              radial-gradient(circle at 20% 20%, rgba(255,122,0,.18), transparent 55%),
+              radial-gradient(circle at 80% 0%, rgba(74,222,128,.10), transparent 50%),
+              linear-gradient(135deg, rgba(2,6,23,.85), rgba(15,23,42,.65));
+            border-bottom: 1px solid var(--border);
+        }
+        body.light-theme .media-thumb{
+            background:
+              radial-gradient(circle at 20% 20%, rgba(255,122,0,.16), transparent 55%),
+              radial-gradient(circle at 80% 0%, rgba(74,222,128,.08), transparent 50%),
+              linear-gradient(135deg, rgba(255,255,255,.95), rgba(243,244,246,.85));
+        }
+        .media-badge{
+            position:absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(255,122,0,.18);
+            border: 1px solid rgba(255,122,0,.35);
+            color: var(--accent);
+        }
+        .media-play{
+            position:absolute;
+            right: 12px;
+            bottom: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background: rgba(2,6,23,.55);
+            border: 1px solid rgba(255,122,0,.35);
+            color: rgba(255,255,255,.95);
+            font-weight: 900;
+            backdrop-filter: blur(8px);
+        }
+        .media-meta{ padding: 10px 12px 12px; }
+        .media-title{ font-weight: 900; font-size: .92rem; color: var(--text); }
+        .media-sub{ margin-top: 2px; font-size: .78rem; color: var(--text-soft); }
+
+        /* =========================
+           MODAL (Netflix style)
+           ========================= */
+        .modal-backdrop{
+            position: fixed;
+            inset: 0;
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding: 18px;
+            background: rgba(0,0,0,.62);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+        }
+        .modal-backdrop.is-open{ display:flex; }
+        .modal-sheet{
+            width: min(980px, 96vw);
+            border-radius: 18px;
+            border: 1px solid rgba(255,122,0,.22);
+            background: rgba(15,23,42,.92);
+            box-shadow: 0 28px 90px rgba(0,0,0,.55);
+            overflow:hidden;
+        }
+        body.light-theme .modal-sheet{
+            background: rgba(255,255,255,.96);
+            border-color: rgba(255,122,0,.28);
+        }
+        .modal-top{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        body.light-theme .modal-top{
+            border-bottom: 1px solid rgba(15,23,42,.10);
+        }
+        .modal-heading{
+            display:flex;
+            align-items:center;
+            gap: 10px;
+            flex-wrap:wrap;
+        }
+        .modal-title{
+            font-weight: 1000;
+            letter-spacing: .2px;
+        }
+        .modal-close{
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(2,6,23,.35);
+            color: var(--text);
+            padding: 8px 10px;
+            cursor:pointer;
+            font-weight: 900;
+        }
+        body.light-theme .modal-close{
+            background: rgba(15,23,42,.05);
+        }
+        .modal-close:hover{
+            border-color: rgba(255,122,0,.6);
+            color: var(--accent);
+        }
+        .modal-video{
+            background: #000;
+        }
+        .modal-video video{
+            width: 100%;
+            height: auto;
+            display:block;
+            max-height: 70vh;
+        }
+        .modal-actions{
+            display:flex;
+            justify-content:space-between;
+            gap: 10px;
+            padding: 12px 14px 14px;
+        }
+
+    </style>
 </head>
 <body>
-
-<!-- ====================================================== -->
-<!--  Proyecto SyntaxTerror                                -->
-<!--  Esta web la he ido construyendo poco a poco como     -->
-<!--  bitácora del proyecto. Aquí documento todo lo que    -->
-<!--  hemos hecho hasta hoy para que quede claro el        -->
-<!--  proceso completo (planificación, diseño, desarrollo  -->
-<!--  y documentación).                                     -->
-<!-- ====================================================== -->
-
 <header>
     <img id="logo-syntaxterror" src="Multimedia/Imagenes/Logos/Proyecto/logo.png"
          alt="Logo SyntaxTerror">
@@ -651,16 +968,30 @@ footer::before {
         <a href="#documentacion">Documentación</a>
         <a href="#cronograma">Cronograma</a>
         <a href="#ux">UX/HCD</a>
+                <a href="actividades_logos_ACTUALIZADO.html" class="nav-btn">🏋️ Actividades</a>
+        <a href="index2.html" class="nav-btn strong">📅 Cronograma</a>
+        
+        <button id="btnPrint" class="nav-btn strong pdf-btn" type="button" aria-label="Imprimir o guardar como PDF">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path d="M7 8V4h10v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M7 17h10v3H7v-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M6 17H5a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3h-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M17 13h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+</svg>
+            <span>PDF</span>
+        </button>
         <button id="themeToggle" class="theme-toggle">🌙</button>
     </nav>
 </header>
 
 <main>
+
+  
+</section>
+
     <div class="grid">
         <!-- Columna izquierda -->
-        
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="resumen">
+        <section class="card" id="resumen">
             <h2>
                 Resumen del proyecto
                 <span class="badge">WIP</span>
@@ -668,7 +999,7 @@ footer::before {
             <p class="small">
                  El objetivo principal del proyecto es desarrollar una aplicación completa que combine interfaz,
     lógica de negocio y base de datos, aplicando los conocimientos de 2º DAM. Buscamos trabajar como un
-    equipo real usando herramientas como GitHub, Kotlin y PostgreSQL, y entregar una solución funcional y
+    equipo real usando herramientas como GitHub, Kotlin y Firestore (Firebase NoSQL), y entregar una solución funcional y
     bien documentada que demuestre nuestras competencias como desarrolladores.
             </p>
 
@@ -681,7 +1012,7 @@ footer::before {
             <p class="section-title">Objetivos del proyecto</p>
             <ul class="small">
                 <li>Analizar y definir los requisitos funcionales y técnicos del proyecto.</li>
-                <li>Diseñar la estructura de la base de datos en PostgreSQL con integridad referencial.</li>
+                <li>Diseñar la estructura de la base de datos en Firestore (Firebase NoSQL) con integridad referencial.</li>
                 <li>Implementar la lógica de negocio en Java con código modular y mantenible.</li>
                 <li>Desarrollar una interfaz gráfica clara, funcional y adaptada al usuario.</li>
                 <li>Gestionar la base de datos con DBeaver y validar consultas durante el desarrollo.</li>
@@ -714,9 +1045,7 @@ footer::before {
         </section>
 
         <!-- Columna derecha -->
-        
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="tareas">
+        <section class="card" id="tareas">
             <h2>Panel de tareas</h2>
             <p class="small">
                 <!--Usa esta tabla como mini tablero Kanban. Edita estados directamente aquí.-->
@@ -742,17 +1071,18 @@ footer::before {
                 </tr>
                 <tr>
                     <td>Crear estructura inicial de la app</td>
-                    <td>⏳ En progreso</td>
+                    <td>✅ Completado</td>
                     <td>Alta</td>
                 </tr>
                 <tr>
                     <td>Escribir documentación mínima</td>
-                    <td>🕒 Pendiente</td>
+                    <td>✅ Completado</td>
                     <td>Media</td>
                 </tr>
                 </tbody>
             </table>
 
+            <p class="section-title">Etiquetas recomendadas</p>
             <div class="pill-row">
                 <span class="pill">#backend</span>
                 <span class="pill">#frontend</span>
@@ -760,9 +1090,7 @@ footer::before {
                 <span class="pill">#documentación</span>
             </div>
 
-            <p class="section-title">Cronograma de trabajo</p>
-            <p class="small">
-                Cronograma orientativo por semanas.
+            
             </p>
             <table>
                 <thead>
@@ -780,29 +1108,26 @@ footer::before {
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>Diseño de BD (PostgreSQL) y conexión con DBeaver.</td>
-                    <td>⏳ En progreso</td>
+                    <td>Diseño de BD (Firestore (Firebase NoSQL)) y conexión con Firebase.</td>
+                    <td>✅ Completado</td>
                 </tr>
                 <tr>
                     <td>3</td>
                     <td>Desarrollo de la lógica principal de la aplicación.</td>
-                    <td>🕒 Pendiente</td>
+                    <td>✅ Completado</td>
                 </tr>
                 <tr>
                     <td>4</td>
                     <td>Pruebas, correcciones y documentación final.</td>
-                    <td>🕒 Pendiente</td>
+                    <td>✅ Completado</td>
                 </tr>
                 </tbody>
             </table>
         </section>
     </div>
 
-
     <!-- Documentación -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="documentacion" style="margin-top:1.5rem;">
+    <section class="card" id="documentacion" style="margin-top:1.5rem;">
         <h2>Documentación del proyecto <span class="badge">actualizado</span></h2>
         <p class="small">
             Resumen vivo de lo que llevamos preparado hasta hoy: alcance, viabilidad, roles, requisitos y riesgos.
@@ -822,7 +1147,7 @@ footer::before {
             <li><strong>Backend</strong>: Java (API/servicios) + JSON.</li>
             <li><strong>Frontend escritorio</strong>: JavaFX.</li>
             <li><strong>App móvil</strong>: Android (Kotlin).</li>
-            <li><strong>BBDD</strong>: PostgreSQL (modelado y consultas con DBeaver).</li>
+            <li><strong>BBDD</strong>: Firestore (Firebase NoSQL) (modelado y consultas con DBeaver).</li>
         </ul>
 
         <p class="section-title">3) Organización del equipo (roles)</p>
@@ -922,215 +1247,38 @@ footer::before {
 
     <!-- Cronograma -->
     
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="cronograma" style="margin-top:1.5rem;">
-        <h2>Cronograma y planificación</h2>
+    <!-- Cronograma -->
+    <section class="card" id="cronograma" style="margin-top:1.5rem;">
+        <h2>Cronograma (Gantt interactivo) <span class="badge">interactivo</span></h2>
         <p class="small">
-            Vista global de las fases (Inicio → Planificación → Análisis/Diseño → Desarrollo → Pruebas → Despliegue → Cierre).
+            
         </p>
+        <a href="index2.html" class="crono-btn">
+    📊 Ver cronograma completo
+</a>
 
-        <p class="section-title">Cronograma (Gantt)</p>
-        <p class="small">
-        </p>
-        <div class="gantt-wrap" data-start="2025-12-08" data-end="2026-02-21" data-today="2026-02-21">
-  <img src="cronograma_gantt_syntaxterror.png" alt="Cronograma / diagrama de Gantt del proyecto (actualizado a 21/02/2026)">
-  <div class="gantt-today" aria-hidden="true"><span>HOY</span></div>
-</div>
-<p class="gantt-note">
-  <b>Cómo usarlo:</b> coloca el archivo <code>cronograma_gantt_syntaxterror.png</code> en la <b>misma carpeta</b> que este <code>index.html</code>.
-  Así GitHub Pages lo carga sin rutas raras. La línea naranja marca la fecha <b>21/02/2026</b>.
-</p>
+        <div class="gantt-tools">
+           
+           
 
-<div class="table-wrap">
-  <table class="gantt-table">
-    <thead>
-      <tr>
-        <th style="width:160px;">Fase</th>
-        <th>Actividad</th>
-        <th style="width:120px;">Inicio</th>
-        <th style="width:120px;">Fin</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-  <td><b>1.0 Inicio</b></td>
-  <td>Alcance y objetivos</td>
-  <td style="white-space:nowrap;">08/12/2025</td>
-  <td style="white-space:nowrap;">10/12/2025</td>
-</tr>
-<tr>
-  <td><b>1.0 Inicio</b></td>
-  <td>Acta de constitución</td>
-  <td style="white-space:nowrap;">10/12/2025</td>
-  <td style="white-space:nowrap;">12/12/2025</td>
-</tr>
-<tr>
-  <td><b>2.0 Planificación</b></td>
-  <td>WBS y reparto de tareas</td>
-  <td style="white-space:nowrap;">13/12/2025</td>
-  <td style="white-space:nowrap;">15/12/2025</td>
-</tr>
-<tr>
-  <td><b>2.0 Planificación</b></td>
-  <td>Roadmap + cronograma base</td>
-  <td style="white-space:nowrap;">15/12/2025</td>
-  <td style="white-space:nowrap;">19/12/2025</td>
-</tr>
-<tr>
-  <td><b>2.0 Planificación</b></td>
-  <td>Análisis de riesgos</td>
-  <td style="white-space:nowrap;">17/12/2025</td>
-  <td style="white-space:nowrap;">19/12/2025</td>
-</tr>
-<tr>
-  <td><b>3.0 Análisis y Diseño</b></td>
-  <td>Diagramas UML</td>
-  <td style="white-space:nowrap;">20/12/2025</td>
-  <td style="white-space:nowrap;">27/12/2025</td>
-</tr>
-<tr>
-  <td><b>3.0 Análisis y Diseño</b></td>
-  <td>Diseño de BBDD (ER)</td>
-  <td style="white-space:nowrap;">23/12/2025</td>
-  <td style="white-space:nowrap;">04/01/2026</td>
-</tr>
-<tr>
-  <td><b>3.0 Análisis y Diseño</b></td>
-  <td>Wireframes/frames (UI)</td>
-  <td style="white-space:nowrap;">27/12/2025</td>
-  <td style="white-space:nowrap;">08/01/2026</td>
-</tr>
-<tr>
-  <td><b>4.0 Desarrollo</b></td>
-  <td>Base de proyecto + navegación</td>
-  <td style="white-space:nowrap;">05/01/2026</td>
-  <td style="white-space:nowrap;">12/01/2026</td>
-</tr>
-<tr>
-  <td><b>4.0 Desarrollo</b></td>
-  <td>Pantallas Login/Register</td>
-  <td style="white-space:nowrap;">10/01/2026</td>
-  <td style="white-space:nowrap;">18/01/2026</td>
-</tr>
-<tr>
-  <td><b>4.0 Desarrollo</b></td>
-  <td>Pantallas List/Contact/Preferences</td>
-  <td style="white-space:nowrap;">15/01/2026</td>
-  <td style="white-space:nowrap;">25/01/2026</td>
-</tr>
-<tr>
-  <td><b>4.0 Desarrollo</b></td>
-  <td>Ajustes UI (paleta, tipografía)</td>
-  <td style="white-space:nowrap;">20/01/2026</td>
-  <td style="white-space:nowrap;">02/02/2026</td>
-</tr>
-<tr>
-  <td><b>4.0 Desarrollo</b></td>
-  <td>Integración BBDD (scripts + ER)</td>
-  <td style="white-space:nowrap;">28/01/2026</td>
-  <td style="white-space:nowrap;">10/02/2026</td>
-</tr>
-<tr>
-  <td><b>5.0 Pruebas</b></td>
-  <td>Pruebas unitarias y validaciones</td>
-  <td style="white-space:nowrap;">03/02/2026</td>
-  <td style="white-space:nowrap;">12/02/2026</td>
-</tr>
-<tr>
-  <td><b>5.0 Pruebas</b></td>
-  <td>Pruebas de integración</td>
-  <td style="white-space:nowrap;">10/02/2026</td>
-  <td style="white-space:nowrap;">16/02/2026</td>
-</tr>
-<tr>
-  <td><b>5.0 Pruebas</b></td>
-  <td>Pruebas de usuario / revisión UX</td>
-  <td style="white-space:nowrap;">14/02/2026</td>
-  <td style="white-space:nowrap;">18/02/2026</td>
-</tr>
-<tr>
-  <td><b>6.0 Documentación</b></td>
-  <td>GitHub Pages (index + evidencias)</td>
-  <td style="white-space:nowrap;">16/02/2026</td>
-  <td style="white-space:nowrap;">20/02/2026</td>
-</tr>
-<tr>
-  <td><b>6.0 Documentación</b></td>
-  <td>Portada + capturas + memoria</td>
-  <td style="white-space:nowrap;">18/02/2026</td>
-  <td style="white-space:nowrap;">21/02/2026</td>
-</tr>
-<tr>
-  <td><b>7.0 Cierre</b></td>
-  <td>Revisión final y checklist</td>
-  <td style="white-space:nowrap;">21/02/2026</td>
-  <td style="white-space:nowrap;">21/02/2026</td>
-</tr>
-    </tbody>
-  </table>
-</div>
-    
-        <p class="section-title" style="margin-top:14px;">Detalle (últimos avances hasta 21/02/2026)</p>
-        <p class="small">
-            El diagrama de Gantt anterior marca las fases grandes del proyecto. Para que la bitácora sea más realista y “de equipo”, añadimos
-            un desglose de los <b>ajustes y entregables</b> que se han ido cerrando en los últimos días (hasta hoy).
-            Estas fechas recogen trabajo de integración, documentación y pulido (UI/UX), que normalmente no se ve en un Gantt “macro”.
-        </p>
-
-        <div class="table-wrap">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="width:120px;">Fecha</th>
-                        <th>Qué se hizo</th>
-                        <th style="width:140px;">Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><b>16/02/2026</b></td>
-                        <td>Revisión del flujo de pantallas (login/registro) y comprobación de navegación. Ajustes de toolbar y botones para que el usuario no se pierda.</td>
-                        <td><span class="pill ok">Hecho</span></td>
-                    </tr>
-                    <tr>
-                        <td><b>17/02/2026</b></td>
-                        <td>Sincronización del repositorio y estructura de carpetas. Revisión de recursos (nombres válidos en <code>res/</code>) para evitar errores de compilación.</td>
-                        <td><span class="pill ok">Hecho</span></td>
-                    </tr>
-                    <tr>
-                        <td><b>18/02/2026</b></td>
-                        <td>Documentación visual: recopilación de logos, perfiles e imágenes del proyecto para usar en la web y en el PDF. Limpieza de assets duplicados.</td>
-                        <td><span class="pill ok">Hecho</span></td>
-                    </tr>
-                    <tr>
-                        <td><b>19/02/2026</b></td>
-                        <td>Base de datos: revisión del modelo y diagrama ER (tablas principales, relaciones, estados). Preparación de scripts de creación y ejemplos.</td>
-                        <td><span class="pill ok">Hecho</span></td>
-                    </tr>
-                    <tr>
-                        <td><b>20/02/2026</b></td>
-                        <td>Web (GitHub Pages): mejoras de estructura, secciones y presentación. Ajustes para que las imágenes se carguen desde rutas del repositorio.</td>
-                        <td><span class="pill ok">Hecho</span></td>
-                    </tr>
-                    <tr>
-                        <td><b>21/02/2026</b></td>
-                        <td><b>Hoy:</b> pulido final de UI/UX (modo claro, consistencia de colores, tipografías) y actualización de la documentación en HTML con lo trabajado hasta la fecha.</td>
-                        <td><span class="pill doing">En curso</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="field">
+                <label for="onlyDone">Solo hecho</label>
+                <input id="onlyDone" type="checkbox" />
+            </div>
         </div>
 
-        <p class="small" style="margin-top:10px;">
-            <b>Nota:</b> este detalle no sustituye al Gantt, lo complementa. El Gantt responde a “fases grandes”, y este bloque responde a “qué hicimos realmente cada día”.
-        </p>
-
+        <div class="gantt-wrap">
+            <div class="gantt-head">
+                <div class="hint">🖱️ Pasa por encima de las barras para ver detalle · 📅 Línea naranja = HOY</div>
+                <div class="hint">Si no cabe, desliza horizontal (scroll) en el gráfico</div>
+            </div>
+            <div class="gantt-canvas" id="ganttCanvas"></div>
+        </div>
     </section>
 
+
     <!-- UX / HCD -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="ux" style="margin-top:1.5rem;">
+    <section class="card" id="ux" style="margin-top:1.5rem;">
         <h2>UX / Diseño centrado en el usuario (HCD)</h2>
         <p class="small">
             Checklist de cómo estamos enfocando el diseño para que la app sea usable (no solo “bonita”).
@@ -1159,18 +1307,7 @@ footer::before {
             </li>
         </ul>
 
-        <p class="section-title">Wireframe (referencia)</p>
-        <p class="small">Primer wireframe/imagen de referencia enlazada en el documento del equipo.</p>
-        <img src="Multimedia/Imagenes/gantt.png"
-             alt="Wireframe de referencia"
-             style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;">
-    
-        <p class="section-title" style="margin-top:14px;">Detalle (últimos avances hasta 21/02/2026)</p>
-        <p class="small">
-            El diagrama de Gantt anterior marca las fases grandes del proyecto. Para que la bitácora sea más realista y “de equipo”, añadimos
-            un desglose de los <b>ajustes y entregables</b> que se han ido cerrando en los últimos días (hasta hoy).
-            Estas fechas recogen trabajo de integración, documentación y pulido (UI/UX), que normalmente no se ve en un Gantt “macro”.
-        </p>
+        
 
         <div class="table-wrap">
             <table class="table">
@@ -1224,9 +1361,7 @@ footer::before {
 
     
     <!-- Diseño visual: paleta + tipografías -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="diseno-visual" style="margin-top:1.5rem;">
+    <section class="card" id="diseno-visual" style="margin-top:1.5rem;">
         <h2>Diseño visual: paleta, tipografías y criterios</h2>
         <p class="small">
             En esta fase hemos fijado una identidad visual coherente para que <b>tanto la web (GitHub Pages)</b> como la <b>app PixelGym</b>
@@ -1324,9 +1459,7 @@ footer::before {
     </section>
 
     <!-- Wireframes / Frames -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="wireframes" style="margin-top:1.5rem;">
+    <section class="card" id="wireframes" style="margin-top:1.5rem;">
         <h2>Wireframes (frames) y ajustes de layout</h2>
         <p class="small">
             Hemos trabajado los <b>frames</b> (wireframes) para asegurar que la navegación sea lógica antes de “pintar” toda la UI final.
@@ -1352,18 +1485,24 @@ footer::before {
     </section>
 
     <!-- Base de datos -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="bbdd" style="margin-top:1.5rem;">
+    <section class="card" id="bbdd" style="margin-top:1.5rem;">
         <h2>Base de datos (BBDD): modelo, scripts y diagrama</h2>
         <p class="small">
+  <b>Decisión de Base de Datos:</b> inicialmente estuvimos bastante tiempo investigando y trabajando con <b>PostgreSQL</b>,
+  diseñando tablas y analizando cómo estructurar correctamente las relaciones para el sistema de reservas.
+  Sin embargo, tras evaluar la integración con Android y la complejidad del mantenimiento, decidimos cambiar el enfoque
+  y optar por una base de datos <b>NoSQL</b> utilizando <b>Firebase (Cloud Firestore)</b>.
+  Esta decisión nos permitió simplificar la estructura de datos, adaptarla mejor al modelo de usuarios y reservas
+  y aprovechar la integración directa con el ecosistema Android.
+</p>
+
+        <p class="small">
             Diseño de la base de datos para el módulo <b>gym</b> (usuarios, suscripciones, planes, salas, profesores, sesiones y reservas).
-            Se adjunta el diagrama ER y scripts SQL.
+            Se adjunta el diagrama ER y scripts NoSQL.
         </p>
 
         <p class="section-title">Diagrama Entidad-Relación (ER)</p>
-        <p class="small">
-            Imagen guardada dentro del repo para que se vea en GitHub Pages.
+       
         </p>
 
         <div class="frame">
@@ -1371,9 +1510,10 @@ footer::before {
         </div>
 
         <details>
-            <summary>Scripts SQL (tablas + datos de ejemplo)</summary>
+            <summary>Scripts NoSQL (tablas + datos de ejemplo)</summary>
             <p class="small" style="margin-top:10px;">
-                <code>BBDD/script_tablas.sql</code> y <code>BBDD/script_datos_ejemplo.sql</code>.
+                Ubicación recomendada en el repo:
+                <code>BBDD/colecciones_firestoredemo.md</code> y <code>BBDD/colecciones_firestoredemo.md</code>.
             </p>
             <p class="small">
                 Nota: si los ficheros están sin extensión, renómbralos con <code>.sql</code> para que GitHub los previsualice.
@@ -1382,9 +1522,7 @@ footer::before {
     </section>
 
     <!-- Entregables / evidencias -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="evidencias" style="margin-top:1.5rem;">
+    <section class="card" id="evidencias" style="margin-top:1.5rem;">
         <h2>Evidencias y entregables (hasta hoy)</h2>
         <p class="small">
             Recopilación rápida de lo que ya está hecho y documentado para poder defender el proyecto y preparar el PDF final.
@@ -1409,17 +1547,13 @@ footer::before {
                     <li>Conectar la app con autenticación (email/contraseña) y persistencia.</li>
                     <li>Implementar pantallas finales siguiendo el frame.</li>
                     <li>Pruebas (unitarias + integración) y checklist de navegación.</li>
-                    <li>Preparar entrega final (PDF + capturas + demo).</li>
                 </ul>
             </div>
         </div>
     </section>
 
-
 <!-- Bitácora -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="bitacora" style="margin-top:1.5rem;">
+    <section class="card" id="bitacora" style="margin-top:1.5rem;">
         <h2>Bitácora del proyecto</h2>
         <p class="small">
             Añadimos una sesión al día o evento de trabajo.
@@ -1437,7 +1571,7 @@ footer::before {
   <div class="bitacora-detalle">
     - Se ha elaborado el <strong>Diagrama Entidad-Relación (ER)</strong> para definir entidades, atributos y relaciones.<br>
     - Se ha construido el <strong>modelo UML</strong> para representar las clases/tablas y sus asociaciones.<br>
-    - Objetivo: dejar clara la estructura antes de pasar a <strong>PostgreSQL</strong> y asegurar integridad (claves y relaciones).<br><br>
+    - Objetivo: dejar clara la estructura antes de pasar a <strong>Firestore (Firebase NoSQL)</strong> y asegurar integridad (claves y relaciones).<br><br>
 
     <strong>Diagrama ER:</strong><br>
     <img src="diagrama/DISEÑO_E-R.png" alt="Diagrama ER de la base de datos" style="width:100%; max-width:900px; border:1px solid var(--border); border-radius:12px; margin-top:8px;"><br><br>
@@ -1449,7 +1583,90 @@ footer::before {
     El modelo se basa en: <em>TipoSala → Sala → Clase</em>, donde una sala pertenece a un tipo y en esa sala se imparten clases.
     Cada clase usa un horario (inicio/fin) y los usuarios pueden generar reservas asociadas a una clase. Además, el aforo/plazas máximas
     limitan el número de reservas permitidas por sesión.
-  </div>
+  
+<br><br>
+<strong>Vídeos demostrativos de la app (galería tipo “Netflix”):</strong><br>
+<span class="small">Estos vídeos muestran cómo hemos utilizado los recursos/actividades dentro de la app (pantallas, navegación y actividades).</span>
+
+<div class="media-grid" aria-label="Galería de vídeos">
+  <button class="media-card" type="button" data-title="Login / Entrada a la app" data-src="/multimedia/entrar.mp4">
+    <div class="media-thumb">
+      <div class="media-badge">VIDEO</div>
+      <div class="media-play">▶</div>
+    </div>
+    <div class="media-meta">
+      <div class="media-title">Login / Entrada a la app</div>
+      <div class="media-sub">Flujo de acceso y primera pantalla</div>
+    </div>
+  </button>
+
+  <button class="media-card" type="button" data-title="Vista general PixelGym" data-src="pyxelgymvideo.mp4">
+    <div class="media-thumb">
+      <div class="media-badge">VIDEO</div>
+      <div class="media-play">▶</div>
+    </div>
+    <div class="media-meta">
+      <div class="media-title">Vista general PixelGym</div>
+      <div class="media-sub">Recorrido por la app y UI</div>
+    </div>
+  </button>
+
+  <button class="media-card" type="button" data-title="Zumba" data-src="/multimedia/zumba.mp4">
+    <div class="media-thumb">
+      <div class="media-badge">VIDEO</div>
+      <div class="media-play">▶</div>
+    </div>
+    <div class="media-meta">
+      <div class="media-title">Zumba</div>
+      <div class="media-sub">Actividad y contenido integrado</div>
+    </div>
+  </button>
+
+  <button class="media-card" type="button" data-title="Cardio" data-src="/multimedia/cardio.mp4">
+    <div class="media-thumb">
+      <div class="media-badge">VIDEO</div>
+      <div class="media-play">▶</div>
+    </div>
+    <div class="media-meta">
+      <div class="media-title">Cardio</div>
+      <div class="media-sub">Actividad y contenido integrado</div>
+    </div>
+  </button>
+
+  <button class="media-card" type="button" data-title="Crossfit" data-src="/multimedia/crossfit.mp4">
+    <div class="media-thumb">
+      <div class="media-badge">VIDEO</div>
+      <div class="media-play">▶</div>
+    </div>
+    <div class="media-meta">
+      <div class="media-title">Crossfit</div>
+      <div class="media-sub">Actividad y contenido integrado</div>
+    </div>
+  </button>
+
+  <button class="media-card" type="button" data-title="Fitboxing" data-src="/multimedia/fitboxing.mp4">
+    <div class="media-thumb">
+      <div class="media-badge">VIDEO</div>
+      <div class="media-play">▶</div>
+    </div>
+    <div class="media-meta">
+      <div class="media-title">Fitboxing</div>
+      <div class="media-sub">Actividad y contenido integrado</div>
+    </div>
+  </button>
+
+  <button class="media-card" type="button" data-title="Musculación" data-src="/multimedia/musculacion.mp4">
+    <div class="media-thumb">
+      <div class="media-badge">VIDEO</div>
+      <div class="media-play">▶</div>
+    </div>
+    <div class="media-meta">
+      <div class="media-title">Musculación</div>
+      <div class="media-sub">Actividad y contenido integrado</div>
+    </div>
+  </button>
+</div>
+</div>
 </li>
 
             <!-- EJEMPLO 1 -->
@@ -1474,8 +1691,8 @@ footer::before {
                 <div class="bitacora-titulo">Conectar base de datos</div>
                 <div class="bitacora-detalle">
                     - Investigación sobre opciones de nube para la base de datos.<br>
-                    - Decidimos usar PostgreSQL gestionada y conectarla con DBeaver.<br>
-                    - Añadimos la base de datos al proyecto y probamos la conexión desde el cliente SQL.<br>
+                    - Decidimos usar Firestore (Firebase NoSQL) gestionada y conectarla con DBeaver.<br>
+                    - Añadimos la base de datos al proyecto y probamos la conexión desde el cliente NoSQL.<br>
                     - Dejamos preparado el acceso para colaboradores.
                 </div>
             </li>
@@ -1501,9 +1718,7 @@ footer::before {
     </section>
 
     <!-- Roadmap -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="roadmap" style="margin-top:1.5rem;">
+    <section class="card" id="roadmap" style="margin-top:1.5rem;">
         <h2>Roadmap del proyecto</h2>
         <p class="small">
             <!--Roadmap general con el progreso aproximado de cada fase. Puedes ir actualizando los porcentajes.-->
@@ -1551,9 +1766,7 @@ footer::before {
     </section>
 
     <!-- Notas rápidas -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="notas" style="margin-top:1.5rem;">
+    <section class="card" id="notas" style="margin-top:1.5rem;">
         <h2>Notas rápidas</h2>
         <p class="small">
             <!--Usa esta sección como “post-its”: ideas para
@@ -1569,8 +1782,8 @@ footer::before {
             <li>
                 <div class="timeline-title">[Duda] Integración con base de datos</div>
                 <div class="timeline-desc">
-                    Hemos configurado la base de datos en PostgreSQL y la gestionamos mediante DBeaver.
-                    Hoy hemos creado el esquema inicial, conectado el cliente SQL y comenzado a definir tablas y relaciones.
+                    Hemos configurado la base de datos en Firestore (Firebase NoSQL) y la gestionamos mediante DBeaver.
+                    Hoy hemos creado el esquema inicial, conectado el cliente NoSQL y comenzado a definir tablas y relaciones.
                 </div>
             </li>
             <li>
@@ -1583,9 +1796,7 @@ footer::before {
     </section>
 
     <!-- Equipo -->
-    
-<!-- Nueva sección añadida por mí para documentar avances -->
-<section class="card" id="equipo" style="margin-top:1.5rem;">
+    <section class="card" id="equipo" style="margin-top:1.5rem;">
         <h2>Quiénes somos</h2>
         <p class="small">
             Somos el equipo <strong>SyntaxTerror</strong>, responsables del desarrollo del proyecto intermodular de 2º DAM.
@@ -1672,33 +1883,564 @@ footer::before {
         });
     });
 
+    /* =========================
+       GANTT INTERACTIVO (AÑADIDO)
+       - No borra nada de lo anterior
+       - Dibuja un Gantt en SVG sin librerías
+       ========================= */
+
+    
+
+        function render(){
+            const z = zoomMap[Number(zoomRange.value)];
+            zoomLabel.textContent = z.label;
+
+            let data = ganttData.slice();
+
+            if(phaseSel.value !== "all"){
+                data = data.filter(x => x.phase === phaseSel.value);
+            }
+            if(onlyDone.checked){
+                data = data.filter(x => x.status === "done");
+            }
+
+            // Si filtras y te quedas sin datos, no rompo la web
+            if(data.length === 0){
+                canvas.innerHTML = '<div style="padding:12px;color:var(--text-soft);font-size:.85rem;">No hay tareas con ese filtro.</div>';
+                return;
+            }
+
+            const starts = data.map(d => toDate(d.start));
+            const ends   = data.map(d => toDate(d.end));
+            const minD   = new Date(Math.min(...starts));
+            const maxD   = new Date(Math.max(...ends));
+
+            const min = new Date(minD); min.setDate(min.getDate()-1);
+            const max = new Date(maxD); max.setDate(max.getDate()+1);
+
+            const totalDays = daysBetween(min, max) + 1;
+
+            const leftCol = 300;     // ancho de la columna de texto
+            const rowH = 28;         // alto de cada fila
+            const headH = 44;        // alto del encabezado del gráfico
+
+            const w = leftCol + totalDays * z.pxPerDay + 40;
+            const h = headH + data.length * rowH + 22;
+
+            const ns = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(ns, "svg");
+            svg.setAttribute("id","ganttSvg");
+            svg.setAttribute("width", w);
+            svg.setAttribute("height", h);
+
+            // Fondo alterno para leer mejor
+            for(let i=0;i<data.length;i++){
+                const y = headH + i*rowH;
+                const rect = document.createElementNS(ns,"rect");
+                rect.setAttribute("x", 0);
+                rect.setAttribute("y", y);
+                rect.setAttribute("width", w);
+                rect.setAttribute("height", rowH);
+                rect.setAttribute("fill", i%2===0 ? "rgba(255,255,255,.02)" : "rgba(255,255,255,0)");
+                svg.appendChild(rect);
+            }
+
+            // Líneas verticales del calendario (marco más fuerte los lunes)
+            for(let d=0; d<totalDays; d++){
+                const cur = new Date(min); cur.setDate(min.getDate()+d);
+                const x = leftCol + d*z.pxPerDay;
+                const isMon = cur.getDay() === 1;
+
+                const line = document.createElementNS(ns,"line");
+                line.setAttribute("x1", x);
+                line.setAttribute("y1", 0);
+                line.setAttribute("x2", x);
+                line.setAttribute("y2", h);
+                line.setAttribute("stroke", isMon ? "rgba(255,122,0,.15)" : "rgba(148,163,184,.10)");
+                line.setAttribute("stroke-width", isMon ? "1.2" : "1");
+                svg.appendChild(line);
+
+                // Etiqueta de fecha solo en lunes
+                if(isMon){
+                    const t = document.createElementNS(ns,"text");
+                    t.setAttribute("x", x+2);
+                    t.setAttribute("y", 28);
+                    t.setAttribute("fill", "rgba(229,231,235,.85)");
+                    t.setAttribute("font-size","11");
+                    t.textContent = cur.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"});
+                    svg.appendChild(t);
+                }
+            }
+
+            // Separador de columna izquierda
+            const sep = document.createElementNS(ns,"line");
+            sep.setAttribute("x1", leftCol);
+            sep.setAttribute("y1", 0);
+            sep.setAttribute("x2", leftCol);
+            sep.setAttribute("y2", h);
+            sep.setAttribute("stroke", "rgba(148,163,184,.18)");
+            svg.appendChild(sep);
+
+            // Línea de HOY (automática)
+            const today = toDate(todayISO());
+            const todayX = leftCol + (daysBetween(min, today)) * z.pxPerDay;
+
+            const todayLine = document.createElementNS(ns,"line");
+            todayLine.setAttribute("x1", todayX);
+            todayLine.setAttribute("y1", 0);
+            todayLine.setAttribute("x2", todayX);
+            todayLine.setAttribute("y2", h);
+            todayLine.setAttribute("stroke", "rgba(255,122,0,.95)");
+            todayLine.setAttribute("stroke-width","2");
+            svg.appendChild(todayLine);
+
+            const todayTag = document.createElementNS(ns,"text");
+            todayTag.setAttribute("x", todayX + 6);
+            todayTag.setAttribute("y", 16);
+            todayTag.setAttribute("fill","rgba(255,122,0,.95)");
+            todayTag.setAttribute("font-size","12");
+            todayTag.setAttribute("font-weight","700");
+            todayTag.textContent = "HOY";
+            svg.appendChild(todayTag);
+
+            // Barras
+            data.forEach((t, i) => {
+                const y = headH + i*rowH + 6;
+
+                // Texto de la tarea
+                const name = document.createElementNS(ns,"text");
+                name.setAttribute("x", 12);
+                name.setAttribute("y", headH + i*rowH + 18);
+                name.setAttribute("fill", "rgba(229,231,235,.92)");
+                name.setAttribute("font-size","12");
+                name.textContent = `${t.phase} — ${t.task}`;
+                svg.appendChild(name);
+
+                const s = toDate(t.start);
+                const e = toDate(t.end);
+                const x = leftCol + daysBetween(min, s) * z.pxPerDay;
+                const dur = Math.max(1, (daysBetween(s,e) + 1)) * z.pxPerDay;
+
+                const bar = document.createElementNS(ns,"rect");
+                bar.setAttribute("x", x);
+                bar.setAttribute("y", y);
+                bar.setAttribute("width", dur);
+                bar.setAttribute("height", 16);
+                bar.setAttribute("rx", 8);
+
+                bar.setAttribute("fill", t.status === "done" ? "rgba(148,163,184,.35)" : "rgba(255,122,0,.65)");
+                bar.setAttribute("stroke", t.status === "done" ? "rgba(148,163,184,.35)" : "rgba(255,122,0,.95)");
+                bar.setAttribute("stroke-width","1");
+                bar.style.cursor = "help";
+
+                bar.addEventListener("mousemove", (ev) => {
+                    tip.style.display = "block";
+                    tip.style.left = (ev.clientX + 14) + "px";
+                    tip.style.top  = (ev.clientY + 14) + "px";
+                    tip.innerHTML = `
+                        <b>${t.task}</b><br>
+                        <span style="opacity:.9">${t.phase}</span><br>
+                        <span style="opacity:.85">📅 ${fmt(s)} → ${fmt(e)}</span><br>
+                        <span style="opacity:.85">✅ Estado: ${t.status === "done" ? "Hecho" : "En curso"}</span>
+                    `;
+                });
+                bar.addEventListener("mouseleave", () => {
+                    tip.style.display = "none";
+                });
+
+                svg.appendChild(bar);
+            });
+
+            canvas.innerHTML = "";
+            canvas.appendChild(svg);
+        }
+
+        // Repinto cuando toco controles
+        phaseSel.addEventListener("change", render);
+        zoomRange.addEventListener("input", render);
+        onlyDone.addEventListener("change", render);
+
+        // Primera pintada
+        render();
+   
+
+
+
+  // Hoy automático (para la línea HOY del Gantt)
+  const TODAY = (new Date()).toISOString().slice(0,10);
+
+  /* =========================
+       GANTT INTERACTIVO (SVG SIN LIBRERÍAS)
+       ========================= */
+  
+    // Datos del cronograma (si quieres añadir más tareas, copias una línea y cambias texto/fechas)
+    const ganttData = [
+      { phase: "1.0 Inicio", task: "Alcance y objetivos", start: "2025-12-08", end: "2025-12-10", status: "done" },
+      { phase: "1.0 Inicio", task: "Acta de constitución", start: "2025-12-10", end: "2025-12-12", status: "done" },
+  
+      { phase: "2.0 Planificación", task: "WBS y reparto de tareas", start: "2025-12-13", end: "2025-12-15", status: "done" },
+      { phase: "2.0 Planificación", task: "Roadmap + cronograma base", start: "2025-12-15", end: "2025-12-19", status: "done" },
+      { phase: "2.0 Planificación", task: "Análisis de riesgos", start: "2025-12-17", end: "2025-12-19", status: "done" },
+  
+      { phase: "3.0 Análisis y Diseño", task: "Diagramas UML", start: "2025-12-20", end: "2025-12-27", status: "done" },
+      { phase: "3.0 Análisis y Diseño", task: "Diseño de BBDD (ER)", start: "2025-12-23", end: "2026-01-04", status: "done" },
+      { phase: "3.0 Análisis y Diseño", task: "Frames/Wireframes (UI)", start: "2025-12-27", end: "2026-01-08", status: "done" },
+  
+      { phase: "4.0 Desarrollo", task: "Base del proyecto + navegación", start: "2026-01-05", end: "2026-01-12", status: "done" },
+      { phase: "4.0 Desarrollo", task: "Pantallas Login/Register", start: "2026-01-10", end: "2026-01-18", status: "done" },
+      { phase: "4.0 Desarrollo", task: "Ajustes visuales (paleta/tipografía)", start: "2026-01-20", end: "2026-02-02", status: "done" },
+  
+      { phase: "5.0 Pruebas", task: "Pruebas unitarias y validaciones", start: "2026-02-03", end: "2026-02-12", status: "done" },
+      { phase: "5.0 Pruebas", task: "Revisión UX y correcciones", start: "2026-02-14", end: "2026-02-18", status: "done" },
+  
+      { phase: "6.0 Documentación", task: "Web (Pages) + evidencias", start: "2026-02-16", end: "2026-02-20", status: "done" },
+      { phase: "6.0 Documentación", task: "Memoria final (capturas y texto)", start: "2026-02-18", end: "2026-02-21", status: "doing" },
+  
+      { phase: "7.0 Cierre", task: "Checklist final", start: "2026-02-21", end: "2026-02-21", status: "doing" }
+    ];
+  
+    const phaseFilter = document.getElementById("phaseFilter");
+    const zoomRange   = document.getElementById("zoomRange");
+    const zoomLabel   = document.getElementById("zoomLabel");
+    const onlyDone    = document.getElementById("onlyDone");
+    const canvas      = document.getElementById("ganttCanvas");
+    const tip         = document.getElementById("tip");
+  
+    const zoomMap = {
+      1: { pxPerDay: 8,  label: "compacto" },
+      2: { pxPerDay: 12, label: "medio" },
+      3: { pxPerDay: 18, label: "zoom" },
+      4: { pxPerDay: 26, label: "máximo" }
+    };
+  
+    function toDate(s){
+      const [y,m,d] = s.split("-").map(Number);
+      return new Date(y, m-1, d);
+    }
+  
+    function daysBetween(a,b){
+      const ms = 24*60*60*1000;
+      return Math.round((b - a)/ms);
+    }
+  
+    function fmt(d){
+      const dd = String(d.getDate()).padStart(2,"0");
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const yy = d.getFullYear();
+      return `${dd}/${mm}/${yy}`;
+    }
+  
+    // Cargo las fases al desplegable (así no tengo que escribirlas a mano)
+    (function initPhases(){
+      const phases = [...new Set(ganttData.map(x => x.phase))];
+      phases.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        phaseFilter.appendChild(opt);
+      });
+    })();
+  
+    function renderGantt(){
+      const z = zoomMap[Number(zoomRange.value)];
+      zoomLabel.textContent = z.label;
+  
+      let data = ganttData.slice();
+  
+      if(phaseFilter.value !== "all"){
+        data = data.filter(x => x.phase === phaseFilter.value);
+      }
+      if(onlyDone.checked){
+        data = data.filter(x => x.status === "done");
+      }
+  
+      // Rango de fechas (para saber cuánto ocupa el calendario)
+      const starts = data.map(d => toDate(d.start));
+      const ends   = data.map(d => toDate(d.end));
+      const minD   = new Date(Math.min(...starts));
+      const maxD   = new Date(Math.max(...ends));
+  
+      // Un poco de margen para que no quede pegado
+      const min = new Date(minD); min.setDate(min.getDate()-1);
+      const max = new Date(maxD); max.setDate(max.getDate()+1);
+  
+      const totalDays = daysBetween(min, max) + 1;
+  
+      // Columna izquierda para los nombres
+      const leftCol = 270;
+      const rowH = 28;
+      const headH = 44;
+  
+      const w = leftCol + totalDays * z.pxPerDay + 40;
+      const h = headH + data.length * rowH + 22;
+  
+      const today = toDate(TODAY);
+      const todayX = leftCol + (daysBetween(min, today)) * z.pxPerDay;
+  
+      const ns = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(ns, "svg");
+      svg.setAttribute("id","ganttSvg");
+      svg.setAttribute("width", w);
+      svg.setAttribute("height", h);
+  
+      // Fondo de filas (para que se lea mejor)
+      for(let i=0;i<data.length;i++){
+        const y = headH + i*rowH;
+        const rect = document.createElementNS(ns,"rect");
+        rect.setAttribute("x", 0);
+        rect.setAttribute("y", y);
+        rect.setAttribute("width", w);
+        rect.setAttribute("height", rowH);
+        rect.setAttribute("fill", i%2===0 ? "rgba(255,255,255,.02)" : "rgba(255,255,255,0)");
+        svg.appendChild(rect);
+      }
+  
+      // Líneas verticales del calendario (marco más fuerte cada lunes)
+      for(let d=0; d<totalDays; d++){
+        const cur = new Date(min); cur.setDate(min.getDate()+d);
+        const x = leftCol + d*z.pxPerDay;
+        const isMon = cur.getDay() === 1;
+  
+        const line = document.createElementNS(ns,"line");
+        line.setAttribute("x1", x);
+        line.setAttribute("y1", 0);
+        line.setAttribute("x2", x);
+        line.setAttribute("y2", h);
+        line.setAttribute("stroke", isMon ? "rgba(255,122,0,.15)" : "rgba(148,163,184,.08)");
+        line.setAttribute("stroke-width", isMon ? "1.2" : "1");
+        svg.appendChild(line);
+  
+        // Etiqueta de fecha (lunes) para orientarse
+        if(isMon){
+          const t = document.createElementNS(ns,"text");
+          t.setAttribute("x", x+2);
+          t.setAttribute("y", 28);
+          t.setAttribute("fill", "rgba(229,231,235,.85)");
+          t.setAttribute("font-size","11");
+          t.textContent = cur.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"});
+          svg.appendChild(t);
+        }
+      }
+  
+      // Separador de la columna de nombres
+      const sep = document.createElementNS(ns,"line");
+      sep.setAttribute("x1", leftCol);
+      sep.setAttribute("y1", 0);
+      sep.setAttribute("x2", leftCol);
+      sep.setAttribute("y2", h);
+      sep.setAttribute("stroke", "rgba(148,163,184,.18)");
+      svg.appendChild(sep);
+  
+      // Línea de HOY (naranja)
+      const todayLine = document.createElementNS(ns,"line");
+      todayLine.setAttribute("x1", todayX);
+      todayLine.setAttribute("y1", 0);
+      todayLine.setAttribute("x2", todayX);
+      todayLine.setAttribute("y2", h);
+      todayLine.setAttribute("stroke", "rgba(255,122,0,.95)");
+      todayLine.setAttribute("stroke-width","2");
+      svg.appendChild(todayLine);
+  
+      const todayTag = document.createElementNS(ns,"text");
+      todayTag.setAttribute("x", todayX + 6);
+      todayTag.setAttribute("y", 16);
+      todayTag.setAttribute("fill","rgba(255,122,0,.95)");
+      todayTag.setAttribute("font-size","12");
+      todayTag.setAttribute("font-weight","800");
+      todayTag.textContent = "HOY";
+      svg.appendChild(todayTag);
+  
+      // Dibujo las tareas
+      data.forEach((t, i) => {
+        const y = headH + i*rowH + 6;
+  
+        // Nombre a la izquierda
+        const name = document.createElementNS(ns,"text");
+        name.setAttribute("x", 12);
+        name.setAttribute("y", headH + i*rowH + 18);
+        name.setAttribute("fill", "rgba(229,231,235,.92)");
+        name.setAttribute("font-size","12");
+        name.textContent = `${t.phase} — ${t.task}`;
+        svg.appendChild(name);
+  
+        // Barra horizontal
+        const s = toDate(t.start);
+        const e = toDate(t.end);
+        const x = leftCol + daysBetween(min, s) * z.pxPerDay;
+        const dur = Math.max(1, (daysBetween(s,e) + 1)) * z.pxPerDay;
+  
+        const bar = document.createElementNS(ns,"rect");
+        bar.setAttribute("x", x);
+        bar.setAttribute("y", y);
+        bar.setAttribute("width", dur);
+        bar.setAttribute("height", 16);
+        bar.setAttribute("rx", 8);
+  
+        // Si está “done” la dejo más neutra, si está en curso la dejo naranja
+        bar.setAttribute("fill", t.status === "done" ? "rgba(148,163,184,.35)" : "rgba(255,122,0,.65)");
+        bar.setAttribute("stroke", t.status === "done" ? "rgba(148,163,184,.35)" : "rgba(255,122,0,.95)");
+        bar.setAttribute("stroke-width","1");
+        bar.style.cursor = "help";
+  
+        // Tooltip (detalle al pasar el ratón)
+        bar.addEventListener("mousemove", (ev) => {
+          tip.style.display = "block";
+          tip.style.left = (ev.clientX + 14) + "px";
+          tip.style.top  = (ev.clientY + 14) + "px";
+          tip.innerHTML = `
+            <b>${t.task}</b><br>
+            <span style="opacity:.9">${t.phase}</span><br>
+            <span style="opacity:.85">📅 ${fmt(s)} → ${fmt(e)}</span><br>
+            <span style="opacity:.85">✅ Estado: ${t.status === "done" ? "Hecho" : "En curso"}</span>
+          `;
+        });
+        bar.addEventListener("mouseleave", () => {
+          tip.style.display = "none";
+        });
+  
+        svg.appendChild(bar);
+      });
+  
+      canvas.innerHTML = "";
+      canvas.appendChild(svg);
+    }
+  
+    // Cada vez que toco los controles, repinto el Gantt
+    phaseFilter.addEventListener("change", renderGantt);
+    zoomRange.addEventListener("input", renderGantt);
+    onlyDone.addEventListener("change", renderGantt);
+  
+    renderGantt();
+
+
+    /* =========================
+       MODAL VÍDEOS (Netflix style)
+       ========================= */
+    (function(){
+        const modal = document.getElementById('videoModal');
+        const modalVideo = document.getElementById('modalVideo');
+        const modalSource = document.getElementById('modalSource');
+        const modalTitle = document.getElementById('modalTitle');
+        const btnClose = document.getElementById('modalClose');
+        const btnPrev = document.getElementById('modalPrev');
+        const btnNext = document.getElementById('modalNext');
+
+        const cards = Array.from(document.querySelectorAll('.media-card'));
+        let currentIndex = -1;
+
+        function openModal(index){
+            const card = cards[index];
+            if(!card) return;
+
+            currentIndex = index;
+            const src = card.getAttribute('data-src') || '';
+            const title = card.getAttribute('data-title') || 'Vídeo';
+
+            modalTitle.textContent = title;
+
+            modalSource.src = src;
+            modalVideo.load();
+
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+
+            modalVideo.play().catch(()=>{});
+        }
+
+        function closeModal(){
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            modalVideo.pause();
+            modalSource.src = '';
+            modalVideo.load();
+        }
+
+        function prev(){
+            if(cards.length === 0) return;
+            const nextIndex = (currentIndex - 1 + cards.length) % cards.length;
+            openModal(nextIndex);
+        }
+
+        function next(){
+            if(cards.length === 0) return;
+            const nextIndex = (currentIndex + 1) % cards.length;
+            openModal(nextIndex);
+        }
+
+        cards.forEach((card, idx) => {
+            card.addEventListener('click', () => openModal(idx));
+            card.addEventListener('keydown', (e) => {
+                if(e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openModal(idx);
+                }
+            });
+        });
+
+        btnClose && btnClose.addEventListener('click', closeModal);
+        btnPrev && btnPrev.addEventListener('click', prev);
+        btnNext && btnNext.addEventListener('click', next);
+
+        modal && modal.addEventListener('click', (e) => {
+            if(e.target === modal) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if(!modal.classList.contains('is-open')) return;
+            if(e.key === 'Escape') closeModal();
+            if(e.key === 'ArrowLeft') prev();
+            if(e.key === 'ArrowRight') next();
+        });
+    })();
+
 </script>
 
-<script>
-(function(){
-  const wrap = document.querySelector('.gantt-wrap');
-  if(!wrap) return;
+<section id="repositorio-github" style="margin-top:60px; text-align:center;">
+    <h2>Trabajo con GitHub</h2>
+    <p style="max-width:800px; margin:20px auto; line-height:1.6;">
+        Durante el desarrollo del proyecto hemos trabajado utilizando GitHub como sistema de control de versiones.
+        Hemos ido subiendo el proyecto progresivamente, realizando commits frecuentes y actualizando el repositorio
+        conforme avanzábamos en el diseño, la implementación de funcionalidades y las mejoras visuales.
+        Esto nos ha permitido llevar un control ordenado del desarrollo y mantener un seguimiento claro de la evolución del proyecto.
+    </p>
+</section>
 
-  const startStr = wrap.getAttribute('data-start'); // YYYY-MM-DD
-  const endStr   = wrap.getAttribute('data-end');
-  const todayStr = wrap.getAttribute('data-today');
+<section id="video-demo" style="text-align:center; margin-top:50px; margin-bottom:40px;">
+    <video style="width:50%; max-width:700px;" controls>
+        <source src="Multimedia/PYXELGYM.mp4" type="video/mp4">
+        Tu navegador no soporta vídeo HTML5.
+    </video>
+</section>
 
-  const start = new Date(startStr + 'T00:00:00');
-  const end   = new Date(endStr + 'T00:00:00');
-  const today = new Date(todayStr + 'T00:00:00');
 
-  const total = (end - start);
-  const done  = (today - start);
 
-  const ratio = total > 0 ? Math.min(1, Math.max(0, done / total)) : 1;
+<div class="tip" id="tip"></div>
 
-  const line = wrap.querySelector('.gantt-today');
-  if(!line) return;
 
-  // Ajuste visual: que no se salga por el borde derecho
-  line.style.left = `calc(${(ratio*100).toFixed(2)}% - 1px)`;
-})();
-</script>
+<!-- Modal Netflix (Vídeos) -->
+<div class="modal-backdrop" id="videoModal" aria-hidden="true">
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-label="Reproductor de vídeo">
+    <div class="modal-top">
+      <div class="modal-heading">
+        <span class="badge">🎬 Demo</span>
+        <span id="modalTitle" class="modal-title">Vídeo</span>
+      </div>
+      <button type="button" class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div class="modal-video">
+      <video id="modalVideo" controls playsinline preload="metadata">
+        <source id="modalSource" src="" type="video/mp4">
+        Tu navegador no soporta vídeo HTML5.
+      </video>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="nav-btn" id="modalPrev">⟵ Anterior</button>
+      <button type="button" class="nav-btn strong" id="modalNext">Siguiente ⟶</button>
+    </div>
+  </div>
+</div>
 
 </body>
 
