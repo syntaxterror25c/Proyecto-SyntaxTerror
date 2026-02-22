@@ -52,33 +52,31 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
                 val userSnap = transaction.get(userRef)
                 val sesionSnap = transaction.get(sesionRef)
 
-                // 1. EXTRAER CRÉDITOS (RUTA ANIDADA)
-                // Como en tu captura 'creditos' está dentro de 'suscripcion_actual'
-                val suscripcion = userSnap.get("suscripcion_actual") as? Map<String, Any>
-                val creditosActuales = (suscripcion?.get("creditos") as? Number)?.toLong() ?: 0L
+                // 1. EXTRAER CRÉDITOS (Búsqueda flexible)
+                val suscripcion = userSnap.get("suscripcion_actual") as? Map<*, *>
+                val creditosActuales = (suscripcion?.get("creditos") as? Number)?.toLong()
+                    ?: userSnap.getLong("creditos")
+                    ?: 0L
 
                 // 2. EXTRAER DATOS SESIÓN
                 val plazasOcupadas = sesionSnap.getLong("plazas_ocupadas") ?: 0L
                 val capacidadMax = sesionSnap.getLong("capacidad_maxima") ?: 20L
 
-                // LOGS DE CONTROL
-                println("DEBUG_RESERVA: Usuario ID: ${userId}")
-                println("DEBUG_RESERVA: Créditos actuales en mapa: $creditosActuales")
-                println("DEBUG_RESERVA: Créditos que pide la sesión: ${sesion.coste}")
-
                 // 3. VALIDACIONES
-                if (creditosActuales < sesion.coste) {
-                    throw Exception("CRÉDITOS INSUFICIENTES")
-                }
-                if (plazasOcupadas >= capacidadMax) {
-                    throw Exception("SESIÓN LLENA")
+                if (creditosActuales < sesion.coste) throw Exception("CRÉDITOS INSUFICIENTES")
+                if (plazasOcupadas >= capacidadMax) throw Exception("SESIÓN LLENA")
+
+                // 4. ACTUALIZACIÓN DINÁMICA DE CRÉDITOS
+                // Si el campo existe dentro del mapa, lo actualizamos ahí. Si no, a la raíz.
+                if (userSnap.contains("suscripcion_actual.creditos")) {
+                    transaction.update(userRef, "suscripcion_actual.creditos", creditosActuales - sesion.coste)
+                } else {
+                    transaction.update(userRef, "creditos", creditosActuales - sesion.coste)
                 }
 
-                // 4. ACTUALIZACIONES (IMPORTANTE: usamos la ruta con punto para el mapa)
-                transaction.update(userRef, "suscripcion_actual.creditos", creditosActuales - sesion.coste)
+                // 5. ACTUALIZACIÓN DE SESIÓN Y CREACIÓN DE RESERVA
                 transaction.update(sesionRef, "plazas_ocupadas", plazasOcupadas + 1)
 
-                // 5. CREAR OBJETO RESERVA
                 val nuevaReserva = Reserva(
                     id_reserva = docReservaRef.id,
                     id_sesion_reservada = sesion.id,
@@ -95,6 +93,7 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
                 )
 
                 transaction.set(docReservaRef, nuevaReserva)
+                null // Retorno explícito para cerrar la lambda de la transacción
             }.await()
             true
         } catch (e: Exception) {

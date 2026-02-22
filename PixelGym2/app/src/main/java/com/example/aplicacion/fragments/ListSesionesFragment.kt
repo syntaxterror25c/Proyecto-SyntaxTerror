@@ -69,38 +69,6 @@ class ListSesionesFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
                         binding.recyclerViewReservas.adapter = actividadAdapter
                     }
                 }
-
-                // Eliminamos la observación de listaSesiones aquí,
-                // ya que ahora se hará en el ReservaFragment.
-
-                launch {
-                    gymViewModel.reservaStatus.collect { exito ->
-                        exito?.let {
-                            // Personalizamos el mensaje según el resultado
-                            val msg = if (it) "¡Reserva confirmada con éxito!" else "No hay plazas disponibles o error en la reserva"
-
-                            // Creamos el Snackbar
-                            val snackbar = com.google.android.material.snackbar.Snackbar.make(
-                                binding.root,
-                                msg,
-                                com.google.android.material.snackbar.Snackbar.LENGTH_LONG
-                            )
-
-                            // Estilo según si es éxito o error
-                            if (it) {
-                                snackbar.setBackgroundTint(resources.getColor(android.R.color.holo_green_dark, null))
-                            } else {
-                                snackbar.setBackgroundTint(resources.getColor(android.R.color.holo_red_dark, null))
-                            }
-
-                            snackbar.setTextColor(resources.getColor(android.R.color.white, null))
-                            snackbar.setAction("OK") { } // Botón opcional para cerrar
-                            snackbar.show()
-
-                            gymViewModel.resetReservaStatus()
-                        }
-                    }
-                }
             }
         }
     }

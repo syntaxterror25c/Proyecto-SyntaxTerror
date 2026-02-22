@@ -1,3 +1,4 @@
+
 package com.example.aplicacion.fragments
 
 import android.app.DatePickerDialog
@@ -21,8 +22,6 @@ import com.example.aplicacion.utils.ImageMapper
 import kotlinx.coroutines.launch
 import java.util.*
 import java.text.SimpleDateFormat
-import android.content.Intent
-import android.provider.CalendarContract
 import android.widget.Toast
 
 class ReservaFragment : Fragment() {
@@ -45,75 +44,132 @@ class ReservaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Recuperar datos de los argumentos
+        // FUNDAMENTAL: Cargar las reservas actuales del usuario para que la validación de duplicados funcione con datos reales.
+        gymViewModel.cargarMisReservas()
+
         actividadId = arguments?.getString("actividadId") ?: ""
         nombreActividad = arguments?.getString("nombreActividad") ?: "Actividad"
-
         binding.tvNombreRecursoReserva.text = nombreActividad
-
-        // --- PINTAR LA IMAGEN DE LA ACTIVIDAD ---
+        // PINTAR LA IMAGEN
         val actividadData = gymViewModel.listaActividades.value.find { it.id == actividadId || it.nombre == nombreActividad }
         val resourceId = ImageMapper.getDrawableId(actividadData?.imagen)
+        com.bumptech.glide.Glide.with(this).load(resourceId).centerCrop().into(binding.imgReservaHeader)
 
-        com.bumptech.glide.Glide.with(this)
-            .load(resourceId)
-            .centerCrop()
-            .into(binding.imgReservaHeader)
-        // -----------------------------------------------
-
-        // 2. Listeners y Observadores (Tus funciones originales)
+        // LISTENERS
         binding.btnDetalles.setOnClickListener {
             val bundle = Bundle().apply { putString("actividadId", actividadId) }
             findNavController().navigate(R.id.action_reservaFragment_to_detalleActividadFragment, bundle)
         }
-
+        binding.btnConfirmarReserva.setOnClickListener { confirmarReservaFinal() }
         binding.etFechaReserva.setOnClickListener { showDatePickerDialog() }
 
-        binding.btnConfirmarReserva.setOnClickListener { confirmarReservaFinal() }
-
-        // --- DETECTAR SELECCIÓN DE HORA PARA MOSTRAR PLAZAS ---
         binding.spinnerHoras.setOnItemClickListener { _, _, _, _ ->
             val horaSel = binding.spinnerHoras.text.toString()
-
-            // Buscamos la sesión en el ViewModel
             val sesion = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSel }
-
             sesion?.let {
                 val libres = it.capacidad_maxima - it.plazas_ocupadas
                 binding.tvPlazasDisponibles.text = "Quedan $libres plazas de ${it.capacidad_maxima}"
-
-                // Cambio de color dinámico
-                if (libres <= 2) {
-                    binding.tvPlazasDisponibles.setTextColor(resources.getColor(android.R.color.holo_red_dark, null))
-                } else {
-                    binding.tvPlazasDisponibles.setTextColor(resources.getColor(android.R.color.secondary_text_dark, null))
-                }
+                binding.tvPlazasDisponibles.setTextColor(resources.getColor(
+                    if (libres <= 2) android.R.color.holo_red_dark else android.R.color.secondary_text_dark, null
+                ))
             }
         }
 
+        // OBSERVADORES
+        observeReservaStatus()
         observeSesiones()
     }
+
+    private fun observeReservaStatus() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                gymViewModel.reservaStatus.collect { exito ->
+                    exito?.let {
+                        val msg = if (it) "¡Reserva confirmada con éxito!"
+                        else "No hay plazas disponibles o error en la reserva"
+
+                        val snackbar = com.google.android.material.snackbar.Snackbar.make(
+                            binding.root,
+                            msg,
+                            com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+                        )
+
+                        // Estilo visual que tanto te gustaba
+                        val colorFondo = if (it) android.R.color.holo_green_dark
+                        else android.R.color.holo_red_dark
+
+                        snackbar.setBackgroundTint(resources.getColor(colorFondo, null))
+                        snackbar.setTextColor(resources.getColor(android.R.color.white, null))
+
+                        // ACCIÓN AL CERRAR
+                        if (it) {
+                            // Si es éxito, esperamos a que el Snackbar se guarde solo o le den a OK
+                            snackbar.addCallback(object : com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback<com.google.android.material.snackbar.Snackbar>() {
+                                override fun onDismissed(transientBottomBar: com.google.android.material.snackbar.Snackbar?, event: Int) {
+                                    // Cuando el snackbar desaparece (por tiempo o swipe), volvemos atrás
+                                    gymViewModel.resetReservaStatus()
+                                    findNavController().popBackStack()
+                                }
+                            })
+                            snackbar.setAction("CERRAR") { snackbar.dismiss() }
+                        } else {
+                            // Si es error, solo habilitamos el botón para reintentar
+                            binding.btnConfirmarReserva.isEnabled = true
+                            gymViewModel.resetReservaStatus()
+                        }
+
+                        snackbar.show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun confirmarReservaFinal() {
+        val horaSel = binding.spinnerHoras.text.toString()
+        val fechaSel = binding.etFechaReserva.text.toString()
+
+        println("DEBUG_FRAGMENT: Botón pulsado. Fecha: $fechaSel, Hora: $horaSel")
+
+        if (horaSel.isNotEmpty() && horaSel != "No hay disponibilidad" && horaSel != "Selecciona hora") {
+            val sesion = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSel }
+
+            sesion?.let {
+                val misReservas = gymViewModel.listaMisReservas.value
+                println("DEBUG_FRAGMENT: Tengo ${misReservas.size} reservas en memoria para comparar")
+
+                val yaTiene = misReservas.any { r ->
+                    // Añadimos un print para ver qué estamos comparando exactamente
+                    println("COMPARANDO: [${r.fecha_sesion} == $fechaSel] Y [${r.hora_inicio} == $horaSel]")
+                    r.fecha_sesion == fechaSel && r.hora_inicio == horaSel
+                }
+                if (yaTiene) {
+                    println("DEBUG_FRAGMENT: BLOQUEADO: Ya existe una reserva igual")
+                    com.google.android.material.snackbar.Snackbar.make(binding.root, "Ya tienes reserva a esa hora", com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+                        .setBackgroundTint(resources.getColor(android.R.color.holo_orange_dark, null)).show()
+                } else {
+                    println("DEBUG_FRAGMENT: Todo OK. Llamando a intentarReserva...")
+                    binding.btnConfirmarReserva.isEnabled = false
+                    gymViewModel.intentarReserva(it)
+                }
+            }
+        } else {
+            println("DEBUG_FRAGMENT: Error de selección: Hora no válida")
+            Toast.makeText(requireContext(), "Selecciona una hora válida", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun observeSesiones() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 gymViewModel.listaSesiones.collect { sesiones ->
-
-                    // FILTRO DINÁMICO: Solo sesiones con plazas libres
-                    val sesionesDisponibles = sesiones.filter { it.plazas_ocupadas < it.capacidad_maxima }
-
-                    if (sesionesDisponibles.isEmpty()) {
-                        val aviso = arrayOf("No hay disponibilidad este día")
-                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, aviso)
-                        binding.spinnerHoras.setAdapter(adapter)
-                        binding.spinnerHoras.setText("", false)
+                    val disponibles = sesiones.filter { it.plazas_ocupadas < it.capacidad_maxima }
+                    if (disponibles.isEmpty()) {
+                        binding.spinnerHoras.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, arrayOf("No hay disponibilidad")))
                         binding.btnConfirmarReserva.isEnabled = false
                     } else {
-                        // Solo mapeamos las horas de las que tienen hueco
-                        val horas = sesionesDisponibles.map { it.hora_inicio }
-                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, horas)
-                        binding.spinnerHoras.setAdapter(adapter)
-
-                        // Limpiamos el texto para que el usuario tenga que elegir
+                        val horas = disponibles.map { it.hora_inicio }
+                        binding.spinnerHoras.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, horas))
                         binding.spinnerHoras.setText("Selecciona hora", false)
                         binding.btnConfirmarReserva.isEnabled = true
                     }
@@ -124,92 +180,18 @@ class ReservaFragment : Fragment() {
 
     private fun showDatePickerDialog() {
         val c = Calendar.getInstance()
-        val dpd = DatePickerDialog(requireContext(), { _, y, m, d ->
-            val calendar = Calendar.getInstance().apply { set(y, m, d) }
-
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            val fechaFormateada = sdf.format(calendar.time)
-
-            binding.etFechaReserva.setText(fechaFormateada)
-            binding.tvPlazasDisponibles.text = "Selecciona una hora para ver disponibilidad"
-            // LLAMADA A LA NUEVA FUNCIÓN DEL VIEWMODEL
-            gymViewModel.cargarSesionesPorFecha(nombreActividad, fechaFormateada)
-
-        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
-        dpd.show()
+        DatePickerDialog(requireContext(), { _, y, m, d ->
+            val cal = Calendar.getInstance().apply { set(y, m, d) }
+            val fecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(cal.time)
+            binding.etFechaReserva.setText(fecha)
+            gymViewModel.cargarSesionesPorFecha(nombreActividad, fecha)
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
     }
 
-    private fun confirmarReservaFinal() {
-        val horaSeleccionada = binding.spinnerHoras.text.toString()
-        val fechaSeleccionada = binding.etFechaReserva.text.toString()
 
-        if (horaSeleccionada.isNotEmpty() &&
-            horaSeleccionada != "No hay disponibilidad este día" &&
-            horaSeleccionada != "Selecciona hora") {
-
-            // 1. Buscamos la sesión que quiere reservar
-            val sesionParaReservar = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSeleccionada }
-
-            sesionParaReservar?.let { sesion ->
-
-                // 2. COMPROBACIÓN: ¿Ya tiene una reserva para esta FECHA y HORA?
-                // Usamos 'listaMisReservas' y los campos 'fecha_sesion' y 'hora_inicio' de tu modelo Reserva
-                val yaTieneReserva = gymViewModel.listaMisReservas.value.any { reserva ->
-                    reserva.fecha_sesion == fechaSeleccionada && reserva.hora_inicio == horaSeleccionada
-                }
-
-                if (yaTieneReserva) {
-                    // AVISO CON SNACKBAR EN NARANJA
-                    com.google.android.material.snackbar.Snackbar.make(
-                        binding.root,
-                        "Atención: Ya tienes una clase reservada el $fechaSeleccionada a las $horaSeleccionada",
-                        com.google.android.material.snackbar.Snackbar.LENGTH_LONG
-                    ).setBackgroundTint(resources.getColor(android.R.color.holo_orange_dark, null))
-                        .show()
-                } else {
-                    // Si no hay conflicto, procedemos a reservar
-                    gymViewModel.intentarReserva(sesion)
-                    añadirAlCalendario(nombreActividad, fechaSeleccionada, horaSeleccionada)
-                    findNavController().popBackStack()
-                }
-            }
-        } else {
-            com.google.android.material.snackbar.Snackbar.make(
-                binding.root,
-                "Por favor, selecciona una hora válida",
-                com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    private fun añadirAlCalendario(nombreAct: String, fecha: String, hora: String) {
-        try {
-            // 1. Convertimos el texto de fecha y hora a milisegundos
-            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-            val fechaCita = sdf.parse("$fecha $hora")
-            val inicioMillis: Long = fechaCita?.time ?: System.currentTimeMillis()
-
-            // 2. Creamos el Intent para el calendario
-            val intent = Intent(Intent.ACTION_INSERT).apply {
-                data = CalendarContract.Events.CONTENT_URI
-                putExtra(CalendarContract.Events.TITLE, "Clase de $nombreAct")
-                putExtra(CalendarContract.Events.DESCRIPTION, "Reserva realizada desde la App del Gimnasio")
-                putExtra(CalendarContract.Events.EVENT_LOCATION, "Gimnasio Oloman")
-                putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, inicioMillis)
-                // Ponemos que dure 1 hora (3600000 milisegundos)
-                putExtra(CalendarContract.EXTRA_EVENT_END_TIME, inicioMillis + 3600000)
-            }
-
-            // 3. Lanzamos la actividad del calendario
-            startActivity(intent)
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(requireContext(), "No se pudo abrir el calendario", Toast.LENGTH_SHORT).show()
-        }
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+

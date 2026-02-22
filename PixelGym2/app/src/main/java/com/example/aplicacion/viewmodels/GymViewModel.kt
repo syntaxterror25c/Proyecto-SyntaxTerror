@@ -111,20 +111,25 @@ class GymViewModel(
     }
 
     fun intentarReserva(sesion: Sesion) {
-        viewModelScope.launch {
-            // 1. Obtenemos el ID del usuario actual
+        _reservaStatus.value = null
+
+        // Usamos Dispatchers.IO para que la red NO bloquee la interfaz
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             val userId = authRepository.getCurrentUser()?.uid ?: return@launch
 
-            // 2. Llamamos al Repository (addReserva es el método que me has pegado arriba)
+            println("DEBUG_VIEWMODEL: Lanzando reserva en hilo secundario...")
             val exito = gymRepository.addReserva(userId, sesion)
 
-            // 3. Informamos a la pantalla del resultado
-            _reservaStatus.value = exito
+            // IMPORTANTE: Los cambios de UI (StateFlow) DEBEN volver al hilo principal
+            launch(kotlinx.coroutines.Dispatchers.Main) {
+                println("DEBUG_VIEWMODEL: Volviendo al Main para avisar al Fragment: $exito")
+                _reservaStatus.value = exito
 
-            // 4. Si ha ido bien, refrescamos los datos para que el usuario vea los cambios
-            if (exito) {
-                cargarSesionesDeActividad(sesion.nombre_actividad)
-                cargarMisReservas()
+                if (exito) {
+                    // Refrescamos datos pero sin bloquear
+                    cargarSesionesDeActividad(sesion.nombre_actividad)
+                    cargarMisReservas()
+                }
             }
         }
     }
