@@ -95,7 +95,7 @@ class LoginFragment : Fragment() {
         binding.textViewRegisterLink.setOnClickListener {
             // Navegamos al fragmento de registro
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-            Toast.makeText(requireContext(), getString(R.string.nav_to_register), Toast.LENGTH_SHORT).show()
+           // Toast.makeText(requireContext(), getString(R.string.nav_to_register), Toast.LENGTH_SHORT).show()
         }
     }
 

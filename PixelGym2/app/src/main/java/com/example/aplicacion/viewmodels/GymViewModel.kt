@@ -21,6 +21,7 @@ class GymViewModel(
 
     // 1 LISTAS Y ESTADOS
     private var todasLasActividades: List<Actividad> = emptyList()
+    private var todasLasReservas: List<Reserva> = emptyList()
 
     private val _listaActividades = MutableStateFlow<List<Actividad>>(emptyList())
     val listaActividades: StateFlow<List<Actividad>> = _listaActividades
@@ -80,24 +81,35 @@ class GymViewModel(
     }
 
     private fun aplicarFiltrosYOrden() {
-        var listaResultante = todasLasActividades
+        val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
 
-        // Filtrar
+        // --- PROCESAR ACTIVIDADES  ---
+        var resActividades = todasLasActividades
         if (queryActual.isNotEmpty()) {
-            listaResultante = listaResultante.filter {
+            resActividades = resActividades.filter {
                 it.nombre.contains(queryActual, ignoreCase = true)
             }
         }
+        _listaActividades.value = if (esAscendente) resActividades.sortedBy { it.nombre }
+        else resActividades.sortedByDescending { it.nombre }
 
-        // Ordenar
-        listaResultante = if (esAscendente) {
-            listaResultante.sortedBy { it.nombre }
-        } else {
-            listaResultante.sortedByDescending { it.nombre }
+        // --- PROCESAR RESERVAS  ---
+        var resReservas = todasLasReservas
+        if (queryActual.isNotEmpty()) {
+            resReservas = resReservas.filter {
+                it.nombre_actividad.contains(queryActual, ignoreCase = true) ||
+                        it.nombre_profesor.contains(queryActual, ignoreCase = true)
+            }
         }
 
-        _listaActividades.value = listaResultante
+        // Ordenamos por FECHA_SESION convirtiendo el String a Date para que sea cronológico
+        _listaMisReservas.value = if (esAscendente) {
+            resReservas.sortedBy { try { sdf.parse(it.fecha_sesion) } catch (e: Exception) { null } }
+        } else {
+            resReservas.sortedByDescending { try { sdf.parse(it.fecha_sesion) } catch (e: Exception) { null } }
+        }
     }
+
 
     // 3 RESTO DE FUNCIONES (Sesiones, Reservas, etc......)
 
@@ -122,12 +134,19 @@ class GymViewModel(
         }
     }
 
+
     fun cargarMisReservas() {
         viewModelScope.launch {
             val userId = authRepository.getCurrentUser()?.uid
             if (userId != null) {
-                val reservas = gymRepository.fetchMisReservas(userId)
-                _listaMisReservas.value = reservas
+                // Traemos los datos de Firebase
+                val reservasDesdeFirebase = gymRepository.fetchMisReservas(userId)
+
+                // ACTUALIZAMOS LA COPIA DE SEGURIDAD (Sin esto, el filtro no funciona)
+                todasLasReservas = reservasDesdeFirebase
+
+                // Ejecutamos la lógica de orden y filtro para que se vea en pantalla
+                aplicarFiltrosYOrden()
             }
         }
     }

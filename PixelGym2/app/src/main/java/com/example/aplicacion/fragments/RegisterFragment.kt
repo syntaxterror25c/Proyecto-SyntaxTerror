@@ -40,6 +40,10 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Listener para volver atrás
+        binding.btnBackRegister.setOnClickListener {
+            findNavController().popBackStack()
+        }
         // 1 Iniciamos la carga de planes y observamos el StateFlow
         observarPlanes()
         viewModel.cargarPlanes()

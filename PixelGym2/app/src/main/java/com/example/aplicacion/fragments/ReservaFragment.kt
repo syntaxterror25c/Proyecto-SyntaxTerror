@@ -87,7 +87,7 @@ class ReservaFragment : Fragment() {
                     exito?.let { esExito ->
                         val msg = if (esExito) getString(R.string.reserva_ok) else getString(R.string.reserva_error)
                         val snackbar = com.google.android.material.snackbar.Snackbar.make(
-                            binding.root, msg, com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+                            binding.root, msg, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
                         )
                         val color = if (esExito) android.R.color.holo_green_dark else android.R.color.holo_red_dark
                         snackbar.setBackgroundTint(resources.getColor(color, null))

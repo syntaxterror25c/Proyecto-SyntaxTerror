@@ -106,7 +106,7 @@
     <string name="estado_suscripcion">Estado suscripción</string>
     <string name="suscripcion_activa">ACTIVA</string>
     <string name="suscripcion_inactiva">INACTIVA</string>
-    <string name="inicio_plan">Inicio del plan</string>
+    <string name="fin_plan">Vencimiento</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
     <string name="mi_perfil">Mi perfil</string>
 </resources>

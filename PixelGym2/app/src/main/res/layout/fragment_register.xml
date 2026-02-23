@@ -12,6 +12,19 @@
             android:layout_height="wrap_content"
             android:padding="24dp">
 
+        <ImageButton
+                android:id="@+id/btnBackRegister"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_arrow_back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Volver al Login"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                app:tint="?attr/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
         <ImageView
                 android:id="@+id/imgLogoReg"
                 android:layout_width="100dp"
