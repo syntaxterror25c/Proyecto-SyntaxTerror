@@ -44,6 +44,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
 // Navigation
     val navVersion = "2.7.7"
@@ -64,7 +65,7 @@ dependencies {
     // Play Services Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
-    // Glide - Imágenes
+    // Glide - imagenes
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
     testImplementation("junit:junit:4.13.2")

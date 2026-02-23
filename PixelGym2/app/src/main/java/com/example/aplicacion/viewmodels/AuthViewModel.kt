@@ -13,7 +13,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow<UserUiState>(UserUiState.Idle)
     val uiState: StateFlow<UserUiState> = _uiState
 
-    // Función de Login con Firebase
+    // Función de Login con ---------Firebase--------------
     fun login(email: String, pass: String) {
         viewModelScope.launch {
             _uiState.value = UserUiState.Loading

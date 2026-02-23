@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Aplicacion)
 
-        // --- PREFERENCIAS DE MODO OSCURO ---
+        // --- PREFERENCIAS DE MODO OSCURO ------
         val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val isDarkMode = prefs.getBoolean("dark_mode", true)
         AppCompatDelegate.setDefaultNightMode(
@@ -40,20 +40,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // --- VIEWMODEL ---
+        // --- VIEWMODEL -----------
         gymViewModel = ViewModelProvider(
             this,
             GymViewModelFactory(ServiceLocator.gymRepository, ServiceLocator.authRepository)
         )[GymViewModel::class.java]
 
-        // ******************
+        // --------------------------------
         // PRUEBA MUCHO OJO
         // gymViewModel.resetTotalGimnasioPruebas()
-        // ******************
+        // ----------------------------------
 
         this.setSupportActionBar(binding.toolbar)
 
-        // Habilita la flecha de atrás
+        // habilita la flecha de atrás
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 
@@ -63,9 +63,11 @@ class MainActivity : AppCompatActivity() {
         // --- LISTENER NAVIGATION DRAWER (MENÚ LATERAL) ---
         binding.navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.perfilFragment -> navController.navigate(R.id.perfilFragment)
                 R.id.drawer_list -> navController.navigate(R.id.tabListReservasFragment)
                 R.id.drawer_contact -> navController.navigate(R.id.contactFragment)
                 R.id.drawer_preferences -> navController.navigate(R.id.preferencesFragment)
+                R.id.perfilFragment -> navController.navigate(R.id.perfilFragment)
                 R.id.drawer_about -> mostrarAcercaDe()
                 R.id.drawer_logOut -> {
                     ServiceLocator.authRepository.logout()
@@ -110,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.action_sort -> {
-                        gymViewModel.toggleSort() // Asegúrate de tener este método en tu ViewModel
+                        gymViewModel.toggleSort() // importante que tengamos este metodo en el viewmodel
                         true
                     }
                     R.id.action_open_drawer -> {
@@ -132,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.bnm_list -> navController.navigate(R.id.tabListReservasFragment)
                 R.id.bnm_contact -> navController.navigate(R.id.contactFragment)
                 R.id.bnm_settings -> navController.navigate(R.id.preferencesFragment)
+
             }
             true
         }
@@ -153,12 +156,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // Lógica de la Flecha Atrás (Solo en pantallas secundarias)
+            // logica de la Flecha atras (solo en pantallas secundarias)
             val pantallasConFlecha = listOf(
                 R.id.contactFragment,
                 R.id.detalleActividadFragment,
                 R.id.preferencesFragment,
-                R.id.reservaFragment
+                R.id.reservaFragment,
+                R.id.perfilFragment
             )
             supportActionBar?.setDisplayHomeAsUpEnabled(destination.id in pantallasConFlecha)
 
@@ -167,7 +171,7 @@ class MainActivity : AppCompatActivity() {
             binding.floatingActionButton.hide()
         }
 
-        // --- CONTROL DEL BOTÓN ATRÁS FÍSICO ---
+        // --- CONTROL DEL BOTÓN ATRÁS FÍSICO --------------------------------------
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -187,29 +191,20 @@ class MainActivity : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(this, callback)
     }
-    // email en el drawer
-//    private fun actualizarHeaderNavigation() {
-//        val user = ServiceLocator.authRepository.getCurrentUser()
-//        if (binding.navigationView.headerCount > 0) {
-//            val headerView = binding.navigationView.getHeaderView(0)
-//            val tvEmail = headerView.findViewById<android.widget.TextView>(R.id.textViewName)
-//            tvEmail?.text = user?.email ?: "Usuario Anónimo"
-//        }
-//    }
 
-    // nombre/nick en el drawer
+    // NOMBRE USUARIO EN EL HEADER DEL NAVIGATION DRAWER
     private fun actualizarHeaderNavigation() {
         val user = ServiceLocator.authRepository.getCurrentUser()
         if (user != null && binding.navigationView.headerCount > 0) {
             val headerView = binding.navigationView.getHeaderView(0)
             val tvName = headerView.findViewById<android.widget.TextView>(R.id.textViewName)
 
-            // Buscamos el documento del usuario por su UID
+            // buscamos el documento del usuario por su UID
             val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
             db.collection("usuarios").document(user.uid).get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
-                        // Extraemos el campo 'nombre_usuario' (o como se llame en tu BD)
+                        // extraemos el campo "nombre_usuario" y lo mostramos, si no existe mostramos el email
                         val nick = document.getString("nombre_usuario") ?: user.email
                         tvName?.text = nick
                     } else {
@@ -221,7 +216,7 @@ class MainActivity : AppCompatActivity() {
                 }
         }
     }
-
+//MOSTrAR DIALOGO ACERCA DE
     private fun mostrarAcercaDe() {
         AlertDialog.Builder(this)
             .setTitle("Acerca de PixelGym")

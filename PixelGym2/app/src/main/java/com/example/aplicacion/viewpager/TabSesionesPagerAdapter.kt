@@ -9,7 +9,7 @@ import com.example.aplicacion.fragments.ListReservasFragment
 class TabSesionesPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
 
-    // Tenemos exactamente 2 pestañas: Cartelera y Mis Reservas
+    // tenemos exactamente 2 pestañas: cartelera y mis reservas
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {

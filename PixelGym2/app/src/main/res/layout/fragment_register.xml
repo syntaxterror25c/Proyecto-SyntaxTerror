@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/contraseña_registro"
-                app:passwordToggleEnabled="true"
+                app:endIconMode="password_toggle"
                 app:errorEnabled="true"
                 app:layout_constraintTop_toBottomOf="@id/tilRegName">
             <com.google.android.material.textfield.TextInputEditText
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/contraseña_registro_2"
-                app:passwordToggleEnabled="true"
+                app:endIconMode="password_toggle"
                 app:errorEnabled="true"
                 app:layout_constraintTop_toBottomOf="@id/tilRegPass">
             <com.google.android.material.textfield.TextInputEditText

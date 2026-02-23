@@ -40,11 +40,11 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Iniciamos la carga de planes y observamos el StateFlow
+        // 1 Iniciamos la carga de planes y observamos el StateFlow
         observarPlanes()
         viewModel.cargarPlanes()
 
-        // 2. Observar estado del registro (UI State)
+        // 2 Observar estado del registro (UI State)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
@@ -64,7 +64,7 @@ class RegisterFragment : Fragment() {
             }
         }
 
-        // 3. Observar validez del formulario
+        // 3  Observar validez del formulario
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isRegisterValid.collect { isValid ->
@@ -75,7 +75,7 @@ class RegisterFragment : Fragment() {
 
         setupListeners()
 
-        // 4. Acción de registro con DATOS REALES
+        // 4  Acción de registro con DATOS REALES
         binding.btnCreateAccount.setOnClickListener {
             val email = binding.etRegUser.text.toString()
             val pass = binding.etRegPass.text.toString()
@@ -93,7 +93,7 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    // --- FUNCIONES DE APOYO (FUERA DE ONVIEWCREATED) ---
+    // --- FUNCIONES DE APOYO (FUERA DE ONVIEWCREATED) --------
     private fun observarPlanes() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

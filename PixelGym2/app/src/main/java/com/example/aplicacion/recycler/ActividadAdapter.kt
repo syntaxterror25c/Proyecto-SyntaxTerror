@@ -33,7 +33,7 @@ class ActividadAdapter(
         // Categoría (He añadido esto para que coincida con el XML de la tarjeta)
         holder.binding.tvActividadCategoria.text = actividad.categoria.ifEmpty { "General" }
 
-        // --- CARGA DE IMAGEN CENTRALIZADA ---
+        // --- CARGA DE IMAGEN CENTRALIZADA ----------
         val resourceId = ImageMapper.getDrawableId(actividad.imagen)
 
         Glide.with(context)

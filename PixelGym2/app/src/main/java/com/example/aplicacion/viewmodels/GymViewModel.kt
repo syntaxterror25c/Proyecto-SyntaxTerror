@@ -19,7 +19,7 @@ class GymViewModel(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    // 1. LISTAS Y ESTADOS
+    // 1 LISTAS Y ESTADOS
     private var todasLasActividades: List<Actividad> = emptyList()
 
     private val _listaActividades = MutableStateFlow<List<Actividad>>(emptyList())
@@ -38,8 +38,29 @@ class GymViewModel(
     private var queryActual: String = ""
     private var esAscendente: Boolean = true
 
-    // 2. LÓGICA DE FILTRADO Y ORDENACIÓN
+    private val _usuarioLogueado = MutableStateFlow<Map<String, Any>?>(null)
+    val usuarioLogueado: StateFlow<Map<String, Any>?> = _usuarioLogueado
 
+    // 2 LÓGICA DE FILTRADO Y ORDENACIÓN
+
+    fun cargarDatosUsuarioActual() {
+        viewModelScope.launch {
+            // Obtenemos el ID del usuario desde AuthRepository
+            val userId = authRepository.getCurrentUser()?.uid
+
+            if (userId != null) {
+                // Llamamos a la función que acabamos de crear en el Repository
+                val datos = gymRepository.fetchUserData(userId)
+
+                // Actualizamos el flujo de datos para que el Fragment lo reciba
+                _usuarioLogueado.value = datos
+
+                println("DEBUG_VIEWMODEL: Datos de usuario cargados: ${datos?.get("nombre")}")
+            } else {
+                println("DEBUG_VIEWMODEL: No hay usuario autenticado")
+            }
+        }
+    }
     fun cargarActividades() {
         viewModelScope.launch {
             // Cargamos del repo y guardamos en la "copia de seguridad"
@@ -78,7 +99,7 @@ class GymViewModel(
         _listaActividades.value = listaResultante
     }
 
-    // 3. RESTO DE FUNCIONES (Sesiones, Reservas, etc.)
+    // 3 RESTO DE FUNCIONES (Sesiones, Reservas, etc......)
 
     fun cargarSesionesDeActividad(nombre: String) {
         viewModelScope.launch {
@@ -144,9 +165,9 @@ class GymViewModel(
         viewModelScope.launch {
             // Llamamos al repo pasando el objeto reserva completo
             // El repo se encargará de:
-            // 1. Devolver +1 crédito al usuario
-            // 2. Hacer -1 en plazas_ocupadas de la sesión
-            // 3. Borrar el documento de la reserva
+            // Devolver +1 crédito al usuario
+            // Hacer -1 en plazas_ocupadas de la sesión
+            // Borrar el documento de la reserva
             val exito = gymRepository.eliminarReserva(reserva)
 
             if (exito) {
@@ -163,7 +184,7 @@ class GymViewModel(
     fun resetTotalGimnasioPruebas() {
         val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
 
-        // 1. LISTA TOTAL: Borramos todo para empezar de cero absoluto
+        // 1 LISTA TOTAL: Borramos todo para empezar de cero absoluto
         val colecciones = listOf("sesiones", "profesores", "salas", "reservas", "actividades", "tarifas", "usuarios")
 
         var contadorColecciones = 0
@@ -194,7 +215,7 @@ class GymViewModel(
     private fun ejecutarGrabacionDatosPrueba() {
         val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
 
-        // --- 1. ACTIVIDADES ---
+        // --- 1 ACTIVIDADES -------
         val catalogoActividades = listOf(
             mapOf("nombre" to "Spinning", "coste" to 1, "imagen" to "im_rec_spinning", "categoria" to R.string.info_categoria, "descripcion" to R.string.spinning_about),
             mapOf("nombre" to "Cardio", "coste" to 1, "imagen" to "im_rec_cardio", "categoria" to R.string.info_categoria, "descripcion" to R.string.cardio_about),
@@ -210,7 +231,7 @@ class GymViewModel(
             db.collection("actividades").document(a["nombre"].toString()).set(a)
         }
 
-        // --- 2. PROFESORES ---
+        // --- 2 PROFESORES ------
         val profesores = listOf(
             mapOf("id" to "P01", "nombre" to "Carlos Ruiz"),
             mapOf("id" to "P02", "nombre" to "Marta Sanz"),
@@ -223,11 +244,11 @@ class GymViewModel(
         )
         profesores.forEach { p -> db.collection("profesores").document(p["id"] as String).set(p) }
 
-        // --- 3. SALAS ---
+        // --- 3 SALAS ----------
         val salas = listOf("Sala Ciclo", "Zona Fuerza", "Sala Zen", "Estudio 1")
         salas.forEach { s -> db.collection("salas").document(s).set(mapOf("nombre" to s)) }
 
-        // --- 4. SESIONES (Generación Automática) ---
+        // --- 4 SESIONES (Generación Automática) ----------------------------------
         val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
 
         for (dia in 22..28) {
@@ -256,7 +277,7 @@ class GymViewModel(
             }
         }
 
-        // --- 5. TARIFAS ---
+        // --- 5 TARIFAS ----------------
         val tarifas = listOf(
             mapOf("nombre" to "Simple", "creditos" to 4, "precio" to 15.99, "descripcion" to "Ideal para probar el gimnasio"),
             mapOf("nombre" to "Básico", "creditos" to 8, "precio" to 28.79, "descripcion" to "Dos créditos por semana"),

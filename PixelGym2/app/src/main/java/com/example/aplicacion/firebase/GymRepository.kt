@@ -35,12 +35,24 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
         }
     }
 
-    /**
-     * PROCESO DE RESERVA COMPLETO (Transacción)
-     * 1. Descuenta créditos al usuario
-     * 2. Suma 1 al aforo de la sesión
-     * 3. Crea el documento de reserva
-     */
+    suspend fun fetchUserData(userId: String): Map<String, Any>? {
+        return try {
+            // Vamos a la colección "usuarios" y buscamos el documento por ID
+            val document = db.collection("usuarios").document(userId).get().await()
+
+            // Devolvemos los datos del documento como un Mapa (String -> Valor)
+            document.data
+        } catch (e: Exception) {
+            // Si hay algún error (falta de red, etc.), devolvemos nulo para no romper la app
+            println("ERROR_REPO: No se han podido obtener los datos del usuario: ${e.message}")
+            null
+        }
+    }
+
+     // PROCESO DE RESERVA COMPLETO (Transacción)
+     // 1. Descuenta créditos al usuario
+     // 2. Suma 1 al aforo de la sesión
+     // 3. Crea el documento de reserva
 
     suspend fun addReserva(userId: String, sesion: Sesion): Boolean {
         val userRef = db.collection("usuarios").document(userId)
@@ -66,11 +78,14 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
                 if (creditosActuales < sesion.coste) throw Exception("CRÉDITOS INSUFICIENTES")
                 if (plazasOcupadas >= capacidadMax) throw Exception("SESIÓN LLENA")
 
-                // 4. ACTUALIZACIÓN DINÁMICA DE CRÉDITOS
-                // Si el campo existe dentro del mapa, lo actualizamos ahí. Si no, a la raíz.
-                if (userSnap.contains("suscripcion_actual.creditos")) {
+                // 4. ACTUALIZACIÓN DE CRÉDITOS (Localiza este punto en addReserva)
+                val suscripcionMap = userSnap.get("suscripcion_actual") as? Map<*, *>
+
+                if (suscripcionMap != null && suscripcionMap.containsKey("creditos")) {
+                    // Si el mapa existe, actualizamos la sub-clave dentro del mapa
                     transaction.update(userRef, "suscripcion_actual.creditos", creditosActuales - sesion.coste)
                 } else {
+                    // Si por algún error no estuviera el mapa, lo actualiza en la raíz
                     transaction.update(userRef, "creditos", creditosActuales - sesion.coste)
                 }
 
@@ -102,10 +117,10 @@ class GymRepository(private val sesionDataSource: SesionDataSource) {
         }
     }
 
-    /**
-     * ELIMINAR RESERVA (Transacción inversa)
-     * Devuelve el crédito y libera la plaza
-     */
+
+     // ELIMINAR RESERVA (Transacción inversa)
+      // Devuelve el crédito y libera la plaza
+
     suspend fun eliminarReserva(reserva: Reserva): Boolean {
         val userRef = db.collection("usuarios").document(reserva.uid)
         val sesionRef = db.collection("sesiones").document(reserva.id_sesion_reservada)

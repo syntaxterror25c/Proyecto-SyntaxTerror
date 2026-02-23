@@ -5,8 +5,10 @@
 
     <item android:gravity="center">
         <bitmap
-                android:src="@drawable/logo"
-                android:gravity="center"
+            android:src="@drawable/logo"
+            android:gravity="center"
+            android:width="200dp"
+            android:height="200dp"
         />
     </item>
 </layer-list>

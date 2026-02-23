@@ -101,4 +101,12 @@
     <string name="error_reserva_duplicada">Ya tienes reserva a esa hora</string>
     <string name="quedan">Quedan</string>
     <string name="plazas_de">plazas de</string>
+    <string name="creditos_disponibles">créditos disponibles</string>
+    <string name="detalles_cuenta">DETALLES DE CUENTA</string>
+    <string name="estado_suscripcion">Estado suscripción</string>
+    <string name="suscripcion_activa">ACTIVA</string>
+    <string name="suscripcion_inactiva">INACTIVA</string>
+    <string name="inicio_plan">Inicio del plan</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="mi_perfil">Mi perfil</string>
 </resources>

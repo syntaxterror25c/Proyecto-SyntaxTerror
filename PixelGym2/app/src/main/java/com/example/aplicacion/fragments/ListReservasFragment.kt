@@ -33,7 +33,7 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
 
         gymViewModel.cargarMisReservas()
 
-        // 1. SOLUCIÓN AL ERROR: Especificamos el tipo (reserva: Reserva)
+        // SOLUCIÓN AL ERROR: Especificamos el tipo (reserva: Reserva)
         reservaAdapter = ReservaAdapter(emptyList()) { reserva: Reserva ->
         }
 

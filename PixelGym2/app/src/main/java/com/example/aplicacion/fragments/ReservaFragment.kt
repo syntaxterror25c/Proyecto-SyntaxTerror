@@ -1,4 +1,3 @@
-
 package com.example.aplicacion.fragments
 
 import android.app.DatePickerDialog
@@ -7,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -22,7 +22,6 @@ import com.example.aplicacion.utils.ImageMapper
 import kotlinx.coroutines.launch
 import java.util.*
 import java.text.SimpleDateFormat
-import android.widget.Toast
 
 class ReservaFragment : Fragment() {
 
@@ -44,38 +43,39 @@ class ReservaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // FUNDAMENTAL: Cargar las reservas actuales del usuario para que la validación de duplicados funcione con datos reales.
+        // Cargamos las reservas para la validación de duplicados
         gymViewModel.cargarMisReservas()
 
         actividadId = arguments?.getString("actividadId") ?: ""
         nombreActividad = arguments?.getString("nombreActividad") ?: "Actividad"
         binding.tvNombreRecursoReserva.text = nombreActividad
-        // PINTAR LA IMAGEN
+
+        // Carga de imagen con Glide
         val actividadData = gymViewModel.listaActividades.value.find { it.id == actividadId || it.nombre == nombreActividad }
         val resourceId = ImageMapper.getDrawableId(actividadData?.imagen)
         com.bumptech.glide.Glide.with(this).load(resourceId).centerCrop().into(binding.imgReservaHeader)
 
-        // LISTENERS
+        // Listeners
         binding.btnDetalles.setOnClickListener {
             val bundle = Bundle().apply { putString("actividadId", actividadId) }
             findNavController().navigate(R.id.action_reservaFragment_to_detalleActividadFragment, bundle)
         }
-        binding.btnConfirmarReserva.setOnClickListener { confirmarReservaFinal() }
+
+        binding.btnConfirmarReserva.setOnClickListener { ejecutarProcesoReserva() }
         binding.etFechaReserva.setOnClickListener { showDatePickerDialog() }
 
+        // Manejo del Spinner de horas
         binding.spinnerHoras.setOnItemClickListener { _, _, _, _ ->
             val horaSel = binding.spinnerHoras.text.toString()
             val sesion = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSel }
             sesion?.let {
                 val libres = it.capacidad_maxima - it.plazas_ocupadas
                 binding.tvPlazasDisponibles.text = "${getString(R.string.quedan)} $libres ${getString(R.string.plazas_de)} ${it.capacidad_maxima}"
-                binding.tvPlazasDisponibles.setTextColor(resources.getColor(
-                    if (libres <= 2) android.R.color.holo_red_dark else android.R.color.secondary_text_dark, null
-                ))
+                val color = if (libres <= 2) android.R.color.holo_red_dark else android.R.color.secondary_text_dark
+                binding.tvPlazasDisponibles.setTextColor(resources.getColor(color, null))
             }
         }
 
-        // OBSERVADORES
         observeReservaStatus()
         observeSesiones()
     }
@@ -84,40 +84,25 @@ class ReservaFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 gymViewModel.reservaStatus.collect { exito ->
-                    exito?.let {
-                        val msg = if (it) getString(R.string.reserva_ok)
-                        else getString(R.string.reserva_error)
-
+                    exito?.let { esExito ->
+                        val msg = if (esExito) getString(R.string.reserva_ok) else getString(R.string.reserva_error)
                         val snackbar = com.google.android.material.snackbar.Snackbar.make(
-                            binding.root,
-                            msg,
-                            com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+                            binding.root, msg, com.google.android.material.snackbar.Snackbar.LENGTH_LONG
                         )
+                        val color = if (esExito) android.R.color.holo_green_dark else android.R.color.holo_red_dark
+                        snackbar.setBackgroundTint(resources.getColor(color, null))
 
-                        // Estilo visual que tanto te gustaba
-                        val colorFondo = if (it) android.R.color.holo_green_dark
-                        else android.R.color.holo_red_dark
-
-                        snackbar.setBackgroundTint(resources.getColor(colorFondo, null))
-                        snackbar.setTextColor(resources.getColor(android.R.color.white, null))
-
-                        // ACCIÓN AL CERRAR
-                        if (it) {
-                            // Si es éxito, esperamos a que el Snackbar se guarde solo o le den a OK
+                        if (esExito) {
                             snackbar.addCallback(object : com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback<com.google.android.material.snackbar.Snackbar>() {
-                                override fun onDismissed(transientBottomBar: com.google.android.material.snackbar.Snackbar?, event: Int) {
-                                    // Cuando el snackbar desaparece (por tiempo o swipe), volvemos atrás
+                                override fun onDismissed(t: com.google.android.material.snackbar.Snackbar?, event: Int) {
                                     gymViewModel.resetReservaStatus()
-                                    findNavController().popBackStack()
+                                    if (isAdded) findNavController().navigateUp()
                                 }
                             })
-                            snackbar.setAction("CERRAR") { snackbar.dismiss() }
                         } else {
-                            // Si es error, solo habilitamos el botón para reintentar
                             binding.btnConfirmarReserva.isEnabled = true
                             gymViewModel.resetReservaStatus()
                         }
-
                         snackbar.show()
                     }
                 }
@@ -125,36 +110,27 @@ class ReservaFragment : Fragment() {
         }
     }
 
-    private fun confirmarReservaFinal() {
+    private fun ejecutarProcesoReserva() {
         val horaSel = binding.spinnerHoras.text.toString()
         val fechaSel = binding.etFechaReserva.text.toString()
 
-        println("DEBUG_FRAGMENT: Botón pulsado. Fecha: $fechaSel, Hora: $horaSel")
-
-        if (horaSel.isNotEmpty() && horaSel != getString(R.string.error_no_disponibilidad) && horaSel != getString(R.string.prompt_selecciona_hora)) {
+        if (horaSel.isNotEmpty() && horaSel != getString(R.string.prompt_selecciona_hora)) {
             val sesion = gymViewModel.listaSesiones.value.find { it.hora_inicio == horaSel }
 
             sesion?.let {
-                val misReservas = gymViewModel.listaMisReservas.value
-                println("DEBUG_FRAGMENT: Tengo ${misReservas.size} reservas en memoria para comparar")
-
-                val yaTiene = misReservas.any { r ->
-                    // Añadimos un print para ver qué estamos comparando exactamente
-                    println("COMPARANDO: [${r.fecha_sesion} == $fechaSel] Y [${r.hora_inicio} == $horaSel]")
+                val yaTiene = gymViewModel.listaMisReservas.value.any { r ->
                     r.fecha_sesion == fechaSel && r.hora_inicio == horaSel
                 }
+
                 if (yaTiene) {
-                    println("DEBUG_FRAGMENT: BLOQUEADO: Ya existe una reserva igual")
                     com.google.android.material.snackbar.Snackbar.make(binding.root, getString(R.string.error_reserva_duplicada), com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
                         .setBackgroundTint(resources.getColor(android.R.color.holo_orange_dark, null)).show()
                 } else {
-                    println("DEBUG_FRAGMENT: Todo OK. Llamando a intentarReserva...")
                     binding.btnConfirmarReserva.isEnabled = false
                     gymViewModel.intentarReserva(it)
                 }
             }
         } else {
-            println("DEBUG_FRAGMENT: Error de selección: Hora no válida")
             Toast.makeText(requireContext(), "Selecciona una hora válida", Toast.LENGTH_SHORT).show()
         }
     }
@@ -188,10 +164,8 @@ class ReservaFragment : Fragment() {
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-

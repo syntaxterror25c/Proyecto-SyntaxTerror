@@ -35,10 +35,10 @@ class AuthRepository(
         authDataSource.logout()
     }
 
-    /**
-     * 4. Registro completo (Atómico):
-     * Crea la cuenta en Auth y el perfil en Firestore con el Plan "tatuado".
-     */
+
+     // 4. Registro completo (Atómico):
+     //Crea la cuenta en Auth y el perfil en Firestore con el Plan "tatuado".
+
     suspend fun signupCompleto(
         email: String,
         pass: String,

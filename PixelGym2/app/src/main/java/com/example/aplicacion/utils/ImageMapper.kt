@@ -3,10 +3,10 @@ package com.example.aplicacion.utils
 import com.example.aplicacion.R
 
 object ImageMapper {
-    /**
-     * Convierte el nombre de un String de Firebase al ID del recurso drawable.
-     * Centralizado para que si cambias un nombre, solo lo cambies aquí.
-     */
+
+     // convierte el nombre de un String de Firebase al ID del recurso drawable.
+      // centralizado para que si cambias un nombre, solo lo cambies aquí.
+
     fun getDrawableId(nombreImagen: String?): Int {
         return when (nombreImagen) {
             "im_rec_spinning" -> R.drawable.im_rec_spinning

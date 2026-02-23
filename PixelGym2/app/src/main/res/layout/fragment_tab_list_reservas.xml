@@ -18,19 +18,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- TabItem 1: Todos los Reservas -->
+        <!-- TabItem 1 todos los reservas -->
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_favoritos"/>
-        <!-- TabItem 2: Favoritos-->
+        <!-- TabItem 2 favoritos-->
         <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_todos" />
     </com.google.android.material.tabs.TabLayout>
 
-    <!-- Contenido (Fragmentos ListReservasFragment y ListReservasFavFragment) -->
+    <!-- Contenido (Fragmentos ListReservasFragment y ListReservasFavFragment)) -->
     <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="0dp"

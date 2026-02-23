@@ -72,4 +72,9 @@
               android:label="Contacto"/>
     <fragment android:id="@+id/preferencesFragment" android:name="com.example.aplicacion.fragments.PreferencesFragment"
               android:label="Preferencias"/>
+    <fragment
+            android:id="@+id/perfilFragment"
+            android:name="com.example.aplicacion.fragments.PerfilFragment"
+            android:label="Mi Perfil"
+            tools:layout="@layout/fragment_perfil" />
 </navigation>
