@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Vídeos — Bitácora PixelGym</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Galería de vídeos demostrativos de PixelGym (estilo Netflix) con reproductor integrado." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-light: #111827;
+      --accent: #ff7a00;
+      --accent-soft: rgba(255, 122, 0, 0.12);
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border: #1f2937;
+    }
+
+    body.light-theme {
+      --bg: #f3f4f6;
+      --bg-light: #ffffff;
+      --accent: #ff7a00;
+      --accent-soft: rgba(255, 122, 0, 0.12);
+      --text: #040a16;
+      --text-soft: #4b5563;
+      --border: #e5e7eb;
+      background: radial-gradient(circle at top, #e5e7eb, #ffffff);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      color: var(--text);
+      transition: 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      background: linear-gradient(to right, #ff7a00, #ff7a0055, transparent);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header h1 { margin: 0; font-size: 1.15rem; }
+    header p { margin: 0; font-size: 0.78rem; color: var(--text-soft); }
+
+    #logo-syntaxterror {
+      height: 72px;
+      margin-right: 20px;
+      filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.6));
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    #logo-syntaxterror:hover {
+      transform: scale(1.05) rotate(-1deg);
+      filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.9));
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--text-soft);
+      text-decoration: none;
+      margin-left: 0.5rem;
+      font-size: 0.82rem;
+    }
+    nav a:hover { color: var(--accent); }
+
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
+      color: var(--text-soft);
+      padding: 0.35rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+    .theme-toggle:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .nav-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 14px;
+      margin-left: 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,122,0,0.45);
+      background: linear-gradient(135deg, rgba(255,122,0,0.16), rgba(255,122,0,0.06));
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration:none;
+      transition: transform .22s ease, box-shadow .22s ease, background .22s ease, color .22s ease, border-color .22s ease;
+      white-space: nowrap;
+    }
+    .nav-btn:hover{
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(255,122,0,0.45);
+      border-color: rgba(255,122,0,0.65);
+    }
+    .nav-btn.strong{
+      background: linear-gradient(135deg, rgba(255,122,0,0.26), rgba(255,122,0,0.10));
+      border-color: rgba(255,122,0,0.65);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 1.5rem auto 2rem;
+      padding: 0 1rem 2rem;
+    }
+
+    .card {
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.3rem;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      background-color: var(--bg-light);
+      margin-bottom: 1.2rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .small { font-size: 0.88rem; color: var(--text-soft); }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 1100px) { .media-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 800px)  { .media-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px)  { .media-grid { grid-template-columns: 1fr; } }
+
+    .media-card {
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,.18);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      text-align: left;
+      padding: 0;
+      color: inherit;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .media-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+      border-color: rgba(255,122,0,0.55);
+    }
+
+    .media-thumb {
+      height: 120px;
+      background: linear-gradient(135deg, rgba(255,122,0,.18), rgba(2,6,23,.35));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .media-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,122,0,.16);
+      border: 1px solid rgba(255,122,0,.45);
+      color: var(--accent);
+    }
+    .media-play {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,122,0,.55);
+      background: rgba(2,6,23,.35);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 1000;
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    }
+
+    .media-meta { padding: 12px; }
+    .media-title { font-weight: 900; }
+    .media-sub { color: var(--text-soft); font-size: 0.85rem; margin-top: 2px; }
+    .media-path { color: var(--text-soft); font-size: 0.72rem; margin-top: 8px; opacity: .75; }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.68);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 50;
+    }
+    .modal.open { display: flex; }
+    .modal-box {
+      width: min(1100px, 100%);
+      background: rgba(2,6,23,.92);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.55);
+    }
+    .modal-head {
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(2,6,23,.65);
+    }
+    .modal-title {
+      font-weight: 900;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .close-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,122,0,0.55);
+      background: rgba(255,122,0,0.10);
+      color: var(--text);
+      padding: 7px 12px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 0.78rem;
+    }
+    .close-btn:hover { background: rgba(255,122,0,0.22); }
+    .player {
+      width: 100%;
+      height: min(70vh, 620px);
+      background: #000;
+    }
+    .modal-foot {
+      padding: 10px 14px 14px;
+      color: var(--text-soft);
+      font-size: 0.85rem;
+      display:flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+    }
+    .direct-link a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 800;
+    }
+    .direct-link a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      padding: 1.8rem 1rem 1.2rem;
+      margin-top: 1.5rem;
+      font-family: monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border-top: 1px solid var(--border);
+      background: rgba(15,23,42,.35);
+    }
+  </style>
+</head>
+<body>
+<header>
+  <img id="logo-syntaxterror" src="Multimedia/Imagenes/Logos/Proyecto/logo.png" alt="Logo SyntaxTerror">
+  <div>
+    <h1>Vídeos demostrativos <span class="badge">PixelGym</span></h1>
+    <p>Galería estilo “Netflix” con reproductor integrado</p>
+  </div>
+  <nav>
+    <a href="index.html">⬅ Volver</a>
+    <a href="actividades_logos.html" class="nav-btn">🏋️ Actividades</a>
+    <a href="index2.html" class="nav-btn strong">📅 Cronograma</a>
+    <a href="consultas_utilizadas.html" class="nav-btn strong">🔥 Consultas Firestore</a>
+    <a href="videos.html" class="nav-btn strong">🎬 Vídeos</a>
+    <button id="themeToggle" class="theme-toggle">🌙</button>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <h2>Galería <span class="badge">8 vídeos</span></h2>
+    <p class="small">
+      Pulsa en un vídeo para abrir el reproductor. Si algún navegador te da problemas, usa el enlace directo en el modal.
+    </p>
+    <div class="media-grid" aria-label="Galería de vídeos">
+      
+      <button class="media-card" type="button" data-title="Entrando a PixelGym" data-src="Multimedia/entrar.mp4">
+        <div class="media-thumb">
+          <div class="media-badge">VIDEO</div>
+          <div class="media-play">▶</div>
+        </div>
+        <div class="media-meta">
+          <div class="media-title">Entrando a PixelGym</div>
+          <div class="media-sub">Un día cualquiera en el gym</div>
+          <div class="media-path">Multimedia/entrar.mp4</div>
+        </div>
+      </button>
+    
+      <button class="media-card" type="button" data-title="Cardio" data-src="Multimedia/cardio.mp4">
+        <div class="media-thumb">
+          <div class="media-badge">VIDEO</div>
+          <div class="media-play">▶</div>
+        </div>
+        <div class="media-meta">
+          <div class="media-title">Cardio</div>
+          <div class="media-sub">Demostración de cardio</div>
+          <div class="media-path">Multimedia/cardio.mp4</div>
+        </div>
+      </button>
+    
+      <button class="media-card" type="button" data-title="Crossfit" data-src="Multimedia/crossfit.mp4">
+        <div class="media-thumb">
+          <div class="media-badge">VIDEO</div>
+          <div class="media-play">▶</div>
+        </div>
+        <div class="media-meta">
+          <div class="media-title">Crossfit</div>
+          <div class="media-sub">Rutina de crossfit</div>
+          <div class="media-path">Multimedia/crossfit.mp4</div>
+        </div>
+      </button>
+    
+      <button class="media-card" type="button" data-title="Fitboxing" data-src="Multimedia/fitboxing.mp4">
+        <div class="media-thumb">
+          <div class="media-badge">VIDEO</div>
+          <div class="media-play">▶</div>
+        </div>
+        <div class="media-meta">
+          <div class="media-title">Fitboxing</div>
+          <div class="media-sub">Sesión de fitboxing</div>
+          <div class="media-path">Multimedia/fitboxing.mp4</div>
+        </div>
+      </button>
+    
+      <button class="media-card" type="button" data-title="Musculación" data-src="Multimedia/musculacion.mp4">
+        <div class="media-thumb">
+          <div class="media-badge">VIDEO</div>
+          <div class="media-play">▶</div>
+        </div>
+        <div class="media-meta">
+          <div class="media-title">Musculación</div>
+          <div class="media-sub">Entrenamiento de fuerza</div>
+          <div class="media-path">Multimedia/musculacion.mp4</div>
+        </div>
+      </button>
+    
+      <button class="media-card" type="button" data-title="Zumba" data-src="Multimedia/zumba.mp4">
+        <div class="media-thumb">
+          <div class="media-badge">VIDEO</div>
+          <div class="media-play">▶</div>
+        </div>
+        <div class="media-meta">
+          <div class="media-title">Zumba</div>
+          <div class="media-sub">Clase de zumba</div>
+          <div class="media-path">Multimedia/zumba.mp4</div>
+        </div>
+      </button>
+    
+      <button class="media-card" type="button" data-title="Vista general PixelGym" data-src="Multimedia/pyxelgymvideo.mp4">
+        <div class="media-thumb">
+          <div class="media-badge">VIDEO</div>
+          <div class="media-play">▶</div>
+        </div>
+        <div class="media-meta">
+          <div class="media-title">Vista general PixelGym</div>
+          <div class="media-sub">Recorrido general de la app</div>
+          <div class="media-path">Multimedia/pyxelgymvideo.mp4</div>
+        </div>
+      </button>
+    
+      <button class="media-card" type="button" data-title="PixelGym (alt)" data-src="Multimedia/PYXELGYM.mp4">
+        <div class="media-thumb">
+          <div class="media-badge">VIDEO</div>
+          <div class="media-play">▶</div>
+        </div>
+        <div class="media-meta">
+          <div class="media-title">PixelGym (alt)</div>
+          <div class="media-sub">Vídeo alternativo</div>
+          <div class="media-path">Multimedia/PYXELGYM.mp4</div>
+        </div>
+      </button>
+    
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="videoModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-label="Reproductor de vídeo">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">Reproductor</div>
+      <button class="close-btn" id="closeModal">✖ Cerrar</button>
+    </div>
+    <video class="player" id="player" controls playsinline preload="metadata"></video>
+    <div class="modal-foot">
+      <div class="direct-link" id="directLink"></div>
+      <div>Tip: si quieres autoplay en móvil, hay que usar <b>muted</b>.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  SYNTAXTERROR · CODE · LEARN · BUILD
+</footer>
+
+<script>
+  const body = document.body;
+  const toggleBtn = document.getElementById('themeToggle');
+
+  function applyStoredTheme() {
+    const stored = localStorage.getItem('syntaxterror-theme');
+    if (stored === 'light') {
+      body.classList.add('light-theme');
+      toggleBtn.textContent = '🌙';
+    } else {
+      body.classList.remove('light-theme');
+      toggleBtn.textContent = '☀️';
+    }
+  }
+  toggleBtn.addEventListener('click', () => {
+    body.classList.toggle('light-theme');
+    const isLight = body.classList.contains('light-theme');
+    localStorage.setItem('syntaxterror-theme', isLight ? 'light' : 'dark');
+    applyStoredTheme();
+  });
+  applyStoredTheme();
+
+  const modal = document.getElementById('videoModal');
+  const player = document.getElementById('player');
+  const modalTitle = document.getElementById('modalTitle');
+  const closeModal = document.getElementById('closeModal');
+  const directLink = document.getElementById('directLink');
+
+  function openModal(title, src) {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    modalTitle.textContent = title;
+
+    const encoded = encodeURI(src);
+    player.pause();
+    player.removeAttribute('src');
+    player.load();
+
+    player.src = encoded;
+    player.load();
+
+    directLink.innerHTML = `Enlace directo: <a href="${encoded}" target="_blank" rel="noopener">abrir vídeo</a>`;
+  }
+
+  function shutdown() {
+    player.pause();
+    player.removeAttribute('src');
+    player.load();
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('.media-card');
+    if (!card) return;
+    openModal(card.dataset.title || 'Vídeo', card.dataset.src || '');
+  });
+
+  closeModal.addEventListener('click', shutdown);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) shutdown();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') shutdown();
+  });
+</script>
+</body>
+</html>

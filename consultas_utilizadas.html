@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Consultas Firestore — Bitácora SyntaxTerror</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Listado de consultas Firestore utilizadas en PixelGym (extraídas del código), con rangos de líneas y fragmentos." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-light: #111827;
+      --accent: #ff7a00;
+      --accent-soft: rgba(255, 122, 0, 0.12);
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border: #1f2937;
+    }
+
+    body.light-theme {
+      --bg: #f3f4f6;
+      --bg-light: #ffffff;
+      --accent: #ff7a00;
+      --accent-soft: rgba(255, 122, 0, 0.12);
+      --text: #040a16;
+      --text-soft: #4b5563;
+      --border: #e5e7eb;
+      background: radial-gradient(circle at top, #e5e7eb, #ffffff);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      color: var(--text);
+      transition: 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      background: linear-gradient(to right, #ff7a00, #ff7a0055, transparent);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header h1 { margin: 0; font-size: 1.15rem; }
+    header p { margin: 0; font-size: 0.78rem; color: var(--text-soft); }
+
+    #logo-syntaxterror {
+      height: 72px;
+      margin-right: 20px;
+      filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.6));
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    #logo-syntaxterror:hover {
+      transform: scale(1.05) rotate(-1deg);
+      filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.9));
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--text-soft);
+      text-decoration: none;
+      margin-left: 0.5rem;
+      font-size: 0.82rem;
+    }
+    nav a:hover { color: var(--accent); }
+
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
+      color: var(--text-soft);
+      padding: 0.35rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+    .theme-toggle:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .nav-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 14px;
+      margin-left: 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,122,0,0.45);
+      background: linear-gradient(135deg, rgba(255,122,0,0.16), rgba(255,122,0,0.06));
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration:none;
+      transition: transform .22s ease, box-shadow .22s ease, background .22s ease, color .22s ease, border-color .22s ease;
+      white-space: nowrap;
+    }
+    .nav-btn:hover{
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(255,122,0,0.45);
+      border-color: rgba(255,122,0,0.65);
+    }
+    .nav-btn.strong{
+      background: linear-gradient(135deg, rgba(255,122,0,0.26), rgba(255,122,0,0.10));
+      border-color: rgba(255,122,0,0.65);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 1.5rem auto 2rem;
+      padding: 0 1rem 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 2.2fr);
+      gap: 1.2rem;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; }
+      nav { width: 100%; justify-content: flex-start; }
+      nav a { margin-left: 0; margin-right: 0.6rem; margin-top: 0.3rem; }
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.3rem;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      background-color: var(--bg-light);
+      margin-bottom: 1.2rem;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .small { font-size: 0.88rem; color: var(--text-soft); }
+
+    .toc {
+      position: sticky;
+      top: 108px;
+      max-height: calc(100vh - 130px);
+      overflow: auto;
+    }
+    .toc-item {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 12px;
+      color: var(--text-soft);
+      text-decoration: none;
+      border: 1px solid transparent;
+      margin-bottom: 8px;
+      background: rgba(2,6,23,.18);
+    }
+    .toc-item:hover {
+      border-color: rgba(255,122,0,0.45);
+      color: var(--text);
+      background: rgba(255,122,0,0.08);
+    }
+
+    .toolbar {
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    input[type="search"] {
+      width: min(520px, 100%);
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,.25);
+      color: var(--text);
+      outline: none;
+    }
+    input[type="search"]::placeholder { color: var(--text-soft); }
+
+    .chip {
+      display:inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,122,0,0.35);
+      background: rgba(255,122,0,0.08);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip.active {
+      background: rgba(255,122,0,0.22);
+      border-color: rgba(255,122,0,0.65);
+      color: var(--text);
+    }
+
+    .snippet {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-top: 12px;
+      background: rgba(2,6,23,.20);
+    }
+    .snippet-head {
+      display:flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(2,6,23,.30);
+    }
+    .snippet-meta {
+      font-size: 0.82rem;
+      color: var(--text-soft);
+    }
+    .copy-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,122,0,0.55);
+      background: rgba(255,122,0,0.10);
+      color: var(--text);
+      padding: 7px 12px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 0.78rem;
+    }
+    .copy-btn:hover {
+      background: rgba(255,122,0,0.22);
+    }
+
+    pre, code { font-family: "JetBrains Mono", Consolas, monospace; }
+    pre {
+      margin: 0;
+      padding: 12px;
+      overflow: auto;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      background: #020617;
+      color: var(--text);
+    }
+
+    mark {
+      background: rgba(255,122,0,0.22);
+      color: inherit;
+      padding: 0 3px;
+      border-radius: 4px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      padding: 1.8rem 1rem 1.2rem;
+      margin-top: 1.5rem;
+      font-family: monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border-top: 1px solid var(--border);
+      background: rgba(15,23,42,.35);
+    }
+  </style>
+</head>
+<body>
+<header>
+  <img id="logo-syntaxterror" src="Multimedia/Imagenes/Logos/Proyecto/logo.png" alt="Logo SyntaxTerror">
+  <div>
+    <h1>Consultas Firestore <span class="badge">PixelGym</span></h1>
+    <p>Listado de consultas extraídas del código (sin PDF) · Firebase/Firestore</p>
+  </div>
+  <nav>
+    <a href="index.html">⬅ Volver</a>
+    <a href="actividades_logos.html" class="nav-btn">🏋️ Actividades</a>
+    <a href="index2.html" class="nav-btn strong">📅 Cronograma</a>
+    <a href="consultas_utilizadas.html" class="nav-btn strong">🔥 Consultas Firestore</a>
+    <button id="themeToggle" class="theme-toggle">🌙</button>
+  </nav>
+</header>
+
+<main>
+  <div class="grid">
+    <aside class="card toc">
+      <h2>Índice <span class="badge">8 ficheros</span></h2>
+      <p class="small">Pulsa para saltar al fichero. Usa el buscador para filtrar.</p>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Buscar por texto (collection, where, usuarios, sesiones...)">
+      </div>
+      <div class="toolbar" id="chips"><span class="chip" data-op="collection(">collection(</span> <span class="chip" data-op="document(">document(</span> <span class="chip" data-op="where">where</span> <span class="chip" data-op="orderBy">orderBy</span> <span class="chip" data-op="limit">limit</span> <span class="chip" data-op="get()">get()</span> <span class="chip" data-op="set(">set(</span> <span class="chip" data-op="update(">update(</span> <span class="chip" data-op="delete(">delete(</span> <span class="chip" data-op="runTransaction">runTransaction</span> <span class="chip" data-op="batch">batch</span></div>
+      <div style="margin-top:12px;">
+        <a class="toc-item" href="#app-src-main-java-com-example-aplicacion-mainactivity-kt">• MainActivity.kt</a>
+<a class="toc-item" href="#app-src-main-java-com-example-aplicacion-firebase-authrepository-kt">• AuthRepository.kt</a>
+<a class="toc-item" href="#app-src-main-java-com-example-aplicacion-firebase-firebaseprovider-kt">• FirebaseProvider.kt</a>
+<a class="toc-item" href="#app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt">• GymRepository.kt</a>
+<a class="toc-item" href="#app-src-main-java-com-example-aplicacion-firebase-data-sesiondatasource-kt">• SesionDataSource.kt</a>
+<a class="toc-item" href="#app-src-main-java-com-example-aplicacion-firebase-data-userdatasource-kt">• UserDataSource.kt</a>
+<a class="toc-item" href="#app-src-main-java-com-example-aplicacion-fragments-detalleactividadfragment-kt">• DetalleActividadFragment.kt</a>
+<a class="toc-item" href="#app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt">• GymViewModel.kt</a>
+      </div>
+    </aside>
+
+    <div>
+      <section class="card">
+        <h2>Cómo leer esto <span class="badge">rápido</span></h2>
+        <p class="small">
+          Cada bloque indica el <b>fichero</b> y el <b>rango de líneas</b> donde aparece una operación Firestore.
+          Puedes <b>copiar</b> cualquier fragmento con el botón 📋.
+        </p>
+      </section>
+
+      
+    <section class="card file" id="app-src-main-java-com-example-aplicacion-mainactivity-kt">
+      <h2>📄 app/src/main/java/com/example/aplicacion/MainActivity.kt <span class="badge">1 fragmento(s)</span></h2>
+      <p class="small">Fragmentos del proyecto donde se usan operaciones Firestore.</p>
+    
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/MainActivity.kt" data-range="197-210">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>197-210</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-mainactivity-kt-197-210">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-mainactivity-kt-197-210">val user = ServiceLocator.authRepository.getCurrentUser()
+if (user != null &amp;&amp; binding.navigationView.headerCount &gt; 0) {
+val headerView = binding.navigationView.getHeaderView(0)
+val tvName = headerView.findViewById&lt;android.widget.TextView&gt;(R.id.textViewName)
+// buscamos el documento del usuario por su UID
+val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+db.collection(&quot;usuarios&quot;).document(user.uid).get()
+.addOnSuccessListener { document -&gt;
+if (document != null &amp;&amp; document.exists()) {
+// extraemos el campo &quot;nombre_usuario&quot; y lo mostramos, si no existe mostramos el email
+val nick = document.getString(&quot;nombre_usuario&quot;) ?: user.email
+tvName?.text = nick
+} else {
+Pagina 2
+
+PixelGym2 - Consultas Firestore extraidas</code></pre>
+        </div>
+        
+</section>
+
+    <section class="card file" id="app-src-main-java-com-example-aplicacion-firebase-authrepository-kt">
+      <h2>📄 app/src/main/java/com/example/aplicacion/firebase/AuthRepository.kt <span class="badge">1 fragmento(s)</span></h2>
+      <p class="small">Fragmentos del proyecto donde se usan operaciones Firestore.</p>
+    
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/AuthRepository.kt" data-range="71-84">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>71-84</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-authrepository-kt-71-84">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-authrepository-kt-71-84">Result.failure(e)
+}
+}
+suspend fun fetchTarifas(): List&lt;Tarifa&gt; {
+return try {
+// Necesitamos obtener la instancia de Firestore primero
+val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+val snapshot = db.collection(&quot;tarifas&quot;).get().await()
+snapshot.toObjects(Tarifa::class.java)
+} catch (e: Exception) {
+android.util.Log.e(&quot;ERROR_REPO&quot;, &quot;Error cargando tarifas: ${e.message}&quot;)
+emptyList()
+}
+}
+Pagina 3
+
+PixelGym2 - Consultas Firestore extraidas</code></pre>
+        </div>
+        
+</section>
+
+    <section class="card file" id="app-src-main-java-com-example-aplicacion-firebase-firebaseprovider-kt">
+      <h2>📄 app/src/main/java/com/example/aplicacion/firebase/FirebaseProvider.kt <span class="badge">1 fragmento(s)</span></h2>
+      <p class="small">Fragmentos del proyecto donde se usan operaciones Firestore.</p>
+    
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/FirebaseProvider.kt" data-range="1-19">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>1-19</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-firebaseprovider-kt-1-19">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-firebaseprovider-kt-1-19">package com.example.aplicacion.firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+// Proveedor de instancias de FirebaseAuth y FirebaseFirestore utilizando el patrón Singleton todo empieza aqui
+object FirebaseProvider {
+@Volatile private var auth: FirebaseAuth? = null
+@Volatile private var firestore: FirebaseFirestore? = null
+fun provideAuth(): FirebaseAuth =
+auth ?: synchronized(this) {
+auth ?: FirebaseAuth.getInstance().also { auth = it }
+}
+fun provideFirestore(): FirebaseFirestore =
+firestore ?: synchronized(this) {
+firestore ?: FirebaseFirestore.getInstance().also { firestore = it }
+}
+}
+Pagina 4
+
+PixelGym2 - Consultas Firestore extraidas</code></pre>
+        </div>
+        
+</section>
+
+    <section class="card file" id="app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt">
+      <h2>📄 app/src/main/java/com/example/aplicacion/firebase/GymRepository.kt <span class="badge">4 fragmento(s)</span></h2>
+      <p class="small">Fragmentos del proyecto donde se usan operaciones Firestore.</p>
+    
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/GymRepository.kt" data-range="1-19">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>1-19</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt-1-19">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt-1-19">package com.example.aplicacion.firebase
+import com.example.aplicacion.firebase.data.SesionDataSource
+import com.example.aplicacion.model.Actividad
+import com.example.aplicacion.model.Reserva
+import com.example.aplicacion.model.Sesion
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FieldValue
+import kotlinx.coroutines.tasks.await
+class GymRepository(private val sesionDataSource: SesionDataSource) {
+private val db = FirebaseFirestore.getInstance()
+suspend fun fetchSesiones(): List&lt;Sesion&gt; = sesionDataSource.getSesiones()
+suspend fun fetchMisReservas(userId: String): List&lt;Reserva&gt; = sesionDataSource.getMisReservas(userId)
+suspend fun fetchActividades(): List&lt;Actividad&gt; = sesionDataSource.getActividades()</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/GymRepository.kt" data-range="25-47">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>25-47</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt-25-47">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt-25-47">/**
+* Obtiene los créditos actuales del usuario
+*/
+suspend fun fetchCreditosUsuario(userId: String): Int {
+return try {
+val snapshot = db.collection(&quot;usuarios&quot;).document(userId).get().await()
+snapshot.getLong(&quot;creditos&quot;)?.toInt() ?: 0
+} catch (e: Exception) {
+0
+}
+}
+suspend fun fetchUserData(userId: String): Map&lt;String, Any&gt;? {
+return try {
+// Vamos a la colección &quot;usuarios&quot; y buscamos el documento por ID
+val document = db.collection(&quot;usuarios&quot;).document(userId).get().await()
+// Devolvemos los datos del documento como un Mapa (String -&gt; Valor)
+document.data
+} catch (e: Exception) {
+// Si hay algún error (falta de red, etc.), devolvemos nulo para no romper la app
+println(&quot;ERROR_REPO: No se han podido obtener los datos del usuario: ${e.message}&quot;)</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/GymRepository.kt" data-range="52-69">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>52-69</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt-52-69">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt-52-69">// PROCESO DE RESERVA COMPLETO (Transacción)
+// 1. Descuenta créditos al usuario
+// 2. Suma 1 al aforo de la sesión
+// 3. Crea el documento de reserva
+suspend fun addReserva(userId: String, sesion: Sesion): Boolean {
+val userRef = db.collection(&quot;usuarios&quot;).document(userId)
+val sesionRef = db.collection(&quot;sesiones&quot;).document(sesion.id)
+val docReservaRef = db.collection(&quot;reservas&quot;).document()
+return try {
+db.runTransaction { transaction -&gt;
+val userSnap = transaction.get(userRef)
+val sesionSnap = transaction.get(sesionRef)
+// 1. EXTRAER CRÉDITOS (Búsqueda flexible)
+val suscripcion = userSnap.get(&quot;suscripcion_actual&quot;) as? Map&lt;*, *&gt;
+val creditosActuales = (suscripcion?.get(&quot;creditos&quot;) as? Number)?.toLong()</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/GymRepository.kt" data-range="119-136">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>119-136</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt-119-136">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-gymrepository-kt-119-136">// ELIMINAR RESERVA (Transacción inversa)
+// Devuelve el crédito y libera la plaza
+suspend fun eliminarReserva(reserva: Reserva): Boolean {
+Pagina 5
+
+PixelGym2 - Consultas Firestore extraidas
+val userRef = db.collection(&quot;usuarios&quot;).document(reserva.uid)
+val sesionRef = db.collection(&quot;sesiones&quot;).document(reserva.id_sesion_reservada)
+val reservaRef = db.collection(&quot;reservas&quot;).document(reserva.id_reserva)
+return try {
+db.runTransaction { transaction -&gt;
+// Usamos el coste que guardamos en la reserva convertido a Long por Firestore
+val costeADevolver = reserva.coste.toLong()
+// ACTUALIZACIÓN DE CRÉDITOS
+// Usamos FieldValue.increment con el coste real,
+transaction.update(userRef, &quot;suscripcion_actual.creditos&quot;, FieldValue.increment(costeADevolver))
+// CTUALIZACIÓN DE SESIÓN: Restamos 1 a las plazas ocupadas
+Pagina 6
+
+PixelGym2 - Consultas Firestore extraidas</code></pre>
+        </div>
+        
+</section>
+
+    <section class="card file" id="app-src-main-java-com-example-aplicacion-firebase-data-sesiondatasource-kt">
+      <h2>📄 app/src/main/java/com/example/aplicacion/firebase/data/SesionDataSource.kt <span class="badge">1 fragmento(s)</span></h2>
+      <p class="small">Fragmentos del proyecto donde se usan operaciones Firestore.</p>
+    
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/data/SesionDataSource.kt" data-range="1-64">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>1-64</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-data-sesiondatasource-kt-1-64">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-data-sesiondatasource-kt-1-64">package com.example.aplicacion.firebase.data
+import com.example.aplicacion.model.Actividad
+import com.example.aplicacion.model.Reserva
+import com.example.aplicacion.model.Sesion
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+class SesionDataSource {
+private val db = FirebaseFirestore.getInstance()
+suspend fun getSesiones(): List&lt;Sesion&gt; = try {
+val snapshot = db.collection(&quot;sesiones&quot;).get().await()
+snapshot.documents.mapNotNull { doc -&gt;
+val sesion = doc.toObject(Sesion::class.java)
+sesion?.copy(id = doc.id) // &lt;--- Aquí inyectamos el ID del documento
+}
+} catch (e: Exception) { emptyList() }
+suspend fun getMisReservas(userId: String): List&lt;Reserva&gt; = try {
+db.collection(&quot;reservas&quot;)
+.whereEqualTo(&quot;uid&quot;, userId)
+.get().await().toObjects(Reserva::class.java)
+} catch (e: Exception) {
+emptyList()
+}
+suspend fun realizarReserva(reserva: Reserva): Boolean = try {
+db.collection(&quot;reservas&quot;).add(reserva).await()
+true
+} catch (e: Exception) { false }
+suspend fun eliminarReserva(idReserva: String): Boolean = try {
+db.collection(&quot;reservas&quot;).document(idReserva).delete().await()
+true
+} catch (e: Exception) { false }
+suspend fun getActividades(): List&lt;Actividad&gt; = try {
+db.collection(&quot;actividades&quot;).get().await().toObjects(Actividad::class.java)
+} catch (e: Exception) { emptyList() }
+suspend fun getSesionesPorNombre(nombre: String): List&lt;Sesion&gt; = try {
+val snapshot = db.collection(&quot;sesiones&quot;)
+.whereEqualTo(&quot;nombre_actividad&quot;, nombre)
+.get().await()
+snapshot.documents.mapNotNull { doc -&gt;
+val sesion = doc.toObject(Sesion::class.java)
+sesion?.copy(id = doc.id) // &lt;--- Aquí también
+}
+} catch (e: Exception) { emptyList() }
+// Función necesaria para cargarSesionesPorFecha
+suspend fun getSesionesPorNombreYFecha(nombre: String, fecha: String): List&lt;Sesion&gt; = try {
+val snapshot = db.collection(&quot;sesiones&quot;)
+.whereEqualTo(&quot;nombre_actividad&quot;, nombre)
+.whereEqualTo(&quot;fecha&quot;, fecha)
+.get().await()
+snapshot.documents.mapNotNull { doc -&gt;
+val sesion = doc.toObject(Sesion::class.java)
+sesion?.copy(id = doc.id) // &lt;--- Y aquí
+}
+} catch (e: Exception) { emptyList() }
+Pagina 7
+
+PixelGym2 - Consultas Firestore extraidas</code></pre>
+        </div>
+        
+</section>
+
+    <section class="card file" id="app-src-main-java-com-example-aplicacion-firebase-data-userdatasource-kt">
+      <h2>📄 app/src/main/java/com/example/aplicacion/firebase/data/UserDataSource.kt <span class="badge">2 fragmento(s)</span></h2>
+      <p class="small">Fragmentos del proyecto donde se usan operaciones Firestore.</p>
+    
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/data/UserDataSource.kt" data-range="1-12">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>1-12</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-data-userdatasource-kt-1-12">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-data-userdatasource-kt-1-12">package com.example.aplicacion.firebase.data
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+class UserDataSource(private val db: FirebaseFirestore) {
+suspend fun saveUserInFirestore(
+uid: String,
+nombreUsuario: String,
+email: String,
+idPlan: String,</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/firebase/data/UserDataSource.kt" data-range="30-42">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>30-42</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-firebase-data-userdatasource-kt-30-42">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-firebase-data-userdatasource-kt-30-42">&quot;mes_anio&quot; to getMesAnioActual(), // Usamos la función que ya tienes abajo
+&quot;sesiones_gastadas&quot; to 0
+)
+)
+// Esto creará la colección &quot;usuarios&quot; si no existe al insertar el primer documento
+db.collection(&quot;usuarios&quot;).document(uid).set(userMap).await()
+}
+private fun getMesAnioActual(): String {
+val sdf = java.text.SimpleDateFormat(&quot;MM_yyyy&quot;, java.util.Locale.getDefault())
+return sdf.format(java.util.Date())
+}
+Pagina 8
+
+PixelGym2 - Consultas Firestore extraidas</code></pre>
+        </div>
+        
+</section>
+
+    <section class="card file" id="app-src-main-java-com-example-aplicacion-fragments-detalleactividadfragment-kt">
+      <h2>📄 app/src/main/java/com/example/aplicacion/fragments/DetalleActividadFragment.kt <span class="badge">2 fragmento(s)</span></h2>
+      <p class="small">Fragmentos del proyecto donde se usan operaciones Firestore.</p>
+    
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/fragments/DetalleActividadFragment.kt" data-range="7-28">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>7-28</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-fragments-detalleactividadfragment-kt-7-28">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-fragments-detalleactividadfragment-kt-7-28">import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.example.aplicacion.databinding.FragmentDetalleActividadBinding
+import com.example.aplicacion.utils.ImageMapper
+import com.example.aplicacion.viewmodels.GymViewModel
+// AÑADIMOS ESTA IMPORTACIÓN
+import com.google.firebase.firestore.FirebaseFirestore
+class DetalleActividadFragment : Fragment() {
+private var _binding: FragmentDetalleActividadBinding? = null
+private val binding get() = _binding!!
+private val gymViewModel: GymViewModel by activityViewModels()
+// Instancia de Firestore
+private val db = FirebaseFirestore.getInstance()
+override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+_binding = FragmentDetalleActividadBinding.inflate(inflater, container, false)
+return binding.root
+}</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/fragments/DetalleActividadFragment.kt" data-range="42-55">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>42-55</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-fragments-detalleactividadfragment-kt-42-55">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-fragments-detalleactividadfragment-kt-42-55">com.bumptech.glide.Glide.with(this)
+.load(resourceId)
+.centerCrop()
+.into(binding.ivActividadDetalle)
+// --- NUEVO BLOQUE: CONSULTA DE SESIONES ---
+db.collection(&quot;sesiones&quot;)
+.whereEqualTo(&quot;nombre_actividad&quot;, itActividad.nombre)
+.get()
+.addOnSuccessListener { documentos -&gt;
+val listaHoras = documentos.mapNotNull { it.getString(&quot;hora_inicio&quot;) }
+.distinct()
+.sorted()
+Pagina 9
+
+PixelGym2 - Consultas Firestore extraidas</code></pre>
+        </div>
+        
+</section>
+
+    <section class="card file" id="app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt">
+      <h2>📄 app/src/main/java/com/example/aplicacion/viewmodels/GymViewModel.kt <span class="badge">6 fragmento(s)</span></h2>
+      <p class="small">Fragmentos del proyecto donde se usan operaciones Firestore.</p>
+    
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/viewmodels/GymViewModel.kt" data-range="179-199">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>179-199</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-179-199">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-179-199">}
+}
+}
+// --- FUNCIONES DE MANTENIMIENTO ---
+fun resetTotalGimnasioPruebas() {
+val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+// 1 LISTA TOTAL: Borramos todo para empezar de cero absoluto
+val colecciones = listOf(&quot;sesiones&quot;, &quot;profesores&quot;, &quot;salas&quot;, &quot;reservas&quot;, &quot;actividades&quot;, &quot;tarifas&quot;, &quot;usuarios&quot;)
+var contadorColecciones = 0
+colecciones.forEach { nombreColeccion -&gt;
+db.collection(nombreColeccion).get().addOnSuccessListener { snapshot -&gt;
+val batch = db.batch()
+for (doc in snapshot) {
+batch.delete(doc.reference)
+}
+batch.commit().addOnCompleteListener {</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/viewmodels/GymViewModel.kt" data-range="210-222">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>210-222</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-210-222">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-210-222">if (contadorColecciones == colecciones.size) ejecutarGrabacionDatosPrueba()
+}
+}
+}
+private fun ejecutarGrabacionDatosPrueba() {
+val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+// --- 1 ACTIVIDADES -------
+val catalogoActividades = listOf(
+mapOf(&quot;nombre&quot; to &quot;Spinning&quot;, &quot;coste&quot; to 1, &quot;imagen&quot; to &quot;im_rec_spinning&quot;, &quot;categoria&quot; to R.string.info_categoria,
+&quot;descripcion&quot; to R.string.spinning_about),
+mapOf(&quot;nombre&quot; to &quot;Cardio&quot;, &quot;coste&quot; to 1, &quot;imagen&quot; to &quot;im_rec_cardio&quot;, &quot;categoria&quot; to R.string.info_categoria,
+&quot;descripcion&quot; to R.string.cardio_about),
+mapOf(&quot;nombre&quot; to &quot;Zumba&quot;, &quot;coste&quot; to 1, &quot;imagen&quot; to &quot;im_rec_zumba&quot;, &quot;categoria&quot; to R.string.baile, &quot;descripcion&quot; to
+R.string.zumba_about),</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/viewmodels/GymViewModel.kt" data-range="225-237">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>225-237</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-225-237">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-225-237">mapOf(&quot;nombre&quot; to R.string.acti_pilates, &quot;coste&quot; to 2, &quot;imagen&quot; to &quot;im_rec_pilates&quot;, &quot;categoria&quot; to
+R.string.cuerpo_mente, &quot;descripcion&quot; to R.string.pilates_about),
+mapOf(&quot;nombre&quot; to &quot;Crossfit&quot;, &quot;coste&quot; to 2, &quot;imagen&quot; to &quot;im_rec_crossfit&quot;, &quot;categoria&quot; to R.string.fuerza, &quot;descripcion&quot;
+to R.string.crossfit_about),
+mapOf(&quot;nombre&quot; to &quot;Fitboxing&quot;, &quot;coste&quot; to 5, &quot;imagen&quot; to &quot;im_rec_fitboxing&quot;, &quot;categoria&quot; to R.string.info_categoria,
+&quot;descripcion&quot; to R.string.fitboxing_about)
+)
+catalogoActividades.forEach { a -&gt;
+db.collection(&quot;actividades&quot;).document(a[&quot;nombre&quot;].toString()).set(a)
+}
+// --- 2 PROFESORES ------
+val profesores = listOf(
+mapOf(&quot;id&quot; to &quot;P01&quot;, &quot;nombre&quot; to &quot;Carlos Ruiz&quot;),
+mapOf(&quot;id&quot; to &quot;P02&quot;, &quot;nombre&quot; to &quot;Marta Sanz&quot;),</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/viewmodels/GymViewModel.kt" data-range="239-255">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>239-255</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-239-255">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-239-255">mapOf(&quot;id&quot; to &quot;P04&quot;, &quot;nombre&quot; to &quot;Laura Punch&quot;),
+mapOf(&quot;id&quot; to &quot;P05&quot;, &quot;nombre&quot; to &quot;Sonia Zen&quot;),
+mapOf(&quot;id&quot; to &quot;P06&quot;, &quot;nombre&quot; to &quot;Elena Core&quot;),
+mapOf(&quot;id&quot; to &quot;P07&quot;, &quot;nombre&quot; to &quot;Dani Flow&quot;),
+mapOf(&quot;id&quot; to &quot;P08&quot;, &quot;nombre&quot; to &quot;Thor&quot;)
+)
+profesores.forEach { p -&gt; db.collection(&quot;profesores&quot;).document(p[&quot;id&quot;] as String).set(p) }
+// --- 3 SALAS ----------
+val salas = listOf(&quot;Sala Ciclo&quot;, &quot;Zona Fuerza&quot;, &quot;Sala Zen&quot;, &quot;Estudio 1&quot;)
+Pagina 10
+
+PixelGym2 - Consultas Firestore extraidas
+salas.forEach { s -&gt; db.collection(&quot;salas&quot;).document(s).set(mapOf(&quot;nombre&quot; to s)) }
+// --- 4 SESIONES (Generación Automática) ----------------------------------
+val sdf = java.text.SimpleDateFormat(&quot;dd/MM/yyyy&quot;, java.util.Locale.getDefault())
+for (dia in 22..28) {
+val cal = java.util.Calendar.getInstance().apply { set(2026, java.util.Calendar.FEBRUARY, dia) }</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/viewmodels/GymViewModel.kt" data-range="269-282">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>269-282</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-269-282">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-269-282">&quot;plazas_ocupadas&quot; to 0,
+&quot;imagen_url&quot; to actividad[&quot;imagen&quot;],
+&quot;coste&quot; to actividad[&quot;coste&quot;],
+&quot;estado_sesion&quot; to &quot;ACTIVA&quot;
+)
+db.collection(&quot;sesiones&quot;).document(idMañana).set(sesionBase.plus(&quot;hora_inicio&quot; to &quot;10:00&quot;))
+db.collection(&quot;sesiones&quot;).document(idTarde).set(sesionBase.plus(&quot;hora_inicio&quot; to &quot;18:00&quot;))
+}
+}
+// --- 5 TARIFAS ----------------
+val tarifas = listOf(
+mapOf(&quot;nombre&quot; to &quot;Simple&quot;, &quot;creditos&quot; to 4, &quot;precio&quot; to 15.99, &quot;descripcion&quot; to &quot;Ideal para probar el gimnasio&quot;),</code></pre>
+        </div>
+        
+
+        <div class="snippet" data-file="app/src/main/java/com/example/aplicacion/viewmodels/GymViewModel.kt" data-range="284-293">
+          <div class="snippet-head">
+            <div class="snippet-meta">Rango: líneas <b>284-293</b></div>
+            <button class="copy-btn" data-copy="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-284-293">📋 Copiar</button>
+          </div>
+          <pre><code id="code-app-src-main-java-com-example-aplicacion-viewmodels-gymviewmodel-kt-284-293">mapOf(&quot;nombre&quot; to &quot;Estándar&quot;, &quot;creditos&quot; to 12, &quot;precio&quot; to 40.79, &quot;descripcion&quot; to &quot;Tres créditos por semana&quot;),
+mapOf(&quot;nombre&quot; to &quot;VIP&quot;, &quot;creditos&quot; to 16, &quot;precio&quot; to 51.19, &quot;descripcion&quot; to &quot;Cuatro créditos por semana&quot;),
+mapOf(&quot;nombre&quot; to &quot;Infinito&quot;, &quot;creditos&quot; to 999, &quot;precio&quot; to 59.99, &quot;descripcion&quot; to &quot;Acceso total ilimitado&quot;)
+)
+tarifas.forEach { t -&gt;
+db.collection(&quot;tarifas&quot;).document(t[&quot;nombre&quot;].toString()).set(t)
+}
+}
+}</code></pre>
+        </div>
+        
+</section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  SYNTAXTERROR · CODE · LEARN · BUILD
+</footer>
+
+<script>
+  const body = document.body;
+  const toggleBtn = document.getElementById('themeToggle');
+  const search = document.getElementById('search');
+  const chips = document.getElementById('chips');
+  const chipEls = Array.from(document.querySelectorAll('.chip'));
+  const snippets = Array.from(document.querySelectorAll('.snippet'));
+  const codeEls = Array.from(document.querySelectorAll('pre code'));
+
+  function applyStoredTheme() {
+    const stored = localStorage.getItem('syntaxterror-theme');
+    if (stored === 'light') {
+      body.classList.add('light-theme');
+      toggleBtn.textContent = '🌙';
+    } else {
+      body.classList.remove('light-theme');
+      toggleBtn.textContent = '☀️';
+    }
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    body.classList.toggle('light-theme');
+    const isLight = body.classList.contains('light-theme');
+    localStorage.setItem('syntaxterror-theme', isLight ? 'light' : 'dark');
+    applyStoredTheme();
+  });
+
+  applyStoredTheme();
+
+  // Copy buttons
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    const id = btn.getAttribute('data-copy');
+    const el = document.getElementById(id);
+    if (!el) return;
+    try {
+      await navigator.clipboard.writeText(el.innerText);
+      btn.textContent = '✅ Copiado';
+      setTimeout(() => btn.textContent = '📋 Copiar', 900);
+    } catch {
+      btn.textContent = '⚠️ No se pudo';
+      setTimeout(() => btn.textContent = '📋 Copiar', 900);
+    }
+  });
+
+  // Highlight search terms inside code
+  function escapeRegExp(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function applyHighlights(term) {
+    const t = term.trim();
+    for (const code of codeEls) {
+      const raw = code.textContent;
+      if (!t) {
+        code.innerHTML = raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        continue;
+      }
+      const safe = escapeRegExp(t);
+      const re = new RegExp(safe, 'gi');
+      const escaped = raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      code.innerHTML = escaped.replace(re, (m) => `<mark>${m}</mark>`);
+    }
+  }
+
+  function currentOpFilter() {
+    const active = chipEls.find(c => c.classList.contains('active'));
+    return active ? active.getAttribute('data-op') : '';
+  }
+
+  function filterSnippets() {
+    const term = search.value.toLowerCase().trim();
+    const op = currentOpFilter();
+    for (const s of snippets) {
+      const code = s.querySelector('code')?.innerText.toLowerCase() || '';
+      const file = s.getAttribute('data-file')?.toLowerCase() || '';
+      const okTerm = !term || code.includes(term) || file.includes(term);
+      const okOp = !op || code.includes(op.toLowerCase());
+      s.style.display = (okTerm && okOp) ? '' : 'none';
+    }
+    // Hide empty file cards
+    const fileCards = Array.from(document.querySelectorAll('.card.file'));
+    for (const card of fileCards) {
+      const anyVisible = Array.from(card.querySelectorAll('.snippet')).some(sn => sn.style.display !== 'none');
+      card.style.display = anyVisible ? '' : 'none';
+    }
+  }
+
+  search.addEventListener('input', () => {
+    applyHighlights(search.value);
+    filterSnippets();
+  });
+
+  chips.addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const already = chip.classList.contains('active');
+    chipEls.forEach(c => c.classList.remove('active'));
+    if (!already) chip.classList.add('active');
+    filterSnippets();
+  });
+
+  // Initial render
+  applyHighlights('');
+  filterSnippets();
+</script>
+</body>
+</html>
