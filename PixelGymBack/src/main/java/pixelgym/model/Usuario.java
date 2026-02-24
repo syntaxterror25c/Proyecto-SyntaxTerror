@@ -10,7 +10,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Usuario {
-    // Campos principales del documento
     private String uid;
     private String nombre_usuario;
     private String nickname;
@@ -18,12 +17,12 @@ public class Usuario {
     private String telefono;
     private String imagen_url;
 
-    // Objetos anidados como Mapas (según tu estructura actual)
+    // Objetos anidados
     private Map<String, Object> suscripcion_actual;
     private Map<String, Object> consumo_actual;
 
     /**
-     * Método para obtener los créditos de forma segura desde el mapa.
+     * Método para obtener los créditos desde el mapa.
      * Extrae 'creditos' dentro de 'suscripcion_actual'.
      */
     public long getCreditos() {

@@ -2,6 +2,7 @@ package pixelgym.model;
 
 import com.google.cloud.firestore.annotation.Exclude;
 import com.google.cloud.firestore.annotation.PropertyName;
+import com.google.cloud.firestore.annotation.IgnoreExtraProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@IgnoreExtraProperties
 public class Sesion {
 
     @Exclude // El ID del documento no es un campo dentro del documento
