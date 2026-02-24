@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>RAs / Módulos aplicados · PixelGym</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-light: #111827;
+      --accent: #ff7a00;
+      --accent-soft: rgba(255, 122, 0, 0.12);
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border: #1f2937;
+    }
+
+    body.light-theme {
+      --bg: #f3f4f6;
+      --bg-light: #ffffff;
+      --accent: #ff7a00;
+      --accent-soft: rgba(255, 122, 0, 0.12);
+      --text: #040a16;
+      --text-soft: #4b5563;
+      --border: #e5e7eb;
+      background: radial-gradient(circle at top, #e5e7eb, #ffffff);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      color: var(--text);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      background: linear-gradient(to right, #ff7a00, #ff7a0055, transparent);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header h1 { margin: 0; font-size: 1.05rem; }
+    header p { margin: 0; font-size: 0.78rem; color: var(--text-soft); }
+
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto 2rem;
+      padding: 0 1rem 2rem;
+    }
+
+    .card {
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.3rem;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      background-color: var(--bg-light);
+    }
+
+    .card + .card { margin-top: 1rem; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin: 0.9rem 0 0.35rem;
+    }
+
+    .small { font-size: 0.85rem; color: var(--text-soft); line-height: 1.6; }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .pill {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      color: var(--text-soft);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.55rem 0.6rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: rgba(15, 23, 42, 0.9);
+      font-weight: 900;
+    }
+    body.light-theme th {
+      background: rgba(15, 23, 42, 0.06);
+    }
+    tr:nth-child(even) td { background: rgba(15, 23, 42, 0.35); }
+    body.light-theme tr:nth-child(even) td { background: rgba(15, 23, 42, 0.03); }
+
+    code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.82rem;
+      background: #020617;
+      padding: 0.15rem 0.35rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    body.light-theme code { background: rgba(15, 23, 42, 0.06); }
+
+    .nav-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,122,0,0.45);
+      background: linear-gradient(135deg, rgba(255,122,0,0.16), rgba(255,122,0,0.06));
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 900;
+      text-decoration:none;
+      transition: transform .22s ease, box-shadow .22s ease, background .22s ease, color .22s ease, border-color .22s ease;
+      white-space: nowrap;
+    }
+    .nav-btn:hover{
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(255,122,0,0.45);
+      border-color: rgba(255,122,0,0.65);
+    }
+    .nav-btn.strong{
+      background: linear-gradient(135deg, rgba(255,122,0,0.26), rgba(255,122,0,0.10));
+      border-color: rgba(255,122,0,0.65);
+    }
+
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
+      color: var(--text-soft);
+      padding: 0.35rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+      gap: 1rem;
+      align-items: start;
+    }
+    @media (max-width: 900px){
+      .grid { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; }
+      .header-actions { width: 100%; justify-content: flex-start; }
+    }
+
+    .list{
+      margin: 0.4rem 0 0;
+      padding-left: 1.1rem;
+    }
+    .list li{ margin: 0.35rem 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>🎯 RAs / Temas aplicados del ciclo DAM <span class="badge">PixelGym</span></h1>
+      <p>Resumen para defensa: “qué del grado hemos aplicado” + evidencias reales</p>
+    </div>
+
+    <div class="header-actions" style="display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+      <a href="index.html" class="nav-btn strong">⟵ Volver</a>
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+     
+      <p class="small">
+        Este apartado resume, de forma clara y defendible, <b>todo lo que hemos aplicado relacionado con el grado</b>
+        durante el desarrollo de <b>PixelGym</b>. Lo usamos para justificar los <b>RAs</b> (Resultados de Aprendizaje)
+        y los contenidos trabajados en los módulos.
+      </p>
+
+      <p class="section-title">Listado de temas aplicados (con explicación)</p>
+
+      <div class="grid">
+        <div>
+          <ul class="list">
+            <li><b>IDE</b>: desarrollo y depuración del proyecto con <b>IntelliJ</b> (estructura, Gradle, ejecución, logs, emulador/dispositivo).</li>
+
+            <li><b>Control de cambios — Git</b>: trabajo colaborativo con <b>Git/GitHub</b>, commits frecuentes, ramas, merges y resolución de conflictos
+              (incluida recuperación tras superposición de versiones).</li>
+
+            <li><b>Interfaces</b>: confección de interfaces desde <b>wireframes</b> hasta pantallas finales.
+              <ul class="list">
+                <li><b>UX</b> (sensaciones): flujo claro (login → reservas → perfil), minimizar fricción, feedback al usuario.</li>
+                <li><b>UI</b> (funcional): componentes, botones, avisos visuales, coherencia de colores y tipografías.</li>
+                <li><b>Usabilidad</b>: soporte <b>multi-idioma</b>, formatos consistentes, mensajes de error útiles, diseño legible.</li>
+                <li><b>Documentación de la app</b>: repositorio (GitHub) + Drive + evidencias + pruebas de usuario.</li>
+              </ul>
+            </li>
+
+            <li><b>PSP — Programación “multihilo”</b>: uso de <b>corrutinas</b> para tareas asíncronas (UI StateFlow, llamadas a Firebase) y buenas prácticas
+              de programación segura (evitar bloqueos y manejar errores).</li>
+
+            <li><b>Programación — Kotlin / Java</b>: POO, arquitectura por capas, ViewModels, patrones básicos y separación de responsabilidades.</li>
+
+            <li><b>Acceso a datos</b>: persistencia y mapeo de datos entre modelos, manejo de estructuras, y serialización/documentación cuando procede.</li>
+
+            <li><b>Programación móvil — Firebase</b>: autenticación con Firebase Auth y persistencia en <b>Cloud Firestore</b> (NoSQL), reglas y estructura de colección.</li>
+
+            <li><b>Sistemas de gestión empresariales (SGE)</b>: enfoque de aplicación como parte de un sistema de gestión (ampliable con panel/admin, perfiles y operaciones).</li>
+
+            <li><b>IPE</b>: habilidades emprendedoras y de proyecto: Gantt, análisis DAFO, enfoque MVP (tipo Lean), Design Thinking y <b>HCD</b> (Human-Centered Design).</li>
+
+            <li><b>Videojuegos / inspiración</b>: estética 8-bit aplicada a branding/identidad visual (coherencia temática).</li>
+
+            <li><b>Bases de datos</b>: NoSQL y comparación con SQL, diagramas (ER/UML), operaciones CRUD y estructura de datos para reservas/tickets/aforo.</li>
+
+            <li><b>Sostenibilidad</b>: app ligera para funcionar en móviles antiguos (reduce obsolescencia); accesibilidad (texto alternativo/claridad);
+              alineación con <b>ODS 9</b> (innovación) y <b>ODS 12</b> (gestión responsable de recursos).</li>
+          </ul>
+        </div>
+
+        <aside>
+          <p class="section-title">Resumen “para decirlo en clase”</p>
+          <p class="small">
+            “En PixelGym hemos aplicado contenidos del ciclo DAM: desarrollo en IDE, control de versiones con Git,
+            diseño de interfaces con enfoque UI/UX y HCD, programación móvil en Kotlin, Firebase Auth y Firestore (NoSQL),
+            concurrencia con corrutinas, modelado de datos (ER/UML), documentación y pruebas, y criterios de sostenibilidad.”
+          </p>
+
+          <p class="section-title">Palabras clave</p>
+          <div class="pill-row">
+            <span class="pill">IntelliJ</span>
+            <span class="pill">Git / GitHub</span>
+            <span class="pill">Wireframes</span>
+            <span class="pill">UI / UX</span>
+            <span class="pill">HCD</span>
+            <span class="pill">Kotlin</span>
+            <span class="pill">Firebase Auth</span>
+            <span class="pill">Firestore NoSQL</span>
+            <span class="pill">Corrutinas</span>
+            <span class="pill">CRUD</span>
+            <span class="pill">DAFO</span>
+            <span class="pill">ODS 9 / 12</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin:0 0 .35rem;">Tabla “Módulo → Evidencia”</h2>
+      <p class="small">Conocimienntos  de cada módulo</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:260px;">Módulo / Tema</th>
+            <th>Qué aplicamos</th>
+            <th style="width:320px;">Evidencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Entornos (IDE)</b></td>
+            <td>Configuración, ejecución, depuración y estructura del proyecto.</td>
+            <td>Repo + capturas/bitácora + ejecución en demo.</td>
+          </tr>
+          <tr>
+            <td><b>Git / Control de versiones</b></td>
+            <td>Ramas, merges, resolución de conflictos y recuperación.</td>
+            <td>Historial de commits + bitácora del sprint final.</td>
+          </tr>
+          <tr>
+            <td><b>DI (UI/UX + Wireframes)</b></td>
+            <td>Diseño de pantallas, navegación, usabilidad e idiomas.</td>
+            <td>Sección UX + wireframes + pantallas funcionales.</td>
+          </tr>
+          <tr>
+            <td><b>PSP (corrutinas)</b></td>
+            <td>Asincronía segura y estados (StateFlow) para Firebase/UI.</td>
+            <td>ViewModels + repositorios + llamadas asíncronas.</td>
+          </tr>
+          <tr>
+            <td><b>Programación (Kotlin/POO)</b></td>
+            <td>Arquitectura, separación de capas, clases y estados.</td>
+            <td>Estructura de paquetes + UML.</td>
+          </tr>
+          <tr>
+            <td><b>BBDD / Acceso a datos</b></td>
+            <td>Firestore (NoSQL) y CRUD: reservas, tickets, aforo.</td>
+            <td>Página de consultas Firestore + diagrama ER/UML.</td>
+          </tr>
+          <tr>
+            <td><b>IPE</b></td>
+            <td>Gantt, DAFO, enfoque MVP/iterativo y HCD.</td>
+            <td>Cronograma + documentación + bitácora.</td>
+          </tr>
+          <tr>
+            <td><b>Sostenibilidad</b></td>
+            <td>App ligera + accesibilidad + ODS 9/12.</td>
+            <td>Sección sostenibilidad (argumentación en memoria).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const body = document.body;
+    const toggleBtn = document.getElementById('themeToggle');
+
+    function applyStoredTheme() {
+      const stored = localStorage.getItem('syntaxterror-theme');
+      if (stored === 'light') {
+        body.classList.add('light-theme');
+        toggleBtn.textContent = '🌙';
+      } else {
+        body.classList.remove('light-theme');
+        toggleBtn.textContent = '☀️';
+      }
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('light-theme');
+      const isLight = body.classList.contains('light-theme');
+      localStorage.setItem('syntaxterror-theme', isLight ? 'light' : 'dark');
+      applyStoredTheme();
+    });
+
+    applyStoredTheme();
+  </script>
+</body>
+</html>
