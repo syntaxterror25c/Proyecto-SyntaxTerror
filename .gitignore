@@ -21,3 +21,6 @@
 
 # Limpieza de errores tipográficos que vimos antes
 .gitnore
+
+index.xml
+index.html
