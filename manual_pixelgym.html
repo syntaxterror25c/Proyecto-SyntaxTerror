@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Manual de Usuario · PixelGym</title>
+
+  <style>
+    :root {
+            --bg: #0f172a;
+            --bg-light: #111827;
+            --accent: #ff7a00;
+            --accent-soft: rgba(255, 122, 0, 0.12);
+            --text: #e5e7eb;
+            --text-soft: #9ca3af;
+            --border: #1f2937;
+        }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body.light-theme {
+      --bg: #f3f4f6;
+      --bg-light: #ffffff;
+      --accent: #ff7a00;
+      --accent-soft: rgba(255, 122, 0, 0.12);
+      --text: #040a16;
+      --text-soft: #4b5563;
+      --border: #e5e7eb;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 16px 56px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(15, 23, 42, .75);
+      border-bottom: 1px solid var(--border);
+    }
+
+    body.light-theme .topbar {
+      background: rgba(243, 244, 246, .85);
+    }
+
+    .topbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1.1;
+    }
+
+    .brand .title {
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .brand .subtitle {
+      color: var(--text-soft);
+      font-size: .92rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+      user-select: none;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn.primary {
+      border-color: rgba(255, 122, 0, .55);
+      background: rgba(255, 122, 0, .12);
+      color: var(--accent);
+    }
+    .btn.primary:hover {
+      background: rgba(255, 122, 0, .18);
+      border-color: rgba(255, 122, 0, .75);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      align-items: start;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+
+    body.light-theme .card {
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+    }
+
+    .card h1 {
+      margin: 0 0 10px;
+      font-size: 1.55rem;
+    }
+
+    .card p {
+      margin: 0 0 10px;
+      color: var(--text-soft);
+    }
+
+    .toc {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 620px) {
+      .toc { grid-template-columns: 1fr; }
+    }
+
+    .toc a {
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      transition: background .2s ease, border-color .2s ease;
+    }
+
+    body.light-theme .toc a {
+      background: rgba(0,0,0,.02);
+    }
+
+    .toc a:hover {
+      border-color: rgba(255,122,0,.55);
+      background: rgba(255,122,0,.08);
+    }
+
+    .chip {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .steps {
+      margin: 18px 0 0;
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+
+    body.light-theme .step {
+      background: rgba(0,0,0,.02);
+    }
+
+    @media (max-width: 900px) {
+      .step { grid-template-columns: 1fr; }
+    }
+
+    .step h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+    }
+
+    .step h2 span {
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .step .meta {
+      margin: 0 0 10px;
+      color: var(--text-soft);
+    }
+
+    .step ol {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text);
+    }
+
+    .step li {
+      margin: 6px 0;
+      color: var(--text);
+    }
+
+    .gallery {
+      display: grid;
+      gap: 10px;
+    }
+
+    .shot {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+    }
+
+    .shot img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .caption {
+      font-size: .9rem;
+      color: var(--text-soft);
+      margin-top: 8px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 22px 0;
+    }
+
+    .note {
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,122,0,.5);
+      background: rgba(255,122,0,.08);
+      color: var(--text);
+    }
+
+    .footer {
+      margin-top: 28px;
+      color: var(--text-soft);
+      font-size: .95rem;
+      text-align: center;
+    }
+
+    @media print {
+      .topbar { position: static; }
+      .actions { display:none !important; }
+      .card, .step { box-shadow:none !important; }
+      body { background:#fff; color:#111; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="title">PixelGym · Manual de Usuario</div>
+        <div class="subtitle">Guía rápida de registro, acceso, reservas y gestión de cuenta</div>
+      </div>
+      <div class="actions">
+        <a class="btn" href="index.html">← Volver</a>
+        <button class="btn primary" onclick="window.print()">🖨️ Exportar a PDF</button>
+        <button class="btn" id="toggleTheme" type="button">🌙/☀️ Tema</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="card">
+        <h1>Manual de instrucciones de <span style="color:var(--accent)">PixelGym</span></h1>
+        <p>
+          Este documento explica, paso a paso, cómo utilizar la aplicación: crear una cuenta, iniciar sesión,
+          consultar el listado de actividades, reservar una clase, revisar tus reservas, ver tu perfil y ajustar preferencias.
+        </p>
+        <div class="note">
+          <strong>Consejo:</strong> si vas a entregar esta documentación, pulsa <b>“Exportar a PDF”</b> para imprimirla o guardarla.
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="toc">
+          <a href="#inicio"><span>1) Inicio y splash</span> <span class="chip">→</span></a>
+          <a href="#registro"><span>2) Registro y planes</span> <span class="chip">→</span></a>
+          <a href="#login"><span>3) Inicio de sesión</span> <span class="chip">→</span></a>
+          <a href="#actividades"><span>4) Actividades</span> <span class="chip">→</span></a>
+          <a href="#reserva"><span>5) Reservar actividad</span> <span class="chip">→</span></a>
+          <a href="#misreservas"><span>6) Mis reservas</span> <span class="chip">→</span></a>
+          <a href="#perfil"><span>7) Perfil</span> <span class="chip">→</span></a>
+          <a href="#preferencias"><span>8) Preferencias</span> <span class="chip">→</span></a>
+          <a href="#contacto"><span>9) Contacto</span> <span class="chip">→</span></a>
+          <a href="#drawer"><span>10) Menú lateral</span> <span class="chip">→</span></a>
+          <a href="#about"><span>11) Acerca de</span> <span class="chip">→</span></a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h1 style="font-size:1.15rem; margin-bottom:12px;">Capturas incluidas</h1>
+        <p>Se muestran pantallas reales de la app para acompañar cada explicación.</p>
+
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/logoappandroid.png" alt="Icono PixelGym"></div>
+          <div class="shot"><img src="Multimedia/Imagenes/movil/splashscreen.png" alt="Splash PixelGym"></div>
+        </div>
+
+        <div class="caption">Ruta de imágenes: <code>Multimedia/Imagenes/movil</code></div>
+      </div>
+    </div>
+
+    <div class="steps">
+
+      <section class="step" id="inicio">
+        <div>
+          <h2><span>1.</span> Inicio y pantalla de carga</h2>
+          <p class="meta">Identidad visual y arranque de la aplicación.</p>
+          <ol>
+            <li>Al abrir PixelGym se muestra el icono de la app en el dispositivo.</li>
+            <li>Después aparece la pantalla splash con el logotipo, confirmando que la app está cargando correctamente.</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/logoappandroid.png" alt="Icono PixelGym"></div>
+          <div class="shot"><img src="Multimedia/Imagenes/movil/splashscreen.png" alt="Splash PixelGym"></div>
+        </div>
+      </section>
+
+      <section class="step" id="registro">
+        <div>
+          <h2><span>2.</span> Registro de usuario y selección de plan</h2>
+          <p class="meta">Creación de cuenta para acceder a las funciones de reservas.</p>
+          <ol>
+            <li>Introduce el <b>email</b> con el que vas a iniciar sesión.</li>
+            <li>Escribe tu <b>Nombre o Nick</b> (aparecerá en tu perfil).</li>
+            <li>Crea una <b>contraseña</b> (mínimo 6 caracteres) y repítela para confirmar.</li>
+            <li>En <b>“Selecciona tu plan”</b>, elige el paquete de créditos que prefieras.</li>
+            <li>Pulsa <b>“Crear cuenta”</b> para finalizar el registro.</li>
+          </ol>
+          <p class="caption">
+            Los <b>créditos</b> se utilizan para realizar reservas (cada actividad puede consumir un número distinto).
+          </p>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mregistro.png" alt="Registro"></div>
+          <div class="shot"><img src="Multimedia/Imagenes/movil/desplegabletarifas.png" alt="Planes y tarifas"></div>
+        </div>
+      </section>
+
+      <section class="step" id="login">
+        <div>
+          <h2><span>3.</span> Inicio de sesión</h2>
+          <p class="meta">Acceso con credenciales para entrar en la app.</p>
+          <ol>
+            <li>Introduce tu <b>email</b> registrado.</li>
+            <li>Escribe tu <b>contraseña</b>.</li>
+            <li>Accede para ver actividades, reservas y tu perfil.</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mlogin.png" alt="Login"></div>
+        </div>
+      </section>
+
+      <section class="step" id="actividades">
+        <div>
+          <h2><span>4.</span> Pantalla principal: listado de actividades</h2>
+          <p class="meta">Explora actividades disponibles y marca favoritas.</p>
+          <ol>
+            <li>En <b>Actividades</b> verás tarjetas con nombre, categoría e imagen.</li>
+            <li>Puedes marcar actividades como <b>favoritas</b> con el icono de estrella.</li>
+            <li>Desde la parte superior se puede usar búsqueda/ordenación (según configuración).</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mseleccionaactividad.png" alt="Listado de actividades"></div>
+        </div>
+      </section>
+
+      <section class="step" id="reserva">
+        <div>
+          <h2><span>5.</span> Reservar una actividad</h2>
+          <p class="meta">Selección de fecha, hora y confirmación.</p>
+          <ol>
+            <li>Selecciona una actividad (ejemplo: <b>Fitboxing</b>).</li>
+            <li>En “Nueva reserva” elige la <b>fecha</b>.</li>
+            <li>Abre “Horarios disponibles” y selecciona una <b>hora</b>.</li>
+            <li>Pulsa <b>Confirmar reserva</b>.</li>
+          </ol>
+          <p class="caption">
+            La app valida disponibilidad y descuenta créditos cuando la reserva se completa.
+          </p>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mreservaactividad.png" alt="Nueva reserva"></div>
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mreservaconfirmada.png" alt="Reserva confirmada"></div>
+        </div>
+      </section>
+
+      <section class="step" id="misreservas">
+        <div>
+          <h2><span>6.</span> Mis reservas (consultar y anular)</h2>
+          <p class="meta">Gestión de reservas activas.</p>
+          <ol>
+            <li>En la pestaña <b>Mis reservas</b> aparece el listado con fecha y hora.</li>
+            <li>Desde cada tarjeta puedes <b>ANULAR</b> si necesitas liberar esa reserva.</li>
+            <li>Al anular, la app actualiza el estado y aplica la lógica de créditos según las reglas del sistema.</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mreservas.png" alt="Mis reservas"></div>
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mreservaconfirmada2.png" alt="Mis reservas con varias entradas"></div>
+        </div>
+      </section>
+
+      <section class="step" id="perfil">
+        <div>
+          <h2><span>7.</span> Perfil de usuario</h2>
+          <p class="meta">Información de cuenta, créditos y suscripción.</p>
+          <ol>
+            <li>Accede a <b>Mi perfil</b> para ver tu nombre y correo.</li>
+            <li>Consulta tu <b>plan</b> y los <b>créditos disponibles</b>.</li>
+            <li>Revisa el <b>estado de suscripción</b> y su fecha de vencimiento.</li>
+            <li>Desde aquí también puedes <b>cerrar sesión</b>.</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mperfil.png" alt="Perfil"></div>
+        </div>
+      </section>
+
+      <section class="step" id="preferencias">
+        <div>
+          <h2><span>8.</span> Preferencias</h2>
+          <p class="meta">Personalización de la experiencia.</p>
+          <ol>
+            <li>Activa o desactiva <b>notificaciones</b>.</li>
+            <li>Configura el <b>modo oscuro</b>.</li>
+            <li>Selecciona el <b>idioma</b> (según disponibilidad).</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mpreferencias.png" alt="Preferencias"></div>
+        </div>
+      </section>
+
+      <section class="step" id="contacto">
+        <div>
+          <h2><span>9.</span> Contacto</h2>
+          <p class="meta">Accesos rápidos para comunicarte con el equipo.</p>
+          <ol>
+            <li>Abre la pantalla de <b>Contacto</b>.</li>
+            <li>Elige el canal: <b>teléfono</b>, <b>WhatsApp</b> o <b>correo</b>.</li>
+            <li>La app abre la aplicación correspondiente del dispositivo.</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mcontacto.png" alt="Contacto"></div>
+        </div>
+      </section>
+
+      <section class="step" id="drawer">
+        <div>
+          <h2><span>10.</span> Menú lateral (Drawer)</h2>
+          <p class="meta">Navegación rápida entre pantallas.</p>
+          <ol>
+            <li>Pulsa el icono de menú (☰) para abrir el panel lateral.</li>
+            <li>Accede a: <b>Mi perfil</b>, <b>Lista</b>, <b>Contacto</b>, <b>Preferencias</b> y <b>Acerca de…</b>.</li>
+            <li>Usa <b>Cerrar sesión</b> para salir de la cuenta.</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/mdrawer.png" alt="Drawer"></div>
+        </div>
+      </section>
+
+      <section class="step" id="about">
+        <div>
+          <h2><span>11.</span> Acerca de PixelGym</h2>
+          <p class="meta">Información de versión y créditos del proyecto.</p>
+          <ol>
+            <li>En <b>Acerca de…</b> se muestra la versión actual de la aplicación.</li>
+            <li>Incluye la autoría del proyecto y la edición usada.</li>
+          </ol>
+        </div>
+        <div class="gallery">
+          <div class="shot"><img src="Multimedia/Imagenes/movil/about.png" alt="Acerca de"></div>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="footer">
+      PixelGym · Manual de Usuario · 2026 · SyntaxTerror
+    </div>
+  </div>
+
+  <script>
+    // Toggle theme (matches index idea)
+    const btn = document.getElementById('toggleTheme');
+    const key = 'pixelgym_theme';
+    function applyTheme(t) {
+      if (t === 'light') document.body.classList.add('light-theme');
+      else document.body.classList.remove('light-theme');
+    }
+    const saved = localStorage.getItem(key);
+    if (saved) applyTheme(saved);
+
+    btn.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light-theme');
+      localStorage.setItem(key, isLight ? 'light' : 'dark');
+    });
+  </script>
+</body>
+</html>
