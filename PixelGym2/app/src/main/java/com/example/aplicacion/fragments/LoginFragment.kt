@@ -39,6 +39,13 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // --- PERSISTENCIA LOGIN ---
+        val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            findNavController().navigate(R.id.action_loginFragment_to_tabListReservasFragment)
+            return // OJO! Para no ejecutar el resto del código del login
+        }
+
         // Escuchar el estado de la autenticación
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
