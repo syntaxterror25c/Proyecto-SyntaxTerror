@@ -253,6 +253,8 @@
       width: 100%;
       height: auto;
       display: block;
+      max-width: 80%;
+      margin: 0 auto;
     }
 
     .caption {
@@ -307,6 +309,20 @@
   </div>
 
   <div class="wrap">
+
+      <div class="card" style="margin-top:18px;">
+        <div style="display:grid; grid-template-columns: 1fr; gap:14px; align-items:start;">
+          <div style="display:flex; justify-content:center;">
+            <div class="shot" style="max-width:420px; width:100%;">
+              <img src="Multimedia/Imagenes/movil/ChicaMovil.png" alt="PixelGym en el día a día" />
+            </div>
+          </div>
+          <p style="margin:0; color:var(--text-soft); text-align:center;">
+            <b>PixelGym</b> te acompaña desde el móvil para registrarte, reservar actividades y gestionar tu suscripción en pocos pasos.
+          </p>
+        </div>
+      </div>
+
     <div class="hero">
       <div class="card">
         <h1>Manual de instrucciones de <span style="color:var(--accent)">PixelGym</span></h1>
@@ -376,6 +392,16 @@
             <li>En <b>“Selecciona tu plan”</b>, elige el paquete de créditos que prefieras.</li>
             <li>Pulsa <b>“Crear cuenta”</b> para finalizar el registro.</li>
           </ol>
+
+          <div class="note" style="margin-top:12px;">
+            <b>Planes y créditos:</b> PixelGym funciona con un sistema de <b>créditos</b>.
+            Cada actividad consume una cantidad (por ejemplo 5 créditos). El plan que eliges define tu saldo.
+          </div>
+          <p class="caption" style="margin-top:10px;">
+            Si falta algún dato o las contraseñas no coinciden, el botón <b>Crear cuenta</b> puede permanecer desactivado
+            hasta que el formulario esté correcto.
+          </p>
+
           <p class="caption">
             Los <b>créditos</b> se utilizan para realizar reservas (cada actividad puede consumir un número distinto).
           </p>
@@ -395,6 +421,12 @@
             <li>Escribe tu <b>contraseña</b>.</li>
             <li>Accede para ver actividades, reservas y tu perfil.</li>
           </ol>
+
+          <div class="note" style="margin-top:12px;">
+            <b>Acceso seguro:</b> el inicio de sesión valida tus credenciales antes de entrar.
+            Si el email o la contraseña no son correctos, la app te avisará para que lo corrijas.
+          </div>
+
         </div>
         <div class="gallery">
           <div class="shot"><img src="Multimedia/Imagenes/movil/mlogin.png" alt="Login"></div>
@@ -410,6 +442,12 @@
             <li>Puedes marcar actividades como <b>favoritas</b> con el icono de estrella.</li>
             <li>Desde la parte superior se puede usar búsqueda/ordenación (según configuración).</li>
           </ol>
+
+          <p class="caption" style="margin-top:10px;">
+            Las actividades aparecen en formato tarjeta con imagen, nombre y categoría (Cardio, Fuerza, Cuerpo‑Mente…).
+            Al pulsar una tarjeta puedes ver la información y comenzar la reserva.
+          </p>
+
         </div>
         <div class="gallery">
           <div class="shot"><img src="Multimedia/Imagenes/movil/mseleccionaactividad.png" alt="Listado de actividades"></div>
@@ -426,6 +464,17 @@
             <li>Abre “Horarios disponibles” y selecciona una <b>hora</b>.</li>
             <li>Pulsa <b>Confirmar reserva</b>.</li>
           </ol>
+
+          <div class="note" style="margin-top:12px;">
+            <b>Calendario + Horario:</b><br>
+            1) Primero eliges el <b>día</b> en el calendario.<br>
+            2) Después eliges la <b>hora</b> disponible en el desplegable.<br>
+            3) Por último, pulsas <b>Confirmar reserva</b>.
+          </div>
+          <p class="caption" style="margin-top:10px;">
+            Este flujo evita errores: el calendario asegura la fecha y el selector de horas solo muestra franjas disponibles.
+          </p>
+
           <p class="caption">
             La app valida disponibilidad y descuenta créditos cuando la reserva se completa.
           </p>
@@ -433,7 +482,10 @@
         <div class="gallery">
           <div class="shot"><img src="Multimedia/Imagenes/movil/mreservaactividad.png" alt="Nueva reserva"></div>
           <div class="shot"><img src="Multimedia/Imagenes/movil/mreservaconfirmada.png" alt="Reserva confirmada"></div>
-        </div>
+
+          <div class="shot"><img src="Multimedia/Imagenes/movil/calendarioreserva.png" alt="Calendario de reserva"></div>
+          <div class="shot"><img src="Multimedia/Imagenes/movil/seleccionhora.png" alt="Selección de hora"></div>
+    </div>
       </section>
 
       <section class="step" id="misreservas">
@@ -445,6 +497,11 @@
             <li>Desde cada tarjeta puedes <b>ANULAR</b> si necesitas liberar esa reserva.</li>
             <li>Al anular, la app actualiza el estado y aplica la lógica de créditos según las reglas del sistema.</li>
           </ol>
+
+          <p class="caption" style="margin-top:10px;">
+            En “Mis reservas” ves tus reservas activas con fecha y hora. Si no puedes asistir, usa <b>ANULAR</b> para liberar la plaza.
+          </p>
+
         </div>
         <div class="gallery">
           <div class="shot"><img src="Multimedia/Imagenes/movil/mreservas.png" alt="Mis reservas"></div>
@@ -462,6 +519,11 @@
             <li>Revisa el <b>estado de suscripción</b> y su fecha de vencimiento.</li>
             <li>Desde aquí también puedes <b>cerrar sesión</b>.</li>
           </ol>
+
+          <div class="note" style="margin-top:12px;">
+            <b>Créditos disponibles:</b> es tu saldo para reservar nuevas actividades. Tras reservar, el saldo se actualiza automáticamente.
+          </div>
+
         </div>
         <div class="gallery">
           <div class="shot"><img src="Multimedia/Imagenes/movil/mperfil.png" alt="Perfil"></div>
@@ -477,6 +539,11 @@
             <li>Configura el <b>modo oscuro</b>.</li>
             <li>Selecciona el <b>idioma</b> (según disponibilidad).</li>
           </ol>
+
+          <p class="caption" style="margin-top:10px;">
+            En Preferencias puedes activar notificaciones, cambiar a modo oscuro para mayor comodidad y seleccionar el idioma.
+          </p>
+
         </div>
         <div class="gallery">
           <div class="shot"><img src="Multimedia/Imagenes/movil/mpreferencias.png" alt="Preferencias"></div>
@@ -492,6 +559,11 @@
             <li>Elige el canal: <b>teléfono</b>, <b>WhatsApp</b> o <b>correo</b>.</li>
             <li>La app abre la aplicación correspondiente del dispositivo.</li>
           </ol>
+
+          <div class="note" style="margin-top:12px;">
+            <b>Atajos de contacto:</b> los iconos abren directamente teléfono, WhatsApp o email para contactar sin pasos extra.
+          </div>
+
         </div>
         <div class="gallery">
           <div class="shot"><img src="Multimedia/Imagenes/movil/mcontacto.png" alt="Contacto"></div>
