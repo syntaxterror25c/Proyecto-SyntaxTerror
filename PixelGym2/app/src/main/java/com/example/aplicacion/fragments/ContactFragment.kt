@@ -1,12 +1,12 @@
 package com.example.aplicacion.fragments
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.aplicacion.R
 import com.example.aplicacion.databinding.FragmentContactBinding
+import androidx.core.net.toUri
 
 
 class ContactFragment : Fragment(R.layout.fragment_contact) {
@@ -20,7 +20,7 @@ class ContactFragment : Fragment(R.layout.fragment_contact) {
         // Botón Email Actualizado
         binding.btnEmail.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse("mailto:info@sintaxterror-gym.com") // Cambio aquí
+            intent.data = "mailto:info@sintaxterror-gym.com".toUri() // Cambio aquí
             intent.putExtra(Intent.EXTRA_SUBJECT, "Consulta sobre mis sesiones")
             startActivity(intent)
         }
@@ -31,7 +31,7 @@ class ContactFragment : Fragment(R.layout.fragment_contact) {
     }
 
     private fun setupVideo() {
-        val videoUri = Uri.parse("android.resource://${requireContext().packageName}/${R.raw.pixelgym_video}")
+        val videoUri = "android.resource://${requireContext().packageName}/${R.raw.pixelgym_video}".toUri()
         binding.videoView.setVideoURI(videoUri)
         binding.videoView.setOnPreparedListener { it.isLooping = true; it.start() }
     }

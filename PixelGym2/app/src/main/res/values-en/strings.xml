@@ -13,7 +13,7 @@
     <string name="login_error_field">Incorrect username or password</string>
     <string name="snackbar_action_close">CLOSE</string>
     <string name="feature_not_implemented">Functionality not implemented yet</string>
-    <string name="nav_to_register">Navigating to registration...</string>
+    <string name="nav_to_register">Navigating to registration…</string>
     <string name="error_email_mal_formado">"Invalid email format"</string>
     <string name="password_mismatch">"Passwords do not match"</string>
     <string name="fill_date">"Please select a date"</string>
@@ -48,7 +48,7 @@
     <string name="notificaciones">Notifications</string>
     <string name="modoOscuro">Dark mode</string>
     <string name="sincronizar">Sync data</string>
-    <string name="hintBuscar">Search disc...</string>
+    <string name="hintBuscar">Search disc…</string>
     <string name="cierraSesion">To exit, please logout</string>
     <string name="anonimo">Anonimous</string>
     <string name="error_unknown">An unexpected error occurred</string>
@@ -108,4 +108,21 @@
     <string name="fin_plan">Expiration</string>
     <string name="cerrar_sesion">Log out</string>
     <string name="mi_perfil">My profile</string>
+    <string name="actividad">Activity</string>
+    <string name="historial_de_sesiones">SESSION HISTORY</string>
+    <string name="reservar">Booking</string>
+    <string name="imagen_de_la_actividad">Activity image</string>
+    <string name="imagen_actividad">Activity image</string>
+    <string name="cardio_express">Cardio Express</string>
+    <string name="fitness">Fitness</string>
+    <string name="estrella">Star</string>
+    <string name="info">INFO</string>
+    <string name="imagen_categoria">Activity image</string>
+    <string name="imagen_categoriab">Activity image</string>
+    <string name="volver_login">Back to login</string>
+    <string name="logo">Logo</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="cargando_horarios">Loading tabletime…</string>
+    <string name="cargando_profesores">Loading trainers…</string>
+
 </resources>

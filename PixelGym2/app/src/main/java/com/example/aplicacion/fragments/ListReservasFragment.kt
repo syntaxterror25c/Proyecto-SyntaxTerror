@@ -33,9 +33,8 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
 
         gymViewModel.cargarMisReservas()
 
-        // SOLUCIÓN AL ERROR: Especificamos el tipo (reserva: Reserva)
-        reservaAdapter = ReservaAdapter(emptyList()) { reserva: Reserva ->
-        }
+        // SOLUCIÓN A ERROR: Especificamos el tipo para cumplir promesa (lateinit var)
+        reservaAdapter = ReservaAdapter(emptyList()) { reserva: Reserva ->        }
 
         binding.recyclerViewReservas.apply {
             layoutManager = LinearLayoutManager(context)
@@ -45,13 +44,24 @@ class ListReservasFragment : Fragment(com.example.aplicacion.R.layout.fragment_l
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 gymViewModel.listaMisReservas.collect { reservas ->
-                    val isEmpty = reservas.isNullOrEmpty()
+                    val isEmpty = reservas.isEmpty()
                     binding.tvEmptyReservas.visibility = if (isEmpty) View.VISIBLE else View.GONE
                     binding.recyclerViewReservas.visibility = if (isEmpty) View.GONE else View.VISIBLE
-                    // 2. Aquí también especificamos el tipo para evitar confusiones
                     reservaAdapter = ReservaAdapter(reservas) { reservaAnular: Reserva ->
-                        // Acción de anular
+                        // Ejecutamos la anulación en el ViewModel
                         gymViewModel.anularReserva(reservaAnular)
+
+                        // Lanzamos el Snackbar ANCLADO A LA ACTIVITY
+                        val rootView = requireActivity().findViewById<View>(android.R.id.content)
+                        com.google.android.material.snackbar.Snackbar.make(
+                            rootView,
+                            "Reserva de ${reservaAnular.nombre_actividad} anulada",
+                            com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+                        ).apply {
+                            setBackgroundTint(resources.getColor(android.R.color.holo_orange_dark, null))
+                            setAction("OK") { dismiss() }
+                            show()
+                        }
                     }
                     binding.recyclerViewReservas.adapter = reservaAdapter
                 }

@@ -1,6 +1,5 @@
 package com.example.aplicacion.viewmodels
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aplicacion.R
@@ -12,7 +11,6 @@ import com.example.aplicacion.model.Reserva
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 class GymViewModel(
     private val gymRepository: GymRepository,
@@ -82,18 +80,23 @@ class GymViewModel(
 
     private fun aplicarFiltrosYOrden() {
         val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+        // Obtenemos "hoy" a las 00:00 para comparar solo fechas
+        val hoy = java.util.Calendar.getInstance().apply {
+            set(java.util.Calendar.HOUR_OF_DAY, 0)
+            set(java.util.Calendar.MINUTE, 0)
+            set(java.util.Calendar.SECOND, 0)
+            set(java.util.Calendar.MILLISECOND, 0)
+        }.time
 
-        // --- PROCESAR ACTIVIDADES  ---
+        // --- PROCESAR ACTIVIDADES ---
         var resActividades = todasLasActividades
         if (queryActual.isNotEmpty()) {
-            resActividades = resActividades.filter {
-                it.nombre.contains(queryActual, ignoreCase = true)
-            }
+            resActividades = resActividades.filter { it.nombre.contains(queryActual, ignoreCase = true) }
         }
         _listaActividades.value = if (esAscendente) resActividades.sortedBy { it.nombre }
         else resActividades.sortedByDescending { it.nombre }
 
-        // --- PROCESAR RESERVAS  ---
+        // --- PROCESAR RESERVAS ---
         var resReservas = todasLasReservas
         if (queryActual.isNotEmpty()) {
             resReservas = resReservas.filter {
@@ -102,14 +105,32 @@ class GymViewModel(
             }
         }
 
-        // Ordenamos por FECHA_SESION convirtiendo el String a Date para que sea cronológico
-        _listaMisReservas.value = if (esAscendente) {
-            resReservas.sortedBy { try { sdf.parse(it.fecha_sesion) } catch (e: Exception) { null } }
-        } else {
-            resReservas.sortedByDescending { try { sdf.parse(it.fecha_sesion) } catch (e: Exception) { null } }
+        // Ordenamos con un Comparator robusto
+        _listaMisReservas.value = resReservas.sortedWith { r1, r2 ->
+            val f1 = try {
+                sdf.parse(r1.fecha_sesion)
+            } catch (e: Exception) {
+                null
+            }
+            val f2 = try {
+                sdf.parse(r2.fecha_sesion)
+            } catch (e: Exception) {
+                null
+            }
+
+            val p1 = if (f1 != null && f1.before(hoy)) 1 else 0
+            val p2 = if (f2 != null && f2.before(hoy)) 1 else 0
+
+            if (p1 != p2) {
+                // Si uno es pasado y el otro no, mandamos el pasado (1) al final
+                p1.compareTo(p2)
+            } else {
+                // Si ambos son del mismo grupo (futuros o pasados), aplicamos tu orden esAscendente
+                if (esAscendente) f1?.compareTo(f2) ?: 0
+                else f2?.compareTo(f1) ?: 0
+            }
         }
     }
-
 
     // 3 RESTO DE FUNCIONES (Sesiones, Reservas, etc......)
 
@@ -276,7 +297,7 @@ class GymViewModel(
 
             catalogoActividades.forEachIndexed { index, actividad ->
                 val nombreAct = actividad["nombre"].toString()
-                val idMañana = "${nombreAct}_${fechaStr.replace("/", "-")}_1000"
+                val idManana = "${nombreAct}_${fechaStr.replace("/", "-")}_1000"
                 val idTarde = "${nombreAct}_${fechaStr.replace("/", "-")}_1800"
 
                 val sesionBase = mapOf(
@@ -291,7 +312,7 @@ class GymViewModel(
                     "estado_sesion" to "ACTIVA"
                 )
 
-                db.collection("sesiones").document(idMañana).set(sesionBase.plus("hora_inicio" to "10:00"))
+                db.collection("sesiones").document(idManana).set(sesionBase.plus("hora_inicio" to "10:00"))
                 db.collection("sesiones").document(idTarde).set(sesionBase.plus("hora_inicio" to "18:00"))
             }
         }

@@ -1,7 +1,6 @@
 package com.example.aplicacion.model
 
 import com.google.firebase.firestore.DocumentId
-import com.google.firebase.firestore.PropertyName
 
 data class Actividad(
     @DocumentId

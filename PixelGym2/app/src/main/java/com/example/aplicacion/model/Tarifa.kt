@@ -6,7 +6,5 @@ data class Tarifa(
     val precio: Double = 0.0
 ) {
     // Esto es lo que verá el usuario en el Spinner
-    override fun toString(): String {
-        return "$nombre - $creditos créditos - ${String.format("%.2f", precio)}€"
-    }
+    override fun toString(): String = "$nombre - $creditos créditos - ${String.format("%.2f", precio)}€"
 }

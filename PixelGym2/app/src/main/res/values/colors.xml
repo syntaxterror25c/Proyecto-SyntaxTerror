@@ -14,4 +14,7 @@
     <color name="on_primary_dark">#000000</color>
     <color name="background_dark">#121212</color>
     <color name="surface_night">#1E1E1E</color>
+    <color name="texto_secundario">#9E9E9E</color>
+
+    <color name="texto_principal">#E0E0E0</color>
 </resources>

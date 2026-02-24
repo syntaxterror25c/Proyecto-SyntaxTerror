@@ -21,20 +21,53 @@ class ReservaAdapter(
 
     override fun onBindViewHolder(holder: ReservaViewHolder, position: Int) {
         val reserva = listaReservas[position]
-        val context = holder.itemView.context
+        // val context = holder.itemView.context
+
+        val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+        val hoy = java.util.Calendar.getInstance().apply {
+            set(java.util.Calendar.HOUR_OF_DAY, 0)
+            set(java.util.Calendar.MINUTE, 0)
+            set(java.util.Calendar.SECOND, 0)
+            set(java.util.Calendar.MILLISECOND, 0)
+        }.time
+
+        val fechaReserva = try { sdf.parse(reserva.fecha_sesion) } catch (e: Exception) { null }
+        val esPasada = fechaReserva != null && fechaReserva.before(hoy)
+
+        // Lógica para el separador visual
+        var mostrarSeparador = false
+        if (esPasada) {
+            if (position == 0) {
+                mostrarSeparador = true
+            } else {
+                val anterior = listaReservas[position - 1]
+                val fechaAnt = try { sdf.parse(anterior.fecha_sesion) } catch (e: Exception) { null }
+                val anteriorEraPasada = fechaAnt != null && fechaAnt.before(hoy)
+                // Solo se muestra si el anterior NO era pasado (punto de cambio)
+                if (!anteriorEraPasada) mostrarSeparador = true
+            }
+        }
 
         holder.binding.apply {
-            // IDs de texto (estos ya te funcionaban)
+            // Control del encabezado de sección
+            sectionHeader.visibility = if (mostrarSeparador) android.view.View.VISIBLE else android.view.View.GONE
+
+            // Datos básicos
             tvReservaNombre.text = reserva.nombre_actividad
             tvReservaFecha.text = reserva.fecha_sesion
             tvReservaHora.text = reserva.hora_inicio
+            ivReservaImagen.setImageResource(ImageMapper.getDrawableId(reserva.imagen_url))
 
-            // Imagen
-            val imageResId = ImageMapper.getDrawableId(reserva.imagen_url)
-            ivReservaImagen.setImageResource(imageResId)
-
-            btnAnular.setOnClickListener {
-                onAnularClick(reserva)
+            if (esPasada) {
+                // Estilo Historial. Afectamos a la tarjeta
+                cardReserva.alpha = 0.5f
+                btnAnular.visibility = android.view.View.GONE
+                btnAnular.setOnClickListener(null)
+            } else {
+                // Estilo Activa
+                cardReserva.alpha = 1.0f
+                btnAnular.visibility = android.view.View.VISIBLE
+                btnAnular.setOnClickListener { onAnularClick(reserva) }
             }
         }
     }

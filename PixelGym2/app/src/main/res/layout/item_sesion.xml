@@ -20,7 +20,7 @@
                 android:id="@+id/iv_sesion_imagen"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:contentDescription="Imagen de la actividad"
+                android:contentDescription="@string/imagen_de_la_actividad"
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/btnReservar"
                 app:layout_constraintEnd_toEndOf="@+id/btnReservar"
@@ -79,7 +79,7 @@
                 android:id="@+id/btnReservar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reservar"
+                android:text="@string/reservar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 

@@ -1,5 +1,6 @@
 package com.example.aplicacion.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ class DetalleActividadFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -36,7 +38,7 @@ class DetalleActividadFragment : Fragment() {
             binding.tvActividadNombreDetalle.text = itActividad.nombre
             binding.tvActividadCategoria.text = itActividad.categoria.ifEmpty { "General" }
             binding.tvActividadDescripcion.text = itActividad.descripcion.ifEmpty { "Sin descripción" }
-            binding.chipCreditos.text = "${itActividad.coste} créditos"
+            "${itActividad.coste} creditos".also { binding.chipCreditos.text = it }
 
             val resourceId = ImageMapper.getDrawableId(itActividad.imagen)
             com.bumptech.glide.Glide.with(this)
@@ -44,7 +46,7 @@ class DetalleActividadFragment : Fragment() {
                 .centerCrop()
                 .into(binding.ivActividadDetalle)
 
-            // --- NUEVO BLOQUE: CONSULTA DE SESIONES ---
+            // --- CONSULTA DE SESIONES ---
             db.collection("sesiones")
                 .whereEqualTo("nombre_actividad", itActividad.nombre)
                 .get()

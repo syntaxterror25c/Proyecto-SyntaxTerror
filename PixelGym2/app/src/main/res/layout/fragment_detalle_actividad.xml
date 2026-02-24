@@ -15,6 +15,7 @@
                 android:id="@+id/ivActividadDetalle"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
+                android:contentDescription="@string/imagen_categoria"
                 android:scaleType="centerCrop"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/im_rec_0default" />
@@ -32,6 +33,7 @@
             <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/logo"
                     android:padding="8dp"
                     android:src="@drawable/logo"
                     android:scaleType="fitCenter" />
@@ -56,7 +58,7 @@
                         android:id="@+id/tvDetalleHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="INFO"
+                        android:text="@string/info"
                         android:textColor="?attr/colorPrimary"
                         android:textStyle="bold"
                         app:layout_constraintTop_toTopOf="parent"
@@ -129,7 +131,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="16dp"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
-                    android:text="Cargando horarios..." />
+                    android:text="@string/cargando_horarios" />
 
             <TextView
                     android:layout_width="wrap_content"
@@ -145,7 +147,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="24dp"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
-                    android:text="Cargando profesores..." />
+                    android:text="@string/cargando_profesores" />
 
             <com.google.android.material.chip.Chip
                     android:id="@+id/chipCreditos"

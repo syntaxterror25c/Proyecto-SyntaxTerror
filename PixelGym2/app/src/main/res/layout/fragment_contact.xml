@@ -16,6 +16,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="16dp"
+                android:contentDescription="@string/logo"
                 android:src="@drawable/logo"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -61,6 +62,7 @@
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:layout_marginHorizontal="8dp"
+                            android:contentDescription="@string/llamarTelefono"
                             android:src="@drawable/btn_phone8b"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter" />
@@ -70,6 +72,7 @@
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:layout_marginHorizontal="8dp"
+                            android:contentDescription="@string/whatsapp"
                             android:src="@drawable/btn_whatsapp8b"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter" />
@@ -79,6 +82,7 @@
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:layout_marginHorizontal="8dp"
+                            android:contentDescription="@string/enviarCorreo"
                             android:src="@drawable/btn_email8b"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter" />

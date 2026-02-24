@@ -14,7 +14,7 @@
     <string name="login_error_field">"Usuario o contraseña incorrectos"</string>
     <string name="snackbar_action_close">"CERRAR"</string>
     <string name="feature_not_implemented">"Funcionalidad no implementada aún"</string>
-    <string name="nav_to_register">"Navegando al registro..."</string>
+    <string name="nav_to_register">"Navegando al registro…"</string>
     <string name="error_email_mal_formado">"El formato del correo electrónico no es válido"</string>
     <string name="password_mismatch">"Las contraseñas no coinciden"</string>
     <string name="fill_date">"Selecciona una fecha"</string>
@@ -49,13 +49,13 @@
     <string name="notificaciones">Notificaciones</string>
     <string name="modoOscuro">Modo oscuro</string>
     <string name="sincronizar">Sincronizar datos</string>
-    <string name="hintBuscar">Buscar reserva...</string>
+    <string name="hintBuscar">Buscar reserva…</string>
     <string name="cierraSesion">Para salir cierra sesión</string>
     <string name="anonimo">Anónimo</string>
     <string name="error_unknown">Ha ocurrido un error inesperado</string>
     <string name="error_user_not_found">Usuario no encontrado</string>
     <string name="user_settings_title">Ajustes de Usuario</string>
-    <string name="acerca_de">Acerca de...</string>
+    <string name="acerca_de">Acerca de…</string>
     <string name="salir_app">Cerrar APP</string>
     <string name="email_registro">Email para login</string>
     <string name="nick_registro">Nombre o Nick</string>
@@ -109,4 +109,20 @@
     <string name="fin_plan">Vencimiento</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
     <string name="mi_perfil">Mi perfil</string>
+    <string name="actividad">Actividad</string>
+    <string name="historial_de_sesiones">HISTORIAL DE SESIONES</string>
+    <string name="reservar">Reservar</string>
+    <string name="imagen_de_la_actividad">Imagen de la actividad</string>
+    <string name="imagen_actividad">Imagen de la actividad</string>
+    <string name="cardio_express">Cardio Express</string>
+    <string name="fitness">Fitness</string>
+    <string name="estrella">Estrella</string>
+    <string name="info">INFO</string>
+    <string name="imagen_categoria">Imagen de la categoría</string>
+    <string name="imagen_categoriab">Imagen de la categoría</string>
+    <string name="volver_login">Volver al login</string>
+    <string name="logo">Logo</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="cargando_horarios">Cargando horarios…</string>
+    <string name="cargando_profesores">Cargando monitores…</string>
 </resources>

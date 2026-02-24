@@ -71,8 +71,13 @@ class ReservaFragment : Fragment() {
             sesion?.let {
                 val libres = it.capacidad_maxima - it.plazas_ocupadas
                 binding.tvPlazasDisponibles.text = "${getString(R.string.quedan)} $libres ${getString(R.string.plazas_de)} ${it.capacidad_maxima}"
-                val color = if (libres <= 2) android.R.color.holo_red_dark else android.R.color.secondary_text_dark
-                binding.tvPlazasDisponibles.setTextColor(resources.getColor(color, null))
+                val colorRes = if (libres <= 2) {
+                    R.color.naranja_fuego
+                } else {
+                    R.color.texto_secundario
+                }
+                val colorReal = androidx.core.content.ContextCompat.getColor(requireContext(), colorRes)
+                binding.tvPlazasDisponibles.setTextColor(colorReal)
             }
         }
 
@@ -85,25 +90,32 @@ class ReservaFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 gymViewModel.reservaStatus.collect { exito ->
                     exito?.let { esExito ->
-                        val msg = if (esExito) getString(R.string.reserva_ok) else getString(R.string.reserva_error)
-                        val snackbar = com.google.android.material.snackbar.Snackbar.make(
-                            binding.root, msg, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
-                        )
-                        val color = if (esExito) android.R.color.holo_green_dark else android.R.color.holo_red_dark
-                        snackbar.setBackgroundTint(resources.getColor(color, null))
-
                         if (esExito) {
-                            snackbar.addCallback(object : com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback<com.google.android.material.snackbar.Snackbar>() {
-                                override fun onDismissed(t: com.google.android.material.snackbar.Snackbar?, event: Int) {
-                                    gymViewModel.resetReservaStatus()
-                                    if (isAdded) findNavController().navigateUp()
-                                }
-                            })
+                            // Reseteamos el estado inmediatamente
+                            gymViewModel.resetReservaStatus()
+
+                            // Lanzamos el Snackbar ANCLADO A LA ACTIVITY (para que se vea al volver)
+                            val rootView = requireActivity().findViewById<View>(android.R.id.content)
+                            com.google.android.material.snackbar.Snackbar.make(
+                                rootView, getString(R.string.reserva_ok), com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                            ).apply {
+                                setBackgroundTint(resources.getColor(android.R.color.holo_green_dark, null))
+                                show()
+                            }
+
+                            // Volvemos atrás SIN ESPERAR
+                            if (isAdded) findNavController().navigateUp()
+
                         } else {
+                            // Si hay error, mostramos el mensaje aquí mismo y rehabilitamos botón
+                            val msg = getString(R.string.reserva_error)
+                            com.google.android.material.snackbar.Snackbar.make(binding.root, msg, com.google.android.material.snackbar.Snackbar.LENGTH_SHORT)
+                                .setBackgroundTint(resources.getColor(android.R.color.holo_red_dark, null))
+                                .show()
+
                             binding.btnConfirmarReserva.isEnabled = true
                             gymViewModel.resetReservaStatus()
                         }
-                        snackbar.show()
                     }
                 }
             }
@@ -156,12 +168,22 @@ class ReservaFragment : Fragment() {
 
     private fun showDatePickerDialog() {
         val c = Calendar.getInstance()
-        DatePickerDialog(requireContext(), { _, y, m, d ->
+
+        // Creamos el diálogo pero NO lo mostramos todavía con .show() al final
+        val datePicker = DatePickerDialog(requireContext(), { _, y, m, d ->
             val cal = Calendar.getInstance().apply { set(y, m, d) }
             val fecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(cal.time)
             binding.etFechaReserva.setText(fecha)
+
+            // Al elegir fecha, pedimos al ViewModel que busque sesiones para ese día
             gymViewModel.cargarSesionesPorFecha(nombreActividad, fecha)
-        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
+
+        // Establecemos que la fecha mínima seleccionable es "ahora"
+        datePicker.datePicker.minDate = System.currentTimeMillis()
+
+        // Ahora se muestra
+        datePicker.show()
     }
 
     override fun onDestroyView() {

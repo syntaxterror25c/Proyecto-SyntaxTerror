@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
@@ -67,7 +66,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.drawer_list -> navController.navigate(R.id.tabListReservasFragment)
                 R.id.drawer_contact -> navController.navigate(R.id.contactFragment)
                 R.id.drawer_preferences -> navController.navigate(R.id.preferencesFragment)
-                R.id.perfilFragment -> navController.navigate(R.id.perfilFragment)
                 R.id.drawer_about -> mostrarAcercaDe()
                 R.id.drawer_logOut -> {
                     ServiceLocator.authRepository.logout()
