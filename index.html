@@ -717,26 +717,89 @@ footer::before {
     body.light-theme .tip{ background: rgba(15,23,42,.95); }
 
     
-        /* =========================
-           BOTONES EXTRA (Actividades + Cronograma)
-           ========================= */
-        .nav-btn{
-            display:inline-flex;
-            align-items:center;
-            gap:6px;
-            padding:7px 14px;
-            margin-left: 0.55rem;
-            border-radius: 999px;
-            border: 1px solid rgba(255,122,0,0.45);
-            background: linear-gradient(135deg, rgba(255,122,0,0.16), rgba(255,122,0,0.06));
-            color: var(--accent);
-            font-size: 0.82rem;
-            font-weight: 800;
-            text-decoration:none;
-            transition: transform .22s ease, box-shadow .22s ease, background .22s ease, color .22s ease, border-color .22s ease;
-            white-space: nowrap;
-        }
-        .nav-btn:hover{
+        
+/* =========================
+   BOTONES NAV MEJORADOS
+   ========================= */
+
+nav a:not(.nav-btn) {
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background .2s ease, color .2s ease;
+}
+
+nav a:not(.nav-btn):hover {
+    background: rgba(255,122,0,0.08);
+    color: #ff7a00;
+}
+
+.nav-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:9px 18px;
+    margin-left: 0.55rem;
+    border-radius: 999px;
+    border: 2px solid rgba(255,122,0,0.7);
+    background: linear-gradient(
+        135deg,
+        rgba(255,122,0,0.25),
+        rgba(255,122,0,0.08)
+    );
+    color: #ff7a00;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    text-decoration:none;
+    transition: 
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease,
+        border-color .25s ease;
+    box-shadow: 0 4px 14px rgba(255,122,0,0.25);
+}
+
+.nav-btn:hover{
+    background: linear-gradient(135deg, #ff7a00, #ff9a2a);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(255,122,0,0.55);
+    border-color: #ff7a00;
+}
+
+.nav-btn.strong{
+    background: linear-gradient(135deg, #ff7a00, #ff9a2a);
+    color: #fff;
+    border-color: #ff7a00;
+    box-shadow: 0 10px 28px rgba(255,122,0,0.45);
+}
+
+.nav-btn.strong:hover{
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 18px 44px rgba(255,122,0,0.65);
+}
+
+/* BOTÓN APP DESTACADO */
+.nav-btn.app-highlight{
+    background: linear-gradient(135deg, #ff7a00, #ffb347);
+    color: #fff;
+    border-color: #ff7a00;
+    box-shadow: 0 0 0 0 rgba(255,122,0,0.7);
+    animation: pulseApp 1.8s infinite;
+}
+
+@keyframes pulseApp {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255,122,0,0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 12px rgba(255,122,0,0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255,122,0,0);
+    }
+}
+.nav-btn:hover{
             background: var(--accent);
             color: #fff;
             transform: translateY(-2px);
@@ -980,8 +1043,7 @@ footer::before {
             <span>PDF</span>
         </button>
         <a href="https://drive.google.com/file/d/1nN7ICeq_sy02hP1rjyONVFDXgJOycCZN/view?usp=sharing" 
-            class="nav-btn strong" 
-            target="_blank" 
+            class="nav-btn strong app-highlight" target="_blank" 
             rel="noopener">
             📱 APP
             </a>
