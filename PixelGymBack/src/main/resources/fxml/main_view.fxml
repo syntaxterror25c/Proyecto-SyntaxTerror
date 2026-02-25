@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" prefWidth="1000" prefHeight="700" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pixelgym.ui.controllers.MainController" style="-fx-background-color: #f4f4f4;">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="PIXELGYM ADMIN PANEL" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #ddd;">
+        <tabs>
+            <Tab text="Gestión de Usuarios">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Button text="Cargar Usuarios" onAction="#handleListarUsuarios" style="-fx-base: #e1f5fe;"/>
+                        <Separator orientation="VERTICAL"/>
+                        <TextField fx:id="txtEmailRecarga" promptText="Email usuario"/>
+                        <TextField fx:id="txtCreditosNuevos" promptText="Nuevos créditos"/>
+                        <Button text="Actualizar Créditos" onAction="#handleRecargaCreditos" style="-fx-base: #c8e6c9;"/>
+                    </HBox>
+                    <TableView fx:id="tablaUsuarios" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </Tab>
+
+            <Tab text="Sesiones y Horarios">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <HBox spacing="10">
+                        <Button text="Ver Todas las Sesiones" onAction="#handleListarSesiones"/>
+                        <Button text="Generar Mes (Alta Masiva)" onAction="#handleAltaMasiva" style="-fx-base: #fff9c4;"/>
+                    </HBox>
+                    <TableView fx:id="tablaSesiones" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </Tab>
+
+            <Tab text="Control de Reservas">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <HBox spacing="10">
+                        <TextField fx:id="txtBusquedaReserva" promptText="Email o Profesor..." prefWidth="250"/>
+                        <Button text="Buscar Reservas" onAction="#handleListarReservas"/>
+                    </HBox>
+                    <TableView fx:id="tablaReservas" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </Tab>
+        </tabs>
+    </TabPane>
+</VBox>

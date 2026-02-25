@@ -16,20 +16,19 @@ import pixelgym.dao.IReservaDAO;
 import static pixelgym.utils.Utils.truncar;
 
 public class PixelGymAdmin {
-    //Unificamos el Scanner
     private static final Scanner sc = new Scanner(System.in);
 
-    // Declaramos pero NO instanciamos
+    // NO instanciamos
     private static IUsuarioDAO usuarioDAO;
     private static ISesionDAO sesionDAO;
     private static IReservaDAO reservaDAO;
 
     public static void main(String[] args) {
         try {
-            // PRIMERO inicializamos Firebase
+            // inicializamos Firebase
             FirebaseConfig.inicializar();
 
-            // SEGUNDO instanciamos los DAOs ahora que la DB ya existe
+            // instanciamos los DAOs ahora que la DB ya existe
             usuarioDAO = new UsuarioDAOImpl();
             sesionDAO = new SesionDAOImpl();
             reservaDAO = new ReservaDAOImpl();

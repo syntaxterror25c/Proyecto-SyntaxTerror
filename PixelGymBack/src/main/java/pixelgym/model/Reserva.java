@@ -11,8 +11,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Reserva {
 
-    // Si el campo se llama igual en Java que en Firebase (como uid o coste),
-    // no hace falta @PropertyName.
+
     private String uid;
     private long coste;
 
