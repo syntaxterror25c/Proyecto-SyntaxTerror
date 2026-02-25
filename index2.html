@@ -618,23 +618,44 @@
   // Versión de la web (la actualizo yo cuando toque)
   const APP_VERSION = "v0.1.0";
 
-  // Hoy (si quieres cambiarlo, cambia esta fecha y ya)
-  const TODAY = "2026-02-15"; // formato YYYY-MM-DD (fin de cronograma) // formato YYYY-MM-DD
-
   document.getElementById("ver").textContent  = APP_VERSION;
   document.getElementById("ver2").textContent = APP_VERSION;
   document.getElementById("ver3").textContent = APP_VERSION;
 
-  // Pongo la fecha en formato dd/mm/yyyy para el chip de arriba
-  (function setTodayLabel(){
-    const d = new Date(TODAY + "T00:00:00");
-    const dd = String(d.getDate()).padStart(2,"0");
-    const mm = String(d.getMonth()+1).padStart(2,"0");
-    const yy = d.getFullYear();
-    document.getElementById("todayLabel").textContent = dd + "/" + mm + "/" + yy;
-  })();
+  // =========================
+  // FECHA/HORA ACTUAL (AUTOMÁTICO)
+  // =========================
+  // Devuelve la fecha de hoy en formato YYYY-MM-DD (hora local del dispositivo)
+  function getTodayISO(){
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,"0");
+    const d = String(now.getDate()).padStart(2,"0");
+    return `${y}-${m}-${d}`;
+  }
 
-  /* =========================
+  // Formato dd/mm/yyyy (y opcionalmente hora)
+  function setTodayLabel(){
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2,"0");
+    const mm = String(now.getMonth()+1).padStart(2,"0");
+    const yy = now.getFullYear();
+    const hh = String(now.getHours()).padStart(2,"0");
+    const mi = String(now.getMinutes()).padStart(2,"0");
+
+    // Si solo quieres fecha, deja: `${dd}/${mm}/${yy}`
+    document.getElementById("todayLabel").textContent = `${dd}/${mm}/${yy} · ${hh}:${mi}`;
+  }
+
+  // Primera carga
+  setTodayLabel();
+
+  // Actualiza cada 30s (fecha y hora del chip)
+  setInterval(setTodayLabel, 30000);
+
+  // Guardamos el "hoy" anterior para repintar el Gantt si cambia el día (a medianoche)
+  let _lastTodayISO = getTodayISO();
+/* =========================
      BOTÓN TEMA (oscuro / claro)
      ========================= */
   const body = document.body;
@@ -805,7 +826,7 @@
     const w = leftCol + totalDays * z.pxPerDay + 40;
     const h = headH + data.length * rowH + 22;
 
-    const today = toDate(TODAY);
+    const today = toDate(getTodayISO());
     const todayX = leftCol + (daysBetween(min, today)) * z.pxPerDay;
 
     const ns = "http://www.w3.org/2000/svg";
@@ -943,6 +964,15 @@
     zoomRange.addEventListener("input", renderGantt);
     onlyDone.addEventListener("change", renderGantt);
     renderGantt();
+
+    // Si cambia el día (p.ej. a medianoche), actualizo la línea "HOY" del Gantt
+    setInterval(() => {
+      const t = getTodayISO();
+      if(t !== _lastTodayISO){
+        _lastTodayISO = t;
+        renderGantt();
+      }
+    }, 60000);
   }</script>
 </body>
 </html>
